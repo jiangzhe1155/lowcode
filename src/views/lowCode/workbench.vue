@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import LowCodeAside from './aside/lowCodeAside.vue'
-import { useConfigStore } from '/src/stores/constant'
+import { useConfigStore } from '@/stores/constant'
 
 const store = useConfigStore();
 </script>

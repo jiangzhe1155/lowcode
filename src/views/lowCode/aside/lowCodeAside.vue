@@ -1,21 +1,36 @@
 <script setup lang="ts">
 import { Operation, PieChart } from '@element-plus/icons-vue'
-import { useConfigStore } from '/src/stores/constant'
+import { useConfigStore } from '@/stores/constant'
+import { computed, reactive } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 
+const { height } = useWindowSize()
 const store = useConfigStore()
-let h = (document.documentElement.clientHeight || document.body.clientHeight) - 100
-console.log(h)
+
+const state = reactive({
+  'treeTabShow': false,
+  'componentTabShow': false
+})
+
+const getH = computed(() => {
+  return (height.value - 100) + 'px'
+})
+
+const getLeftOffset = computed(() => {
+  return (store.value.asideWidth + 10) + 'px'
+})
+
 </script>
 <template>
-  <el-aside class="!h-full" :width="store.asideWidth +'px'">
+  <el-aside class="!h-full " :width="store.asideWidth +'px'">
     <el-menu :collapse="true" class="!w-full">
-      <el-menu-item index="1">
+      <el-menu-item index="1" @click="state.treeTabShow = !state.treeTabShow">
         <el-icon>
           <Operation/>
         </el-icon>
-        <div v-show="false">asdsad</div>
+        <template #title>结构树</template>
       </el-menu-item>
-      <el-menu-item index="2">
+      <el-menu-item index="2" @click="state.componentTabShow = !state.componentTabShow">
         <el-icon>
           <PieChart/>
         </el-icon>
@@ -23,7 +38,11 @@ console.log(h)
       </el-menu-item>
     </el-menu>
   </el-aside>
-  <el-card class="box-card absolute" :style="{height:h+'px',left:store.asideWidth+'px'}">
+  <el-card v-if="state.treeTabShow" class="box-card absolute w-108" :style="{height:getH,left:getLeftOffset}">
+    结构树
+  </el-card>
+  <el-card v-if="state.componentTabShow" class="box-card absolute w-108" :style="{height:getH,left:getLeftOffset}">
+    组件库
   </el-card>
 </template>
 
