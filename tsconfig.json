@@ -13,7 +13,7 @@
     "sourceMap": true,
     "noImplicitThis": true,
     // js/ts 混用时设为false
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@/*": [
         "src/*"

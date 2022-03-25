@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import LowCodeAside from './aside/LowCodeAside.vue';</script>
+import LowCodeAside from './aside/lowCodeAside.vue'
+import { useConfigStore } from '/src/stores/constant'
 
+const store = useConfigStore();
+</script>
 <template>
   <el-container class="h-screen">
-    <el-header class="border-b-2">
+    <el-header class="border-b-2" :height="store.headerHeight+'px'">
       aaaa
     </el-header>
     <el-container>
@@ -12,15 +15,15 @@ import LowCodeAside from './aside/LowCodeAside.vue';</script>
         <el-card class="!bg-gray-100 h-full">
         </el-card>
       </el-main>
-      <el-aside width="200px" class="border-l-1">右侧边栏</el-aside>
+      <el-aside class="border-l-1">右侧边栏</el-aside>
     </el-container>
   </el-container>
 </template>
 
 <script lang="ts">
 export default {
-  name: "WorkBench"
-};
+  name: 'WorkBench'
+}
 </script>
 
 <style scoped>
