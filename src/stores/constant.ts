@@ -4,7 +4,7 @@ import { ref } from 'vue'
 export const useConfigStore = createGlobalState(
   () => useStorage('config', {
     headerHeight: 100,
-    asideWidth: 48
+    asideWidth: 60
   }),
 )
 

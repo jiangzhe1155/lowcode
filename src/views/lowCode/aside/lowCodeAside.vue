@@ -23,8 +23,7 @@ console.log(h)
       </el-menu-item>
     </el-menu>
   </el-aside>
-  <el-card class="box-card absoluute" :style="{height:h+'px',left:store.asideWidth+'px'}">
-
+  <el-card class="box-card absolute" :style="{height:h+'px',left:store.asideWidth+'px'}">
   </el-card>
 </template>
 
