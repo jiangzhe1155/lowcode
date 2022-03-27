@@ -2,8 +2,10 @@
 
 import { computed, reactive, ref } from 'vue'
 import ElementRender from '../component/ElementRender.vue'
-const self = ref(null);
-
+import CardComponent from '@/views/lowCode/component/CardComponent.vue'
+import RootContainer from '@/views/lowCode/component/RootContainer.vue'
+import PageContainer from '@/views/lowCode/component/PageContainer.vue'
+import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 const renderJson = reactive({
     root:{
       id: 1,
@@ -25,18 +27,15 @@ const renderJson = reactive({
     ]
   }
 )
-
-const getPage = computed(()=> {
-  let res = Object.assign({},renderJson.root);
-  res.children = renderJson.components;
-  return res;
-})
-
 </script>
 
 <template>
-  <ElementRender :element="getPage">
-  </ElementRender>
+    <RootContainer>
+        <PageContainer>
+            <CardComponent>
+            </CardComponent>
+        </PageContainer>
+    </RootContainer>
 </template>
 
 <style scoped>

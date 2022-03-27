@@ -8,6 +8,8 @@ import "element-plus/dist/index.css";
 import PageContainer from '@/views/lowCode/component/PageContainer.vue'
 import RootContainer from '@/views/lowCode/component/RootContainer.vue'
 import ElementRender from '@/views/lowCode/component/ElementRender.vue'
+import CardComponent from '@/views/lowCode/component/CardComponent.vue'
+
 import mitt from 'mitt';
 
 const app = createApp(App);
@@ -21,3 +23,4 @@ app.config.globalProperties.mittBus = new mitt()
 app.component('PageContainer',PageContainer) // 注册组件
 app.component('RootContainer',RootContainer) // 注册组件
 app.component('ElementRender',ElementRender) // 注册组件
+app.component('CardComponent',CardComponent)

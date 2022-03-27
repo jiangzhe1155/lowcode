@@ -9,14 +9,19 @@ const props = defineProps({
     default:null
   }
 })
+
 const el = ref(null);
 const location = reactive(useElementBounding(el));
+
 </script>
 
 <template>
-  <div ref="el" class="h-full">
-    <VisualNodeHelper :location="location">
-    </VisualNodeHelper>
-    <slot></slot>
-  </div>
+  <VisualNodeHelper :location="location">
+  </VisualNodeHelper>
+  <el-card ref="el">
+    <template #header>
+      <p>一个卡片</p>
+    </template>
+  </el-card>
 </template>
+
