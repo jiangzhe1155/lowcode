@@ -18,7 +18,7 @@ const location = reactive(useElementBounding(el));
 
 <template>
   <el-container ref="el" class="h-full !bg-transparent !flex-col p-20px">
-    <VisualNodeHelper :location="location">
+    <VisualNodeHelper :location="location" element-id="2">
     </VisualNodeHelper>
     <slot></slot>
   </el-container>

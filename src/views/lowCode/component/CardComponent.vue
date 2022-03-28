@@ -13,15 +13,19 @@ const props = defineProps({
 const el = ref(null);
 const location = reactive(useElementBounding(el));
 
+const onClick = () => {
+  console.log('asdasdsadsad')
+}
 </script>
 
 <template>
-  <VisualNodeHelper :location="location">
+  <VisualNodeHelper :location="location" element-id="3">
   </VisualNodeHelper>
   <el-card ref="el">
     <template #header>
       <p>一个卡片</p>
     </template>
+    <el-button @click="onClick">asdasd</el-button>
   </el-card>
 </template>
 

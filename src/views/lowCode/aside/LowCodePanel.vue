@@ -53,7 +53,7 @@ onClickOutside(target, () => {
 
 <template>
   <div v-if="isVisible" :class="[isAffix ? 'relative' : 'absolute']" ref="target"
-       class='z-1'
+       class='z-100'
        :style="{left:(isAffix?0:store.asideWidth)+'px',height:getHeight,top:store.headerHeight,width:width+'px'}">
     <el-card class="h-full" :body-style="{padding:0}">
       <template #header>

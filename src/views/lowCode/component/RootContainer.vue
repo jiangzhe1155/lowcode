@@ -2,20 +2,21 @@
 import { defineProps, ref, reactive } from 'vue'
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 import { useElementBounding } from '@vueuse/core'
+
 const props = defineProps({
-  element:{
-    type:Object,
-    require:true,
-    default:null
+  element: {
+    type: Object,
+    require: true,
+    default: null
   }
 })
-const el = ref(null);
-const location = reactive(useElementBounding(el));
+const el = ref(null)
+const location = reactive(useElementBounding(el))
 </script>
 
 <template>
   <div ref="el" class="h-full">
-    <VisualNodeHelper :location="location">
+    <VisualNodeHelper :location="location" element-id='1'>
     </VisualNodeHelper>
     <slot></slot>
   </div>
