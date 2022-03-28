@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, ref } from 'vue'
+import { useElementHover } from '@vueuse/core'
 
 defineProps({
   location: {
@@ -12,13 +13,17 @@ defineProps({
   }
 })
 
+const myHoverableElement = ref()
+const isHovered = useElementHover(myHoverableElement)
+
 </script>
 
 <template>
   <div
-      class="absolute border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25"
+      ref="myHoverableElement"
+      :class="['absolute',{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':isHovered}]"
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}">
-    <p class="absolute -top-20px text-blue-400 text-sm">{{ name }}</p>
+    <p v-if="isHovered" class="absolute -top-20px text-blue-400 text-sm">{{ name }}</p>
   </div>
 </template>
 
