@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Workbench from '../views/lowCode/workbench.vue'
+import Workbench from '../views/lowCode/Workbench.vue'
 
 const routes = [
   {

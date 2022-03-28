@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { useConfigStore } from '@/stores/constant'
-import { computed, defineProps, defineEmits, ref} from 'vue'
-import { useWindowSize } from '@vueuse/core'
-import { onClickOutside } from '@vueuse/core'
+import { computed, defineEmits, defineProps, ref } from 'vue'
+import { onClickOutside, useWindowSize } from '@vueuse/core'
 
 const store = useConfigStore()
 const { height } = useWindowSize()
@@ -30,7 +29,6 @@ const props = defineProps({
 })
 
 const isAffix = ref(props.isAffix)
-
 const emit = defineEmits(['onPanelClose'])
 const getHeight = computed(() => {
   return (height.value - store.value.headerHeight) + 'px'
@@ -55,6 +53,7 @@ onClickOutside(target, () => {
 
 <template>
   <div v-if="isVisible" :class="[isAffix ? 'relative' : 'absolute']" ref="target"
+       class='z-1'
        :style="{left:(isAffix?0:store.asideWidth)+'px',height:getHeight,top:store.headerHeight,width:width+'px'}">
     <el-card class="h-full" :body-style="{padding:0}">
       <template #header>

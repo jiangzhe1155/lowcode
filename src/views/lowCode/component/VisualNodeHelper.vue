@@ -13,14 +13,14 @@ defineProps({
   }
 })
 
-const myHoverableElement = ref()
-const isHovered = useElementHover(myHoverableElement)
+const el = ref()
+const isHovered = useElementHover(el)
 
 </script>
 
 <template>
   <div
-      ref="myHoverableElement"
+      ref="el"
       :class="['absolute',{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':isHovered}]"
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}">
     <p v-if="isHovered" class="absolute -top-20px text-blue-400 text-sm">{{ name }}</p>
@@ -28,5 +28,4 @@ const isHovered = useElementHover(myHoverableElement)
 </template>
 
 <style>
-
 </style>

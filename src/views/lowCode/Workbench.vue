@@ -22,12 +22,6 @@ const store = useConfigStore()
   </el-container>
 </template>
 
-<script lang="ts">
-export default {
-  name: 'WorkBench'
-}
-</script>
-
 <style scoped>
 
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const activeNames = ref(['container','layout']);
+
+const activeNames = ref(['container', 'layout'])
 </script>
 
 <template>
@@ -12,10 +13,11 @@ const activeNames = ref(['container','layout']);
       <el-row :gutter="0">
         <el-col :span="8">
           <el-card shadow="hover" class="h-full">
-          <el-image class="w-56px h-56px" src="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg">
-          </el-image>
-          <p>行列容器</p>
-        </el-card>
+            <el-image class="w-56px h-56px"
+                      src="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg">
+            </el-image>
+            <p>行列容器</p>
+          </el-card>
         </el-col>
         <el-col :span="8">
           <el-card shadow="hover" class="h-full">
@@ -34,7 +36,8 @@ const activeNames = ref(['container','layout']);
       <el-row :gutter="0">
         <el-col :span="8">
           <el-card shadow="hover" class="h-full">
-            <el-image class="w-56px h-56px" src="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg">
+            <el-image class="w-56px h-56px"
+                      src="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg">
             </el-image>
             <p>卡片</p>
           </el-card>
