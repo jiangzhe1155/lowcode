@@ -33,12 +33,10 @@ const isShowHover = computed(() => {
 </script>
 
 <template>
-  {{isHovered}} {{!isClick}} {{ isMouseInArea() }} {{nodeState.clickedLocation.width}} {{nodeState.clickedLocation.height}} {{nodeState.clickedLocation.top}} {{nodeState.clickedLocation.left}} {{ x }} {{ y }}
   <div
       ref="el"
       class="absolute"
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
-      :class="{'pointer-events-none':isMouseInArea()}"
       @click="nodeStateOnClick(elementId,props.location)">
     <div v-if="isShowHover" class="w-full h-full"
          :class="['border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25',{'pointer-events-none':isMouseInArea()}]">
