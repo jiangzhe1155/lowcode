@@ -25,7 +25,6 @@ const renderJson = reactive({
     }
 )
 
-
 </script>
 
 <template>
