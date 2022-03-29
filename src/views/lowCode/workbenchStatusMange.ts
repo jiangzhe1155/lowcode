@@ -8,7 +8,9 @@ export const nodeState = reactive({
     width: 0,
     height: 0,
     left: 0
-  }
+  },
+  hoverNodeId: '',
+  hoverItemNodeId: ''
 })
 
 export const renderPage = reactive({
@@ -55,6 +57,7 @@ const buildElementMap = () => {
   }
   build(root, 0)
 }
+
 buildElementMap()
 
 export const {
@@ -91,6 +94,34 @@ export function compareLevel (elementId: string, clickedNodeId: string): number 
   return pre.level - next.level
 }
 
+export const nodeStateOnHover = (elementId: string, isHover: boolean) => {
+  if (!isHover) {
+    if (elementId === nodeState.hoverNodeId && !isHover) {
+      nodeState.hoverNodeId = ''
+    }
+    return
+  }
+  nodeState.hoverNodeId = elementId
+}
+
+export const nodeStateOnHoverItem = (elementId: string, isHover: boolean) => {
+  if (!isHover) {
+    if (elementId === nodeState.hoverItemNodeId && !isHover) {
+      nodeState.hoverItemNodeId = ''
+    }
+    return
+  }
+  nodeState.hoverItemNodeId = elementId
+}
+
+export const isShowHover = (elementId: string) => {
+  if (isClick(elementId)){
+    return false;
+  }
+  // 并且鼠标不在特定的区块
+  return (nodeState.hoverNodeId === elementId && canHover(elementId)) || nodeState.hoverItemNodeId === elementId
+}
+
 export const canHover = (elementId: string) => {
   if (isClick(elementId)) {
     // 已经被点击
@@ -104,3 +135,5 @@ export const canHover = (elementId: string) => {
 
   return true
 }
+
+

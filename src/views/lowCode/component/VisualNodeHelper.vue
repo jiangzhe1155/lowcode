@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { computed, defineProps, ref } from 'vue'
-import { useElementHover } from '@vueuse/core'
-import { canHover, isClick, nodeStateOnClick } from '@/views/lowCode/workbenchStatusMange'
+import { defineProps } from 'vue'
+import { vElementHover } from '@vueuse/components'
+
+import {
+  canHover,
+  isClick,
+  isShowHover,
+  nodeStateOnClick,
+  nodeStateOnHover
+} from '@/views/lowCode/workbenchStatusMange'
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
+import HoverItem from '@/views/lowCode/component/HoverItem.vue'
 
 const props = defineProps({
   location: {
@@ -19,30 +27,24 @@ const props = defineProps({
   }
 })
 
-const el = ref()
-const isHovered = useElementHover(el)
-
-const isShowHover = computed(() => {
-  // 并且鼠标不在特定的区块
-  return isHovered.value && canHover(props.elementId)
-})
-
-// 获取工具栏的矩形
-
+function onHover (state: boolean) {
+  nodeStateOnHover(props.elementId, state)
+}
 </script>
 
 <template>
   <div
-      ref="el"
+      v-element-hover="onHover"
       class="absolute"
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
       :class="{'pointer-events-none':!canHover(elementId)}"
       @click="nodeStateOnClick(elementId,props.location)">
-    <div v-if="isShowHover" class="w-full h-full"
-         :class="['border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25',{'pointer-events-none':!canHover(elementId)}]">
+    <div v-show="isShowHover(elementId)" class="w-full h-full"
+         :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':isShowHover(elementId)},{'pointer-events-none':!isShowHover(elementId)}]">
       <p class="absolute -top-20px text-blue-300 text-sm">{{ name }}</p>
     </div>
   </div>
+
   <div
       v-if="isClick(elementId)"
       class="z-2 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute"
@@ -53,8 +55,12 @@ const isShowHover = computed(() => {
         <el-button type="primary" size="small">wqewq</el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>page</el-dropdown-item>
-            <el-dropdown-item>root</el-dropdown-item>
+            <el-dropdown-item>
+              <HoverItem element-id="2">頁面</HoverItem>
+            </el-dropdown-item>
+            <el-dropdown-item>
+              <HoverItem element-id="1">root</HoverItem>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -97,5 +103,3 @@ const isShowHover = computed(() => {
   </div>
 </template>
 
-<style>
-</style>
