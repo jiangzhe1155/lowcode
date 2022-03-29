@@ -41,8 +41,8 @@ export const renderPage = reactive({
   },
   modelBoxes: []
 })
-
 export const elementMap = reactive({})
+export const locationMap = reactive({})
 
 const buildElementMap = () => {
   let root = renderPage.root
@@ -66,7 +66,7 @@ export const {
   sourceType
 } = useMouse()
 
-export const isMouseInArea = () => {
+export const isMouseInClickArea = () => {
   if (nodeState.clickedNodeId.length > 0) {
     let {
       top,
@@ -79,9 +79,9 @@ export const isMouseInArea = () => {
   return false
 }
 
-export const nodeStateOnClick = (elementId: string, localtion: any) => {
+export const nodeStateOnClick = (elementId: string) => {
   nodeState.clickedNodeId = elementId
-  nodeState.clickedLocation = localtion
+  nodeState.clickedLocation = locationMap[elementId]
 }
 
 export function isClick (elementId: string) {
@@ -115,8 +115,8 @@ export const nodeStateOnHoverItem = (elementId: string, isHover: boolean) => {
 }
 
 export const isShowHover = (elementId: string) => {
-  if (isClick(elementId)){
-    return false;
+  if (isClick(elementId)) {
+    return false
   }
   // 并且鼠标不在特定的区块
   return (nodeState.hoverNodeId === elementId && canHover(elementId)) || nodeState.hoverItemNodeId === elementId
@@ -129,7 +129,7 @@ export const canHover = (elementId: string) => {
   }
 
   // 2 存在被点击，但是层级在这个之上
-  if (isMouseInArea() && compareLevel(elementId, nodeState.clickedNodeId) < 0) {
+  if (nodeState.clickedNodeId.length > 0 && isMouseInClickArea() && compareLevel(elementId, nodeState.clickedNodeId) < 0) {
     return false
   }
 

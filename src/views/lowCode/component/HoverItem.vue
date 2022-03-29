@@ -2,7 +2,7 @@
 
 import { defineProps } from 'vue'
 import { vElementHover } from '@vueuse/components'
-import { nodeStateOnHover, nodeStateOnHoverItem } from '@/views/lowCode/workbenchStatusMange'
+import { nodeStateOnHover, nodeStateOnHoverItem,nodeStateOnClick } from '@/views/lowCode/workbenchStatusMange'
 
 const props = defineProps({
   elementId: {
@@ -18,7 +18,7 @@ function onHover (state: boolean) {
 </script>
 
 <template>
-  <div v-element-hover="onHover">
+  <div v-element-hover="onHover" @click="nodeStateOnClick(elementId)">
     <slot></slot>
   </div>
 </template>

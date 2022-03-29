@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from 'vue'
+import { defineProps, onMounted } from 'vue'
 import { vElementHover } from '@vueuse/components'
 
 import {
@@ -7,10 +7,12 @@ import {
   isClick,
   isShowHover,
   nodeStateOnClick,
-  nodeStateOnHover
+  nodeStateOnHover,
+  locationMap
 } from '@/views/lowCode/workbenchStatusMange'
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
+import { toReactive } from '@vueuse/core'
 
 const props = defineProps({
   location: {
@@ -30,6 +32,12 @@ const props = defineProps({
 function onHover (state: boolean) {
   nodeStateOnHover(props.elementId, state)
 }
+
+onMounted(() => {
+  // 上报位置
+  locationMap[props.elementId] = props.location
+})
+
 </script>
 
 <template>
@@ -38,13 +46,12 @@ function onHover (state: boolean) {
       class="absolute"
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
       :class="{'pointer-events-none':!canHover(elementId)}"
-      @click="nodeStateOnClick(elementId,props.location)">
+      @click="nodeStateOnClick(elementId)">
     <div v-show="isShowHover(elementId)" class="w-full h-full"
          :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':isShowHover(elementId)},{'pointer-events-none':!isShowHover(elementId)}]">
       <p class="absolute -top-20px text-blue-300 text-sm">{{ name }}</p>
     </div>
   </div>
-
   <div
       v-if="isClick(elementId)"
       class="z-2 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute"
