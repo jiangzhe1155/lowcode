@@ -1,12 +1,13 @@
 <script setup lang="ts">
 
-import { reactive } from 'vue'
 import CardComponent from '@/views/lowCode/component/CardComponent.vue'
 import RootContainer from '@/views/lowCode/component/RootContainer.vue'
 import PageContainer from '@/views/lowCode/component/PageContainer.vue'
+import { renderPage,elementMap } from '@/views/lowCode/workbenchStatusMange'
 </script>
 
 <template>
+
   <RootContainer>
     <PageContainer>
       <CardComponent>
