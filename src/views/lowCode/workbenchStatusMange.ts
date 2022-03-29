@@ -41,20 +41,21 @@ export const renderPage = reactive({
   },
   modelBoxes: []
 })
-export const elementMap = reactive({})
-export const locationMap = reactive({})
+export const elementMap = reactive(new Map())
+export const locationMap = reactive(new Map())
+
+const build = (root, level: number):void => {
+  root.level = level
+  elementMap.set(root.id, root)
+  if (root.children && root.children.length > 0) {
+    for (let child of root.children) {
+      build(child, level + 1)
+    }
+  }
+}
 
 const buildElementMap = () => {
   let root = renderPage.root
-  const build = (root, level: number) => {
-    root.level = level
-    elementMap[root.id] = root
-    if (root.children && root.children.length > 0) {
-      for (let child of root.children) {
-        build(child, level + 1)
-      }
-    }
-  }
   build(root, 0)
 }
 
@@ -81,7 +82,7 @@ export const isMouseInClickArea = () => {
 
 export const nodeStateOnClick = (elementId: string) => {
   nodeState.clickedNodeId = elementId
-  nodeState.clickedLocation = locationMap[elementId]
+  nodeState.clickedLocation = locationMap.get(elementId)
   // 清空 hover 选择
   nodeState.hoverItemNodeId = ''
 }
@@ -91,8 +92,8 @@ export function isClick (elementId: string) {
 }
 
 export function compareLevel (elementId: string, clickedNodeId: string): number {
-  let pre = elementMap[elementId]
-  let next = elementMap[clickedNodeId]
+  let pre = elementMap.get(elementId)
+  let next = elementMap.get(clickedNodeId)
   return pre.level - next.level
 }
 

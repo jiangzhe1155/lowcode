@@ -35,7 +35,7 @@ function onHover (state: boolean) {
 
 onMounted(() => {
   // 上报位置
-  locationMap[props.elementId] = props.location
+  locationMap.set(props.elementId,props.location)
 })
 
 </script>
