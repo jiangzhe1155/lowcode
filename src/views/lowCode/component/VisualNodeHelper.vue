@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, defineProps, reactive, ref } from 'vue'
-import { toReactive, useElementHover } from '@vueuse/core'
-import { nodeState, nodeStateOnClick, isMouseInArea, x, y } from '@/views/lowCode/workbenchStatusMange'
+import { computed, defineProps, ref } from 'vue'
+import { useElementHover } from '@vueuse/core'
+import { canHover, isClick, nodeStateOnClick } from '@/views/lowCode/workbenchStatusMange'
 
 let props = defineProps({
   location: {
@@ -21,13 +21,9 @@ let props = defineProps({
 const el = ref()
 const isHovered = useElementHover(el)
 
-const isClick = computed(() => {
-  return props.elementId === nodeState.clickedNodeId
-})
-
 const isShowHover = computed(() => {
   // 并且鼠标不在特定的区块
-  return isHovered.value && !isClick.value && !isMouseInArea()
+  return isHovered.value && canHover(props.elementId)
 })
 
 </script>
@@ -37,15 +33,16 @@ const isShowHover = computed(() => {
       ref="el"
       class="absolute"
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
+      :class="{'pointer-events-none':!canHover(elementId)}"
       @click="nodeStateOnClick(elementId,props.location)">
     <div v-if="isShowHover" class="w-full h-full"
-         :class="['border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25',{'pointer-events-none':isMouseInArea()}]">
-      <p class="absolute -top-20px text-blue-300 text-sm">{{ name }}</p>
+         :class="['border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25',{'pointer-events-none':!canHover(elementId)}]">
+      <p v-if="isShowHover" class="absolute -top-20px text-blue-300 text-sm">{{ name }}</p>
     </div>
   </div>
 
   <div
-      v-if="isClick"
+      v-if="isClick(elementId)"
       class="z-1 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute"
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
   >
