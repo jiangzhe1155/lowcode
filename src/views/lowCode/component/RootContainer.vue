@@ -16,7 +16,7 @@ const location = reactive(useElementBounding(el))
 
 <template>
   <div ref="el" class="h-full">
-    <VisualNodeHelper :location="location" element-id='1'>
+    <VisualNodeHelper :location="location" element-id='1' name="Root">
     </VisualNodeHelper>
     <slot></slot>
   </div>

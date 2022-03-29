@@ -39,7 +39,6 @@ onMounted(() => {
 })
 
 </script>
-
 <template>
   <div
       v-element-hover="onHover"
@@ -59,9 +58,12 @@ onMounted(() => {
   >
     <div class="z-10 absolute -top-26px -right-2px !pointer-events-auto bg-white flex justify-center ">
       <el-dropdown size="small" type="primary" trigger="hover" class="mr-2px">
-        <el-button type="primary" size="small">wqewq</el-button>
+        <el-button type="primary" size="small">{{ name }}</el-button>
         <template #dropdown>
           <el-dropdown-menu>
+            <el-dropdown-item>
+              <HoverItem element-id="3">卡片</HoverItem>
+            </el-dropdown-item>
             <el-dropdown-item>
               <HoverItem element-id="2">頁面</HoverItem>
             </el-dropdown-item>

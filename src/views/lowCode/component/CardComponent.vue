@@ -19,7 +19,7 @@ const onClick = () => {
 </script>
 
 <template>
-  <VisualNodeHelper :location="location" element-id="3">
+  <VisualNodeHelper :location="location" element-id="3" name="卡片">
   </VisualNodeHelper>
   <el-card ref="el">
     <template #header>

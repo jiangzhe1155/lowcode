@@ -13,12 +13,11 @@ const props = defineProps({
 
 const el = ref(null);
 const location = reactive(useElementBounding(el));
-
 </script>
 
 <template>
   <el-container ref="el" class="h-full !bg-transparent !flex-col p-20px">
-    <VisualNodeHelper :location="location" element-id="2">
+    <VisualNodeHelper :location="location" element-id="2" name="Page">
     </VisualNodeHelper>
     <slot></slot>
   </el-container>

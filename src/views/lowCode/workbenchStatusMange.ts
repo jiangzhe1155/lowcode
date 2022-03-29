@@ -82,6 +82,8 @@ export const isMouseInClickArea = () => {
 export const nodeStateOnClick = (elementId: string) => {
   nodeState.clickedNodeId = elementId
   nodeState.clickedLocation = locationMap[elementId]
+  // 清空 hover 选择
+  nodeState.hoverItemNodeId = ''
 }
 
 export function isClick (elementId: string) {
@@ -129,7 +131,7 @@ export const canHover = (elementId: string) => {
   }
 
   // 2 存在被点击，但是层级在这个之上
-  if (nodeState.clickedNodeId.length > 0 && isMouseInClickArea() && compareLevel(elementId, nodeState.clickedNodeId) < 0) {
+  if (isMouseInClickArea() && compareLevel(elementId, nodeState.clickedNodeId) < 0) {
     return false
   }
 
