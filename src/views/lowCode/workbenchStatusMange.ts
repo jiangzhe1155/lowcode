@@ -9,6 +9,31 @@ export const nodeState = reactive({
     height: 0,
     left: 0
   },
+  renderPage: {
+    root: {
+      id: '1',
+      name: '页面',
+      type: 'RootContainer',
+      slots: [],
+      children: [
+        {
+          id: '2',
+          name: '通用容器',
+          type: 'PageContainer',
+          slots: [],
+          children: [
+            {
+              id: '1',
+              name: '卡片',
+              type: 'CardComponent',
+              slots: [],
+            }
+          ]
+        }
+      ]
+    },
+    modelBoxes: []
+  },
   elementMap: {
     '1': {
       level: 1
@@ -51,21 +76,22 @@ export function isClick (elementId: string) {
   return nodeState.clickedNodeId === elementId
 }
 
+export function compareLevel (elementId: string, clickedNodeId: string): number {
+  let pre = nodeState.elementMap[elementId]
+  let next = nodeState.elementMap[clickedNodeId]
+  return pre.level - next.level
+}
+
 export const canHover = (elementId: string) => {
   if (isClick(elementId)) {
     // 已经被点击
     return false
   }
-  // 1 没被点击
+
   // 2 存在被点击，但是层级在这个之上
-  if (!isMouseInArea()) {
-    return true
+  if (isMouseInArea() && compareLevel(elementId, nodeState.clickedNodeId) < 0) {
+    return false
   }
 
-  let clickElement = nodeState.elementMap[nodeState.clickedNodeId]
-  let next = nodeState.elementMap[elementId]
-  if (next.level > clickElement.level) {
-    return true
-  }
-  return false
+  return true
 }
