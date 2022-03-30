@@ -2,7 +2,7 @@ import { createGlobalState, useStorage } from '@vueuse/core'
 
 export const useConfigStore = createGlobalState(
   () => useStorage('config', {
-    headerHeight: 48,
+    headerHeight: 50,
     asideWidth: 60
   }),
 )
