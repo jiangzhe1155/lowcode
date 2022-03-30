@@ -23,18 +23,13 @@ const store = useConfigStore()
       <LowCodeAside></LowCodeAside>
       <el-main class="bg-gray-200 !p-0">
         <div class="relative h-full">
-          <el-scrollbar height="600">
-            <div ref="el"
-                 class="absolute left-16px top-16px bottom-16px right-16px !bg-gray-100 shadow border-solid border-1 overflow-visible	">
-              <VisualNodeHelper>
-              </VisualNodeHelper>
-              <OperationPanel>
-              </OperationPanel>
-
-            </div>
-          </el-scrollbar>
-
-
+          <div ref="el"
+               class="absolute left-16px top-16px bottom-16px right-16px !bg-gray-100 shadow border-solid border-1 overflow-visible	">
+            <VisualNodeHelper>
+            </VisualNodeHelper>
+            <OperationPanel>
+            </OperationPanel>
+          </div>
         </div>
 
         <!--                <div class="h-auto">-->
