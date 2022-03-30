@@ -1,65 +1,71 @@
 <script setup lang="ts">
-import { defineProps, onMounted } from 'vue'
+import { computed, defineProps, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { vElementHover } from '@vueuse/components'
 
-import {
-  canHover,
-  isClick,
-  isShowHover,
-  nodeStateOnClick,
-  nodeStateOnHover,
-  locationMap
-} from '@/views/lowCode/workbenchStatusMange'
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
+import {
+  nodeStateOnClick,
+  nodeState,
+  locationMap,
+  elementMap
+} from '@/views/lowCode/workbenchStatusMange'
+import { useMousePressed } from '@vueuse/core'
 
-const props = defineProps({
-  location: {
-    type: Object,
-    required: true
-  },
-  name: {
-    type: String,
-    default: '虚拟边框'
-  },
-  elementId: {
-    type: String,
-    default: '0'
+const styleCompute = computed(() => {
+  let location = locationMap.get(nodeState.currentHoveredId)
+  if (!location) {
+    return {
+      top: 0,
+      width: 0,
+      height: 0,
+      left: 0
+    }
+  }
+  return {
+    top: location.top-120 + 'px',
+    width: location.width + 'px',
+    height: location.height + 'px',
+    left: location.left-80 + 'px'
   }
 })
 
-function onHover (state: boolean) {
-  nodeStateOnHover(props.elementId, state)
-}
-
-onMounted(() => {
-  // 上报位置
-  locationMap.set(props.elementId,props.location)
+const clickStyleCompute = computed(() => {
+  let location = locationMap.get(nodeState.clickedNodeId)
+  if (!location) {
+    return {
+      top: 0,
+      width: 0,
+      height: 0,
+      left: 0
+    }
+  }
+  return {
+    top: location.top-120 + 'px',
+    width: location.width + 'px',
+    height: location.height + 'px',
+    transform: location.left-80 + 'px'
+  }
 })
 
 </script>
 <template>
   <div
-      v-element-hover="onHover"
+      v-if="nodeState.currentHoveredId && nodeState.currentHoveredId !==nodeState.clickedNodeId"
       class="absolute"
-      :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
-      :class="{'pointer-events-none':!canHover(elementId)}"
-      @click="nodeStateOnClick(elementId)">
-    <div v-show="isShowHover(elementId)"
-         :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':isShowHover(elementId)},{'pointer-events-none':!isShowHover(elementId)}]"
-      :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}" >
-
-      <p class="absolute -top-20px text-blue-300 text-sm">{{ name }}</p>
-    </div>
+      :style="styleCompute"
+      :class="[{'pointer-events-none':true},{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true}]">
+    <p class="absolute -top-20px text-blue-300 text-sm">{{ elementMap.get(nodeState.currentHoveredId).name }}</p>
   </div>
+
   <div
-      v-if="isClick(elementId)"
-      class="z-2 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute"
-      :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
+      v-if="nodeState.clickedNodeId"
+      class="pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
+      :style="clickStyleCompute"
   >
-    <div class="z-10 absolute -top-26px -right-2px !pointer-events-auto bg-white flex justify-center ">
+    <div class="absolute -top-26px -right-2px !pointer-events-auto bg-white flex justify-center ">
       <el-dropdown size="small" type="primary" trigger="hover" class="mr-2px">
-        <el-button type="primary" size="small">{{ name }}</el-button>
+        <el-button type="primary" size="small">{{ elementMap.get(nodeState.clickedNodeId).name }}</el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>
@@ -74,6 +80,7 @@ onMounted(() => {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+
       <el-button-group type="primary" size="small">
         <el-tooltip
             effect="dark"
