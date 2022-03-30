@@ -12,7 +12,6 @@ import {
 } from '@/views/lowCode/workbenchStatusMange'
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
-import { toReactive } from '@vueuse/core'
 
 const props = defineProps({
   location: {
@@ -46,8 +45,10 @@ onMounted(() => {
       :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}"
       :class="{'pointer-events-none':!canHover(elementId)}"
       @click="nodeStateOnClick(elementId)">
-    <div v-show="isShowHover(elementId)" class="w-full h-full"
-         :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':isShowHover(elementId)},{'pointer-events-none':!isShowHover(elementId)}]">
+    <div v-show="isShowHover(elementId)"
+         :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':isShowHover(elementId)},{'pointer-events-none':!isShowHover(elementId)}]"
+      :style="{top:location.top+'px',width:location.width+'px',height:location.height+'px',left:location.left+'px'}" >
+
       <p class="absolute -top-20px text-blue-300 text-sm">{{ name }}</p>
     </div>
   </div>

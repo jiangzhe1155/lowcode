@@ -16,7 +16,7 @@ const location = reactive(useElementBounding(el));
 </script>
 
 <template>
-  <el-container ref="el" class="h-full !bg-transparent !flex-col p-20px">
+  <el-container ref="el" class="space-y-6 h-full !bg-transparent !flex-col p-20px">
     <VisualNodeHelper :location="location" element-id="2" name="Page">
     </VisualNodeHelper>
     <slot></slot>

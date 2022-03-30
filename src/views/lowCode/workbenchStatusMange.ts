@@ -30,7 +30,13 @@ export const renderPage = reactive({
         children: [
           {
             id: '3',
-            name: '卡片',
+            name: '卡片1',
+            type: 'CardComponent',
+            level: 2,
+            slots: [],
+          },{
+            id: '4',
+            name: '卡片2',
             type: 'CardComponent',
             level: 2,
             slots: [],
