@@ -1,5 +1,5 @@
 import { computed, reactive } from 'vue'
-import { useMouse } from '@vueuse/core'
+import { useMouse, usePointer } from '@vueuse/core'
 
 export const nodeState = reactive({
   clickedNodeId: '',
@@ -16,6 +16,12 @@ export const nodeState = reactive({
       return nodeState.hoverItemNodeId
     }
     return nodeState.hoverNodeId[nodeState.hoverNodeId.length - 1]
+  }),
+  pressNodeId: '',
+  pressX: 0,
+  pressY: 0,
+  isDrag: computed(() => {
+    return nodeState.pressNodeId.length>0 && !(nodeState.pressX === x.value && nodeState.pressY === y.value)
   })
 })
 
@@ -48,7 +54,7 @@ export const renderPage = reactive({
             slots: [],
           }
         ]
-      },{
+      }, {
         id: '5',
         name: '卡片3',
         type: 'CardComponent',
@@ -83,8 +89,8 @@ buildElementMap()
 export const {
   x,
   y,
-  sourceType
-} = useMouse({ touch: false })
+  pressure
+} = usePointer()
 
 export const nodeStateOnClick = (elementId: string) => {
   nodeState.clickedNodeId = elementId
@@ -98,7 +104,7 @@ export function compareLevel (elementId: string, clickedNodeId: string): number 
 }
 
 export const nodeStateOnHover = (elementId: string, isHover: boolean) => {
-  console.log(elementId + '\t' + isHover)
+  // console.log(elementId + '\t' + isHover)
   if (!isHover) {
     // if (elementId === nodeState.hoverNodeId && !isHover) {
     //   nodeState.hoverNodeId = ''

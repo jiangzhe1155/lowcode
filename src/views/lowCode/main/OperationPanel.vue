@@ -6,19 +6,14 @@ import PageContainer from '@/views/lowCode/component/PageContainer.vue'
 import { nodeState, nodeStateOnClick } from '@/views/lowCode/workbenchStatusMange'
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 
-import { ref } from 'vue'
-import { useMousePressed } from '@vueuse/core'
-
 const onCLick = () => {
   nodeStateOnClick(nodeState.currentHoveredId)
 }
-const el = ref(null)
 
-const { pressed } = useMousePressed({ target: el })
 </script>
 <template>
   <RootContainer :element="{id:'1'}" @click="onCLick">
-    <PageContainer  :element="{id:'2'}">
+    <PageContainer :element="{id:'2'}">
       <CardComponent :element="{id:'3'}">
       </CardComponent>
       <CardComponent :element="{id:'4'}">
