@@ -172,14 +172,15 @@ const directionStyle = computed(() => {
   <div
       v-if="nodeState.isDrag"
       ref="el"
-      class="absolute bg-gray-300 bg-opacity-50 "
+      class="absolute bg-gray-400 bg-opacity-50 "
       :style="pressStyleCompute"
   >
     <div
         class="fixed cursor-move select-none z-10 bg-gray-500 w-auto px-40px"
         :style="dragStyleCompute"
     >
-      <p class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
+      <p
+          class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
     </div>
   </div>
 
