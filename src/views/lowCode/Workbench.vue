@@ -5,7 +5,7 @@ import OperationPanel from '@/views/lowCode/main/OperationPanel.vue'
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 import { ref, watch, watchEffect } from 'vue'
 import { useMousePressed, useScroll } from '@vueuse/core'
-import { nodeState, x, y } from './workbenchStatusMange'
+import { nodeState, nodeStateOnClick, x, y } from './workbenchStatusMange'
 
 const el = ref<HTMLElement | null>(null)
 const {
@@ -19,7 +19,9 @@ watch(pressed, (n) => {
     nodeState.pressNodeId = nodeState.currentHoveredId
     nodeState.pressX = x.value
     nodeState.pressY = y.value
+
   } else {
+    nodeStateOnClick(nodeState.pressNodeId);
     nodeState.pressNodeId = ''
     nodeState.pressX = 0
     nodeState.pressY = 0

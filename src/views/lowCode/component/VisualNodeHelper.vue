@@ -63,7 +63,7 @@ const pressStyleCompute = computed(() => {
 
 const dragStyleCompute = computed(() => {
   return {
-    left: x.value - 20 + 'px',
+    left: x.value - 10 + 'px',
     top: y.value - 10 + 'px',
   }
 })
@@ -172,19 +172,16 @@ const directionStyle = computed(() => {
   <div
       v-if="nodeState.isDrag"
       ref="el"
-      class="absolute bg-gray-200 bg-opacity-50 "
+      class="absolute bg-gray-300 bg-opacity-50 "
       :style="pressStyleCompute"
   >
     <div
-        class="fixed cursor-move select-none z-10"
+        class="fixed cursor-move select-none z-10 bg-gray-500 w-auto px-40px"
         :style="dragStyleCompute"
-    >👋 Drag me!
-      <div class="opacity-50">
-        I am at {{ Math.round(x) }}, {{ Math.round(y) }}
-      </div>
+    >
+      <p class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
     </div>
   </div>
-
 
 </template>
 
