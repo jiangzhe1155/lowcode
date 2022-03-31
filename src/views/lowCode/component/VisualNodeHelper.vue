@@ -13,7 +13,6 @@ import {
 import { toReactive, useMousePressed } from '@vueuse/core'
 import { Num } from 'windicss/types/lang/tokens'
 
-
 const props = defineProps({
   scrollY: {
     type: Number,
@@ -33,10 +32,10 @@ const styleCompute = computed(() => {
     }
   }
   return {
-    top: location.top-70-1 +props.scrollY+ 'px',
+    top: location.top - 70 - 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
-    left: location.left-80-1  + 'px'
+    left: location.left - 80 - 1 + 'px'
   }
 })
 
@@ -51,10 +50,17 @@ const clickStyleCompute = computed(() => {
     }
   }
   return {
-    top: location.top-70-1 + props.scrollY + 'px',
+    top: location.top - 70 - 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
-    left: location.left-80-1  + 'px'
+    left: location.left - 80 - 1 + 'px'
+  }
+})
+
+const directionStyle = computed(() => {
+  let location = locationMap.get(nodeState.clickedNodeId)
+  return {
+    '-top-26px':location.top > 100
   }
 })
 
@@ -73,7 +79,9 @@ const clickStyleCompute = computed(() => {
       class="pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyleCompute"
   >
-    <div class="z-20 absolute -top-26px -right-2px !pointer-events-auto bg-white flex justify-center ">
+    <div class="absolute -right-2px !pointer-events-auto bg-white flex justify-center "
+         :class="directionStyle"
+    >
       <el-dropdown size="small" type="primary" trigger="hover" class="mr-2px">
         <el-button type="primary" size="small">{{ elementMap.get(nodeState.clickedNodeId).name }}</el-button>
         <template #dropdown>

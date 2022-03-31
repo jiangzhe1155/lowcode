@@ -26,13 +26,11 @@ const store = useConfigStore()
             class="relative  h-full shadow border-solid border-1">
           <div
               ref="el"
-               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-scroll overflow-x-hidden">
-            <div class="absolute w-full h-full">
-              <VisualNodeHelper :scrollY="y">
-              </VisualNodeHelper>
-              <OperationPanel>
-              </OperationPanel>
-            </div>
+              class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-scroll overflow-x-hidden">
+            <VisualNodeHelper :scroll-y="y">
+            </VisualNodeHelper>
+            <OperationPanel>
+            </OperationPanel>
           </div>
         </div>
 
