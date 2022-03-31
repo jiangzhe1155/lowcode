@@ -176,10 +176,10 @@ const directionStyle = computed(() => {
       :style="pressStyleCompute"
   >
     <div
-        class="fixed "
+        class="fixed cursor-move select-none z-10"
         :style="dragStyleCompute"
     >👋 Drag me!
-      <div class="text-sm opacity-50 select-none cursor-move z-10">
+      <div class="opacity-50">
         I am at {{ Math.round(x) }}, {{ Math.round(y) }}
       </div>
     </div>

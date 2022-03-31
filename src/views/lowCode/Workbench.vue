@@ -30,8 +30,8 @@ watch(pressed, (n) => {
 </script>
 <template>
   <el-container class="h-screen">
-    <el-header class="!border-b-2 !z-100" :height="store.headerHeight+'px'">
-      {{ x }} {{ y }} {{ nodeState }}{{ pressed }} {{nodeState.isDrag}}
+    <el-header class="!border-b-2" :height="store.headerHeight+'px'">
+      {{ x }} {{ y }} {{ nodeState }}{{ pressed }} {{ nodeState.isDrag }}
     </el-header>
     <el-container>
       <LowCodeAside></LowCodeAside>
