@@ -94,6 +94,61 @@ const directionStyle = computed(() => {
   }
 })
 
+const dragInsertionStyleCompute = computed(() => {
+
+  let {
+    top,
+    width,
+    height,
+    left
+  } = locationMap.get(nodeState.dragElementId)
+  let direction = nodeState.dragDirection
+
+  if (direction == 'right') {
+    return {
+      width: '4px',
+      height: height + 'px',
+      left: left + width - 80 - 4 + 'px',
+      top: top - 70 + props.scrollY + 'px'
+    }
+  }
+
+  if (direction == 'left') {
+    return {
+      width: '4px',
+      height: height + 'px',
+      left: left - 80 + 'px',
+      top: top - 70 + props.scrollY + 'px'
+    }
+  }
+
+  if (direction == 'top') {
+    return {
+      height: '4px',
+      width: width + 'px',
+      left: left - 80 + 'px',
+      top: top - 70 + props.scrollY + 'px'
+    }
+  }
+
+  if (direction == 'bottom') {
+    return {
+      height: '4px',
+      width: width + 'px',
+      left: left - 80 + 'px',
+      top: top - 70 + height + props.scrollY - 4 + 'px'
+    }
+  }
+
+  return {
+    height: height + 'px',
+    width: width + 'px',
+    left: left - 80 + 'px',
+    top: top - 70 + props.scrollY - 4 + 'px'
+  }
+})
+
+
 </script>
 
 <template>
@@ -179,10 +234,22 @@ const directionStyle = computed(() => {
     <div
         class="fixed cursor-move select-none z-10 bg-gray-500 w-auto px-40px"
         :style="dragStyleCompute"
-    ><p
-        class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
+    ><p class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
     </div>
+
+
   </div>
+
+  <div
+      v-if="nodeState.isDrag && nodeState.isShowInsertion"
+      class="absolute"
+      :class="{'bg-blue-500':nodeState.dragDirection !== 'center',
+           'bg-blue-600 bg-opacity-50':nodeState.dragDirection === 'center'
+        }"
+      :style="dragInsertionStyleCompute"
+  >
+  </div>
+
 
 </template>
 

@@ -1,4 +1,4 @@
-import { computed, reactive, watch, watchEffect } from 'vue'
+import { computed, reactive, UnwrapRef, watch, watchEffect } from 'vue'
 import { useMouse, usePointer } from '@vueuse/core'
 
 export const nodeState = reactive({
@@ -23,7 +23,28 @@ export const nodeState = reactive({
   isDrag: computed(() => {
     return nodeState.pressNodeId.length > 0 && !(nodeState.pressX === x.value && nodeState.pressY === y.value)
   }),
-  dragElementId: null
+  dragElementId: null,
+  dragDirection: null,
+  isShowInsertion: computed(() => {
+    if (!nodeState.dragElementId) {
+      return false
+    }
+
+    // 如果是子元素 不允許
+    if (isSubElement(nodeState.pressNodeId, nodeState.dragElementId)) {
+      return false
+    }
+
+    if (nodeState.dragDirection === 'center') {
+      // 如果这个容器已经存在子元素时
+      if (elementMap.get(nodeState.dragElementId).children) {
+        return false
+      }
+
+    }
+
+    return true
+  })
 })
 
 export const renderPage = reactive({
@@ -82,6 +103,23 @@ export const renderPage = reactive({
 
 export const elementMap = reactive(new Map())
 export const locationMap = reactive(new Map())
+
+const isSubElement = (pressNodeId: string, dragElementId: string) => {
+  if (pressNodeId === dragElementId) {
+    return true
+  }
+
+  let element = elementMap.get(pressNodeId)
+  if (element.children) {
+    for (let child of element.children) {
+      if (isSubElement(child.id, dragElementId)) {
+        return true
+      }
+    }
+  }
+
+  return false
+}
 
 const build = (root, level: number): void => {
   root.level = level
