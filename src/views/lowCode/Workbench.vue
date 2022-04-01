@@ -5,7 +5,7 @@ import OperationPanel from '@/views/lowCode/main/OperationPanel.vue'
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 import { ref, watch, watchEffect } from 'vue'
 import { useMousePressed, useScroll } from '@vueuse/core'
-import { nodeState, nodeStateOnClick, x, y } from './workbenchStatusMange'
+import { nodeState, nodeStateOnClick, onDragEnd, onStartSelect, x, y } from './workbenchStatusMange'
 
 const el = ref<HTMLElement | null>(null)
 const {
@@ -16,15 +16,9 @@ const { pressed } = useMousePressed({ target: el })
 const store = useConfigStore()
 watch(pressed, (n) => {
   if (n) {
-    nodeState.pressNodeId = nodeState.currentHoveredId
-    nodeState.pressX = x.value
-    nodeState.pressY = y.value
-
+    onStartSelect()
   } else {
-    nodeStateOnClick(nodeState.pressNodeId);
-    nodeState.pressNodeId = ''
-    nodeState.pressX = 0
-    nodeState.pressY = 0
+    onDragEnd()
   }
 })
 
@@ -38,7 +32,7 @@ watch(pressed, (n) => {
     <el-container>
       <LowCodeAside></LowCodeAside>
       <el-main class="bg-gray-200 !p-0">
-        <div class="relative  h-full shadow border-solid border-1">
+        <div class="relative h-full shadow border-solid border-1">
           <div
               ref="el"
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-scroll overflow-x-hidden">

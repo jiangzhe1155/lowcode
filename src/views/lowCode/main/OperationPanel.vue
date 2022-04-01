@@ -17,10 +17,21 @@ const onCLick = () => {
       <CardComponent :element="{id:'3'}">
       </CardComponent>
       <CardComponent :element="{id:'4'}">
+        <CardComponent :element="{id:'5'}">
+        </CardComponent>
       </CardComponent>
     </PageContainer>
-    <CardComponent :element="{id:'5'}">
+    <CardComponent :element="{id:'6'}">
     </CardComponent>
+
+<!--    <el-row :gutter="20">-->
+<!--      <el-col :span="12" class="">-->
+<!--        <div class="!bg-red-500 h-full"/>-->
+<!--      </el-col>-->
+<!--      <el-col :span="12" class="">-->
+<!--        <div class="!bg-red-500 h-full"/>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
   </RootContainer>
 </template>
 

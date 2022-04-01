@@ -26,7 +26,7 @@ function onHover (state: boolean) {
 </script>
 
 <template>
-  <div ref="el" v-element-hover="onHover" class="h-full">
+  <div ref="el" v-element-hover="onHover" class="!min-h-100vh flex !flex-col">
     <slot></slot>
   </div>
 </template>

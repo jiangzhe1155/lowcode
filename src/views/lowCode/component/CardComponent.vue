@@ -14,6 +14,7 @@ const props = defineProps({
 })
 
 const el = ref(null)
+
 const location = reactive(useElementBounding(el))
 
 onMounted(() => {
@@ -36,7 +37,7 @@ function onHover (state: boolean) {
     <template #header>
       <p>一个卡片</p>
     </template>
-    <el-button @click="onClick">asdasd</el-button>
+    <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
   </el-card>
 </template>
 

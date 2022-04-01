@@ -10,7 +10,7 @@ import {
   locationMap,
   elementMap,
   x,
-  y
+  y, onDrag
 } from '@/views/lowCode/workbenchStatusMange'
 import { isClient, toReactive, useDraggable, useMousePressed } from '@vueuse/core'
 import { Num } from 'windicss/types/lang/tokens'
@@ -62,6 +62,7 @@ const pressStyleCompute = computed(() => {
 })
 
 const dragStyleCompute = computed(() => {
+  onDrag()
   return {
     left: x.value - 10 + 'px',
     top: y.value - 10 + 'px',
@@ -178,9 +179,8 @@ const directionStyle = computed(() => {
     <div
         class="fixed cursor-move select-none z-10 bg-gray-500 w-auto px-40px"
         :style="dragStyleCompute"
-    >
-      <p
-          class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
+    ><p
+        class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
     </div>
   </div>
 
