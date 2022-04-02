@@ -7,13 +7,14 @@ import { nodeState, nodeStateOnClick, renderPage } from '@/views/lowCode/workben
 import { computed, h, resolveComponent, watch } from 'vue'
 
 watch(renderPage, (n) => {
-  console.log('节点更新拉')
 })
 const onCLick = () => {
   nodeStateOnClick(nodeState.currentHoveredId)
 }
 
-const render = () => {
+const render = computed(() => {
+  console.log('节点更新拉')
+
   function doRender (node: any) {
     const resolve = resolveComponent(node.type)
     return h(resolve, { element: node }, () => {
@@ -22,7 +23,7 @@ const render = () => {
   }
 
   return doRender(renderPage.root)
-}
+})
 
 </script>
 

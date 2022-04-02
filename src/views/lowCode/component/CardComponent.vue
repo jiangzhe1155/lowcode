@@ -16,7 +16,7 @@ const el = ref(null)
 
 const location = reactive(useElementBounding(el))
 
-watch(location, (n) => {
+watch(location, (n,o) => {
   console.log('更新位置')
   locationMap.set(props.element.id, n)
 })
