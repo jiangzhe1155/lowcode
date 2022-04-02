@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import LowCodeAside from './aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
+import OperationPanel2 from '@/views/lowCode/main/OperationPanel2.vue'
 import OperationPanel from '@/views/lowCode/main/OperationPanel.vue'
+
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 import { ref, watch, watchEffect } from 'vue'
 import { useMousePressed, useScroll } from '@vueuse/core'
-import { nodeState, nodeStateOnClick, onDragEnd, onStartSelect, x, y,renderPage } from './workbenchStatusMange'
+import { nodeState, onDragEnd, onStartSelect, x, y, renderPage } from './workbenchStatusMange'
 
 const el = ref<HTMLElement | null>(null)
 const {
@@ -38,8 +40,8 @@ watch(pressed, (n) => {
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-scroll overflow-x-hidden">
             <VisualNodeHelper :scroll-y="scrollY">
             </VisualNodeHelper>
-            <OperationPanel>
-            </OperationPanel>
+            <OperationPanel2>
+            </OperationPanel2>
           </div>
         </div>
       </el-main>

@@ -148,7 +148,6 @@ const dragInsertionStyleCompute = computed(() => {
   }
 })
 
-
 </script>
 
 <template>

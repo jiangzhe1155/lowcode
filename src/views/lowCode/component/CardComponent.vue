@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted } from 'vue'
-import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
+import { defineProps, ref, reactive, onMounted, watch } from 'vue'
 import { useElementBounding } from '@vueuse/core'
 import { locationMap, nodeStateOnHover } from '@/views/lowCode/workbenchStatusMange'
 import { vElementHover } from '@vueuse/components'
@@ -17,9 +16,8 @@ const el = ref(null)
 
 const location = reactive(useElementBounding(el))
 
-onMounted(() => {
-  // 上报自己的位置
-  locationMap.set(props.element.id, location)
+watch(location, (n) => {
+  locationMap.set(props.element.id, n)
 })
 
 const onClick = () => {

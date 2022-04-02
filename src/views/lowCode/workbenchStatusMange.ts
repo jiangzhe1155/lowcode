@@ -1,4 +1,4 @@
-import { computed, reactive, UnwrapRef, watch, watchEffect } from 'vue'
+import { computed, nextTick, reactive, UnwrapRef, watch, watchEffect } from 'vue'
 import { useMouse, usePointer } from '@vueuse/core'
 
 export const nodeState = reactive({
@@ -37,7 +37,7 @@ export const nodeState = reactive({
 
     if (nodeState.dragDirection === 'center') {
       // 如果这个容器已经存在子元素时
-      if (elementMap.get(nodeState.dragElementId).children) {
+      if (elementMap.get(nodeState.dragElementId).children.length > 0) {
         return false
       }
     }
@@ -80,6 +80,7 @@ export const renderPage = reactive({
             type: 'CardComponent',
             level: 2,
             isContainer: false,
+            children: [],
             slots: [],
             supportDirection: ['top', 'bottom', 'center'],
           }, {
@@ -97,6 +98,7 @@ export const renderPage = reactive({
               type: 'CardComponent',
               level: 1,
               isContainer: false,
+              children: [],
               slots: [],
             }],
             slots: [],
@@ -110,6 +112,7 @@ export const renderPage = reactive({
         level: 1,
         isContainer: false,
         supportDirection: ['top', 'bottom', 'center'],
+        children: [],
         slots: [],
       }
     ]
@@ -301,27 +304,35 @@ function move (pressNodeId: string, dragElementId: string, dragDirection: string
   let element = elementMap.get(pressNodeId)
   let pElement = elementMap.get(element.pid)
   let i = pElement.children.indexOf(element)
-  pElement.children.splice(i, i)
+  pElement.children.splice(i, 1)
 
   let dragElement = elementMap.get(dragElementId)
-  let newParentElement = elementMap.get(dragElement.pid)
-  let j = newParentElement.children.indexOf(dragElement)
-  let shift = 0
-  if (dragDirection === 'bottom' || dragDirection === 'right') {
-    shift = 1
+  if (dragDirection === 'center') {
+    dragElement.children.push(element)
+  } else {
+    let newParentElement = elementMap.get(dragElement.pid)
+    let j = newParentElement.children.indexOf(dragElement)
+    let shift = 0
+    if (dragDirection === 'bottom' || dragDirection === 'right') {
+      shift = 1
+    }
+    newParentElement.children.splice(j + shift, 0, element)
   }
-  newParentElement.children.splice(j + shift, 0, element)
 }
 
 export const onDragEnd = () => {
   console.log('结束拖拽')
   if (nodeState.isShowInsertion) {
     move(nodeState.pressNodeId, nodeState.dragElementId, nodeState.dragDirection)
+    nodeStateOnClick(nodeState.pressNodeId)
+  }else{
+    nodeStateOnClick(nodeState.dragElementId)
   }
-  nodeStateOnClick(nodeState.dragElementId)
+
   nodeState.pressNodeId = ''
   nodeState.pressX = 0
   nodeState.pressY = 0
+  nodeState.dragElementId = ''
 }
 
 
