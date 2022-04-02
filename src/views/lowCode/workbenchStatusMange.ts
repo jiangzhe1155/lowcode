@@ -26,7 +26,7 @@ export const nodeState = reactive({
   dragElementId: null,
   dragDirection: null,
   isShowInsertion: computed(() => {
-    if (!nodeState.dragElementId) {
+    if (!nodeState.isDrag || !nodeState.dragElementId) {
       return false
     }
 
@@ -121,6 +121,7 @@ export const elementMap = reactive(new Map())
 export const locationMap = reactive(new Map())
 
 const isSubElement = (pressNodeId: string, dragElementId: string) => {
+
   if (pressNodeId === dragElementId) {
     return true
   }
@@ -295,9 +296,29 @@ export const onStartSelect = () => {
   nodeState.pressY = y.value
 }
 
+function move (pressNodeId: string, dragElementId: string, dragDirection: string) {
+  console.log('拖拽')
+  let element = elementMap.get(pressNodeId)
+  let pElement = elementMap.get(element.pid)
+  let i = pElement.children.indexOf(element)
+  pElement.children.splice(i, i)
+
+  let dragElement = elementMap.get(dragElementId)
+  let newParentElement = elementMap.get(dragElement.pid)
+  let j = newParentElement.children.indexOf(dragElement)
+  let shift = 0
+  if (dragDirection === 'bottom' || dragDirection === 'right') {
+    shift = 1
+  }
+  newParentElement.children.splice(j + shift, 0, element)
+}
+
 export const onDragEnd = () => {
   console.log('结束拖拽')
-  nodeStateOnClick(nodeState.pressNodeId)
+  if (nodeState.isShowInsertion) {
+    move(nodeState.pressNodeId, nodeState.dragElementId, nodeState.dragDirection)
+  }
+  nodeStateOnClick(nodeState.dragElementId)
   nodeState.pressNodeId = ''
   nodeState.pressX = 0
   nodeState.pressY = 0

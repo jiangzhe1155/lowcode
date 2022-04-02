@@ -5,7 +5,7 @@ import OperationPanel from '@/views/lowCode/main/OperationPanel.vue'
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 import { ref, watch, watchEffect } from 'vue'
 import { useMousePressed, useScroll } from '@vueuse/core'
-import { nodeState, nodeStateOnClick, onDragEnd, onStartSelect, x, y } from './workbenchStatusMange'
+import { nodeState, nodeStateOnClick, onDragEnd, onStartSelect, x, y,renderPage } from './workbenchStatusMange'
 
 const el = ref<HTMLElement | null>(null)
 const {
@@ -43,7 +43,7 @@ watch(pressed, (n) => {
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1">右侧边栏</el-aside>
+      <el-aside class="border-l-1">{{ renderPage }}</el-aside>
     </el-container>
   </el-container>
 </template>
