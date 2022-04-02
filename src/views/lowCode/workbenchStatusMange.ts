@@ -165,6 +165,7 @@ export const {
 } = usePointer()
 
 export const nodeStateOnClick = (elementId: string) => {
+  // console.log('点击', elementId)
   nodeState.clickedNodeId = elementId
   nodeState.hoverItemNodeId = ''
 }
@@ -309,14 +310,24 @@ function move (pressNodeId: string, dragElementId: string, dragDirection: string
   let dragElement = elementMap.get(dragElementId)
   if (dragDirection === 'center') {
     dragElement.children.push(element)
+    element.level = dragElement.level + 1
+    element.pid = dragElement.id
+
   } else {
     let newParentElement = elementMap.get(dragElement.pid)
+    element.level = newParentElement.level + 1
+    element.pid = newParentElement.id
+
     let j = newParentElement.children.indexOf(dragElement)
     let shift = 0
     if (dragDirection === 'bottom' || dragDirection === 'right') {
       shift = 1
     }
-    newParentElement.children.splice(j + shift, 0, element)
+    if (j + shift >= newParentElement.children.length) {
+      newParentElement.children.push(element)
+    } else {
+      newParentElement.children.splice(j + shift, 0, element)
+    }
   }
 }
 
@@ -325,7 +336,7 @@ export const onDragEnd = () => {
   if (nodeState.isShowInsertion) {
     move(nodeState.pressNodeId, nodeState.dragElementId, nodeState.dragDirection)
     nodeStateOnClick(nodeState.pressNodeId)
-  }else{
+  } else {
     nodeStateOnClick(nodeState.dragElementId)
   }
 

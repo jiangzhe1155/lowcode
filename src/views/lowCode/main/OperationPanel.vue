@@ -4,8 +4,11 @@ import CardComponent from '@/views/lowCode/component/CardComponent.vue'
 import RootContainer from '@/views/lowCode/component/RootContainer.vue'
 import PageContainer from '@/views/lowCode/component/PageContainer.vue'
 import { nodeState, nodeStateOnClick, renderPage } from '@/views/lowCode/workbenchStatusMange'
-import { h, resolveComponent } from 'vue'
+import { computed, h, resolveComponent, watch } from 'vue'
 
+watch(renderPage, (n) => {
+  console.log('节点更新拉')
+})
 const onCLick = () => {
   nodeStateOnClick(nodeState.currentHoveredId)
 }

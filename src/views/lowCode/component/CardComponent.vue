@@ -17,12 +17,9 @@ const el = ref(null)
 const location = reactive(useElementBounding(el))
 
 watch(location, (n) => {
+  console.log('更新位置')
   locationMap.set(props.element.id, n)
 })
-
-const onClick = () => {
-  console.log('asdasdsadsad')
-}
 
 function onHover (state: boolean) {
   nodeStateOnHover(props.element.id, state)
