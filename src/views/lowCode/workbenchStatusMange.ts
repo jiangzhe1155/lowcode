@@ -40,7 +40,12 @@ export const nodeState = reactive({
       if (elementMap.get(nodeState.dragElementId).children) {
         return false
       }
+    }
 
+    // 这个组件的父组件支持这个方向的操作
+    let i = elementMap.get(elementMap.get(nodeState.dragElementId).pid).supportDirection.indexOf(nodeState.dragDirection)
+    if (i < 0) {
+      return false
     }
 
     return true
@@ -50,35 +55,44 @@ export const nodeState = reactive({
 export const renderPage = reactive({
   root: {
     id: '1',
+    pid: '',
     name: '根节点',
     type: 'RootContainer',
     slots: [],
     level: 0,
     isContainer: true,
+    supportDirection: ['top', 'bottom', 'center'],
     children: [
       {
         id: '2',
+        pid: '1',
         name: '通用页面容器',
         type: 'PageContainer',
         slots: [],
         level: 1,
         isContainer: true,
+        supportDirection: ['top', 'bottom', 'center'],
         children: [
           {
             id: '3',
+            pid: '2',
             name: '卡片3',
             type: 'CardComponent',
             level: 2,
             isContainer: false,
             slots: [],
+            supportDirection: ['top', 'bottom', 'center'],
           }, {
             id: '4',
+            pid: '2',
             name: '卡片4',
             type: 'CardComponent',
             level: 2,
             isContainer: false,
+            supportDirection: ['top', 'bottom', 'center'],
             children: [{
               id: '5',
+              pid: '4',
               name: '卡片5',
               type: 'CardComponent',
               level: 1,
@@ -90,10 +104,12 @@ export const renderPage = reactive({
         ]
       }, {
         id: '6',
+        pid: '1',
         name: '卡片6',
         type: 'CardComponent',
         level: 1,
         isContainer: false,
+        supportDirection: ['top', 'bottom', 'center'],
         slots: [],
       }
     ]
