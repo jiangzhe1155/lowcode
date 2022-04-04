@@ -243,7 +243,7 @@ const dragInsertionStyleCompute = computed(() => {
   <div
       v-if="nodeState.isDrag"
       ref="el"
-      class="absolute bg-gray-400 bg-opacity-50 "
+      class="absolute bg-gray-400 bg-opacity-50 cursor-move select-none"
       :style="pressStyleCompute"
   >
     <div
@@ -255,7 +255,7 @@ const dragInsertionStyleCompute = computed(() => {
 
   <div
       v-if="nodeState.isDrag && nodeState.isShowInsertion"
-      class="absolute"
+      class="absolute cursor-move select-none"
       :class="{'bg-blue-500':nodeState.dragDirection !== 'center',
            'bg-blue-600 bg-opacity-50':nodeState.dragDirection === 'center'
         }"

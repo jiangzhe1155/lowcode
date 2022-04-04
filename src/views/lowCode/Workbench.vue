@@ -27,7 +27,6 @@ onLongPress(el, ()=>{
 watch(pressed, (n) => {
   console.log('按压了',n)
   if (n) {
-
   } else {
     onDragEnd()
     longPressed.value = false;
