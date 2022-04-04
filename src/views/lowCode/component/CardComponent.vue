@@ -1,8 +1,20 @@
 <script setup lang="ts">
-import { defineProps, ref, reactive, onMounted, watch } from 'vue'
+import {
+  defineProps,
+  ref,
+  reactive,
+  onMounted,
+  watch,
+  onUpdated,
+  onBeforeUpdate,
+  nextTick,
+  getCurrentInstance,
+  onDeactivated, toRefs, onActivated
+} from 'vue'
 import { useElementBounding } from '@vueuse/core'
-import { locationMap, nodeStateOnHover } from '@/views/lowCode/workbenchStatusMange'
+import { emitter, locationMap, nodeStateOnHover } from '@/views/lowCode/workbenchStatusMange'
 import { vElementHover } from '@vueuse/components'
+import useComponentHelp  from '@/views/lowCode/componentHelp'
 
 const props = defineProps({
   element: {
@@ -13,13 +25,9 @@ const props = defineProps({
 })
 
 const el = ref(null)
-
 const location = reactive(useElementBounding(el))
 
-watch(location, (n,o) => {
-  console.log('更新位置')
-  locationMap.set(props.element.id, n)
-})
+useComponentHelp(props,location)
 
 function onHover (state: boolean) {
   nodeStateOnHover(props.element.id, state)

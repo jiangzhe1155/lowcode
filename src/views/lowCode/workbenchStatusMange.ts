@@ -1,14 +1,14 @@
-import { computed, nextTick, reactive, UnwrapRef, watch, watchEffect } from 'vue'
+import { computed, getCurrentInstance, nextTick, onMounted, reactive, UnwrapRef, watch, watchEffect } from 'vue'
 import { useMouse, usePointer } from '@vueuse/core'
+import { v4 } from 'uuid'
+import mitt from 'mitt'
 
+export const emitter = mitt()
 export const nodeState = reactive({
   clickedNodeId: '',
-  clickedLocation: {
-    top: 0,
-    width: 0,
-    height: 0,
-    left: 0
-  },
+  clickLocation: computed(() => {
+    return locationMap.get(nodeState.clickedNodeId)
+  }),
   hoverNodeId: [],
   hoverItemNodeId: '',
   currentHoveredId: computed(() => {
@@ -17,14 +17,20 @@ export const nodeState = reactive({
     }
     return nodeState.hoverNodeId[nodeState.hoverNodeId.length - 1]
   }),
+  hoverLocation: computed(() => {
+    return locationMap.get(nodeState.currentHoveredId)
+  }),
   pressNodeId: '',
   pressX: 0,
   pressY: 0,
   isDrag: computed(() => {
-    return nodeState.pressNodeId.length > 0 && !(nodeState.pressX === x.value && nodeState.pressY === y.value)
+    return nodeState.pressNodeId?.length > 0 && !(nodeState.pressX === x.value && nodeState.pressY === y.value)
   }),
   dragElementId: null,
   dragDirection: null,
+  dragLocation: computed(() => {
+    return locationMap.get(nodeState.dragElementId)
+  }),
   isShowInsertion: computed(() => {
     if (!nodeState.isDrag || !nodeState.dragElementId) {
       return false
@@ -153,6 +159,7 @@ const build = (root, level: number): void => {
 
 const buildElementMap = () => {
   let root = renderPage.root
+  elementMap.clear()
   build(root, 0)
 }
 
@@ -264,7 +271,7 @@ function findInArea (x: number, y: number) {
   let targetLocation = null
   for (let location of locationMap) {
     let e = elementMap.get(location[0])
-    if (e.level <= level) {
+    if (!e || e.level <= level) {
       continue
     }
     let {
@@ -288,20 +295,19 @@ function findInArea (x: number, y: number) {
 }
 
 export const onDrag = () => {
-  console.log('拖拽中')
+  // console.log('拖拽中')
   // 获取层级最深 且在指定范围内的元素
   findInArea(x.value, y.value)
 }
 
 export const onStartSelect = () => {
-  console.log('开始选择')
+  // console.log('开始选择')
   nodeState.pressNodeId = nodeState.currentHoveredId
   nodeState.pressX = x.value
   nodeState.pressY = y.value
 }
 
 function move (pressNodeId: string, dragElementId: string, dragDirection: string) {
-  console.log('拖拽')
   let element = elementMap.get(pressNodeId)
   let pElement = elementMap.get(element.pid)
   let i = pElement.children.indexOf(element)
@@ -312,7 +318,6 @@ function move (pressNodeId: string, dragElementId: string, dragDirection: string
     dragElement.children.push(element)
     element.level = dragElement.level + 1
     element.pid = dragElement.id
-
   } else {
     let newParentElement = elementMap.get(dragElement.pid)
     element.level = newParentElement.level + 1
@@ -331,19 +336,66 @@ function move (pressNodeId: string, dragElementId: string, dragDirection: string
   }
 }
 
+export const onCopy = (elementId: string) => {
+  console.log('复制', elementId)
+  let element = elementMap.get(elementId)
+
+  function doCopy (element: any) {
+    let target = Object.assign({}, element)
+    target.id = v4()
+
+    target.children = target.children.map(e => doCopy(e))
+    return target
+  }
+
+  let res = doCopy(element)
+
+  let pElement = elementMap.get(element.pid)
+  let i = pElement.children.indexOf(element)
+  if (i + 1 >= pElement.children.length) {
+    pElement.children.push(res)
+  } else {
+    pElement.children.splice(i + 1, 0, res)
+  }
+  buildElementMap()
+  locationMap.clear()
+  emitter.emit('onUpdateElement');
+
+  setTimeout(() => {
+    nodeStateOnClick(res.id)
+  }, 200)
+}
+
+onMounted(() => {
+  const { proxy } = getCurrentInstance() as any
+
+})
+
+export const onDelete = (elementId: string) => {
+  console.log('删除', elementId)
+  let element = elementMap.get(elementId)
+  let pElement = elementMap.get(element.pid)
+  let i = pElement.children.indexOf(element)
+  pElement.children.splice(i, 1)
+  nodeState.clickedNodeId = ''
+  buildElementMap()
+  locationMap.clear()
+  emitter.emit('onUpdateElement');
+}
+
 export const onDragEnd = () => {
-  console.log('结束拖拽')
   if (nodeState.isShowInsertion) {
     move(nodeState.pressNodeId, nodeState.dragElementId, nodeState.dragDirection)
     nodeStateOnClick(nodeState.pressNodeId)
   } else {
-    nodeStateOnClick(nodeState.dragElementId)
+    // nodeStateOnClick(nodeState.dragElementId)
   }
 
   nodeState.pressNodeId = ''
   nodeState.pressX = 0
   nodeState.pressY = 0
   nodeState.dragElementId = ''
+  nodeState.dragDirection = ''
 }
 
 

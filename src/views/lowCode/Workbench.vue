@@ -5,9 +5,9 @@ import OperationPanel2 from '@/views/lowCode/main/OperationPanel2.vue'
 import OperationPanel from '@/views/lowCode/main/OperationPanel.vue'
 
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
-import { ref, watch} from 'vue'
+import { ref, watch } from 'vue'
 import { useMousePressed, useScroll } from '@vueuse/core'
-import { nodeState, onDragEnd, onStartSelect, x, y, renderPage, nodeStateOnClick } from './workbenchStatusMange'
+import { nodeState, onDragEnd, onStartSelect, x, y, renderPage, nodeStateOnClick,locationMap } from './workbenchStatusMange'
 
 const el = ref<HTMLElement | null>(null)
 const {
@@ -16,6 +16,7 @@ const {
 
 const { pressed } = useMousePressed({ target: el })
 const store = useConfigStore()
+
 watch(pressed, (n) => {
   if (n) {
     onStartSelect()
@@ -50,7 +51,7 @@ const onCLick = () => {
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1">{{ renderPage }}</el-aside>
+      <el-aside class="border-l-1">{{ locationMap }}</el-aside>
     </el-container>
   </el-container>
 </template>

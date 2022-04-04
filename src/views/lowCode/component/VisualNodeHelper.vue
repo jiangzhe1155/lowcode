@@ -1,5 +1,15 @@
 <script setup lang="ts">
-import { computed, defineProps, onBeforeUnmount, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import {
+  computed,
+  defineProps,
+  getCurrentInstance,
+  onBeforeUnmount,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+  watchEffect
+} from 'vue'
 import { vElementHover } from '@vueuse/components'
 
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
@@ -10,12 +20,15 @@ import {
   locationMap,
   elementMap,
   x,
-  y, onDrag
+  y, onDrag,
+  onCopy,
+  onDelete, renderPage
 } from '@/views/lowCode/workbenchStatusMange'
 import { isClient, toReactive, useDraggable, useMousePressed } from '@vueuse/core'
 import { Num } from 'windicss/types/lang/tokens'
 
 const el = ref<HTMLElement | null>(null)
+
 
 const props = defineProps({
   scrollY: {
@@ -26,7 +39,7 @@ const props = defineProps({
 })
 
 const styleCompute = computed(() => {
-  let location = locationMap.get(nodeState.currentHoveredId)
+  let location = nodeState.hoverLocation
   if (!location) {
     return {
       top: 0,
@@ -36,7 +49,7 @@ const styleCompute = computed(() => {
     }
   }
   return {
-    top: location.top - 70 - 1 + props.scrollY + 'px',
+    top: location.top - 70 + 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
     left: location.left - 80 - 1 + 'px'
@@ -70,7 +83,8 @@ const dragStyleCompute = computed(() => {
 })
 
 const clickStyleCompute = computed(() => {
-  let location = locationMap.get(nodeState.clickedNodeId)
+  console.log('获取点击样式')
+  let location = nodeState.clickLocation
   if (!location) {
     return {
       top: 0,
@@ -80,7 +94,7 @@ const clickStyleCompute = computed(() => {
     }
   }
   return {
-    top: location.top - 70 - 1 + props.scrollY + 'px',
+    top: location.top - 70 +1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
     left: location.left - 80 - 1 + 'px'
@@ -89,19 +103,21 @@ const clickStyleCompute = computed(() => {
 
 const directionStyle = computed(() => {
   let location = locationMap.get(nodeState.clickedNodeId)
+  if (!location){
+    return {}
+  }
   return {
     '-top-26px': location.top > 100
   }
 })
 
 const dragInsertionStyleCompute = computed(() => {
-
   let {
     top,
     width,
     height,
     left
-  } = locationMap.get(nodeState.dragElementId)
+  } = nodeState.dragLocation
   let direction = nodeState.dragDirection
 
   if (direction == 'right') {
@@ -163,7 +179,7 @@ const dragInsertionStyleCompute = computed(() => {
 
   <div
       v-if="nodeState.clickedNodeId && !nodeState.isDrag"
-      class="pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
+      class="z-2 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyleCompute"
   >
     <div
@@ -203,8 +219,8 @@ const dragInsertionStyleCompute = computed(() => {
             content="复制"
             :offset="5"
             placement="top">
-          <el-button>
-            <el-icon :size="16">
+          <el-button @click="onCopy(nodeState.clickedNodeId)">
+            <el-icon :size="16" >
               <copy-document/>
             </el-icon>
           </el-button>
@@ -214,8 +230,8 @@ const dragInsertionStyleCompute = computed(() => {
             content="移除"
             :offset="5"
             placement="top">
-          <el-button>
-            <el-icon :size="16">
+          <el-button @click="onDelete(nodeState.clickedNodeId)">
+            <el-icon :size="16" >
               <delete/>
             </el-icon>
           </el-button>
@@ -235,8 +251,6 @@ const dragInsertionStyleCompute = computed(() => {
         :style="dragStyleCompute"
     ><p class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
     </div>
-
-
   </div>
 
   <div
@@ -248,7 +262,6 @@ const dragInsertionStyleCompute = computed(() => {
       :style="dragInsertionStyleCompute"
   >
   </div>
-
 
 </template>
 
