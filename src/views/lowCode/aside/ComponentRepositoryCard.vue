@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-
+import ComponentCardItem from '@/views/lowCode/aside/ComponentCardItem.vue'
 const activeNames = ref(['container', 'layout'])
+
 </script>
 
 <template>
@@ -12,19 +13,13 @@ const activeNames = ref(['container', 'layout'])
       </template>
       <el-row :gutter="0">
         <el-col :span="8">
-          <el-card shadow="hover" class="h-full">
-            <el-image class="w-56px h-56px"
-                      src="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg">
-            </el-image>
-            <p>行列容器</p>
-          </el-card>
+          <ComponentCardItem
+              name="行列容器" img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
+                             type="RootContainer">
+          </ComponentCardItem>
         </el-col>
         <el-col :span="8">
-          <el-card shadow="hover" class="h-full">
-            <el-image class="w-56px h-56px" src="https://tianshu.alicdn.com/429f9a1d-3856-4e5c-8a9c-3013860c9708.png">
-            </el-image>
-            <p>页面</p>
-          </el-card>
+          <ComponentCardItem name="页面" img-url="https://tianshu.alicdn.com/429f9a1d-3856-4e5c-8a9c-3013860c9708.png" type="PageContainer"></ComponentCardItem>
         </el-col>
         <el-col :span="8"></el-col>
       </el-row>
@@ -33,14 +28,9 @@ const activeNames = ref(['container', 'layout'])
       <template #title>
         <p class="pl-20px">基础组件</p>
       </template>
-      <el-row :gutter="0">
+      <el-row >
         <el-col :span="8">
-          <el-card shadow="hover" class="h-full">
-            <el-image class="w-56px h-56px"
-                      src="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg">
-            </el-image>
-            <p>卡片</p>
-          </el-card>
+          <ComponentCardItem name="卡片" img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg" type="CardComponent"></ComponentCardItem>
         </el-col>
       </el-row>
     </el-collapse-item>

@@ -24,7 +24,7 @@ export const nodeState = reactive({
   pressX: 0,
   pressY: 0,
   isDrag: computed(() => {
-    return nodeState.pressNodeId?.length > 0 && !(nodeState.pressX === x.value && nodeState.pressY === y.value)
+    return (nodeState.pressNodeId?.length > 0 || nodeState.pressTypeId?.length > 0) && !(nodeState.pressX === x.value && nodeState.pressY === y.value)
   }),
   dragElementId: null,
   dragDirection: null,
@@ -55,6 +55,16 @@ export const nodeState = reactive({
     }
 
     return true
+  }),
+  asideHoverType: '',
+  pressTypeId: '',
+  currentCursorName: computed(() => {
+    if (nodeState.pressNodeId.length > 0) {
+      return elementMap.get(nodeState.pressNodeId).name
+    }
+    if (nodeState.pressTypeId.length > 0) {
+      return nodeState.pressTypeId
+    }
   })
 })
 
@@ -136,7 +146,7 @@ const isSubElement = (pressNodeId: string, dragElementId: string) => {
   }
 
   let element = elementMap.get(pressNodeId)
-  if (element.children) {
+  if (element && element.children) {
     for (let child of element.children) {
       if (isSubElement(child.id, dragElementId)) {
         return true
@@ -152,6 +162,7 @@ const build = (root, level: number): void => {
   elementMap.set(root.id, root)
   if (root.children && root.children.length > 0) {
     for (let child of root.children) {
+      child.pid = root.id
       build(child, level + 1)
     }
   }
@@ -295,14 +306,12 @@ function findInArea (x: number, y: number) {
 }
 
 export const onDrag = () => {
-  // console.log('拖拽中')
   // 获取层级最深 且在指定范围内的元素
   findInArea(x.value, y.value)
 }
 
 export const onStartSelect = () => {
   // console.log('开始选择')
-  nodeState.pressNodeId = nodeState.currentHoveredId
   nodeState.pressX = x.value
   nodeState.pressY = y.value
 }
@@ -359,7 +368,7 @@ export const onCopy = (elementId: string) => {
   }
   buildElementMap()
   locationMap.clear()
-  emitter.emit('onUpdateElement');
+  emitter.emit('onUpdateElement')
 
   setTimeout(() => {
     nodeStateOnClick(res.id)
@@ -380,12 +389,57 @@ export const onDelete = (elementId: string) => {
   nodeState.clickedNodeId = ''
   buildElementMap()
   locationMap.clear()
-  emitter.emit('onUpdateElement');
+  emitter.emit('onUpdateElement')
+}
+
+function add (pressTypeId: string, dragElementId: string, dragDirection: string) {
+  console.log('添加')
+  let element = {
+    id: v4(),
+    name: '卡片',
+    level: 0,
+    pid: '',
+    type: 'CardComponent',
+    isContainer: false,
+    children: [],
+    slots: [],
+    supportDirection: ['top', 'bottom', 'center'],
+  }
+
+  let dragElement = elementMap.get(dragElementId)
+  if (dragDirection === 'center') {
+    dragElement.children.push(element)
+    element.level = dragElement.level + 1
+    element.pid = dragElement.id
+  } else {
+    let newParentElement = elementMap.get(dragElement.pid)
+    element.level = newParentElement.level + 1
+    element.pid = newParentElement.id
+
+    let j = newParentElement.children.indexOf(dragElement)
+    let shift = 0
+    if (dragDirection === 'bottom' || dragDirection === 'right') {
+      shift = 1
+    }
+    if (j + shift >= newParentElement.children.length) {
+      newParentElement.children.push(element)
+    } else {
+      newParentElement.children.splice(j + shift, 0, element)
+    }
+  }
+
+  buildElementMap()
+  locationMap.clear()
+  emitter.emit('onUpdateElement')
 }
 
 export const onDragEnd = () => {
   if (nodeState.isShowInsertion) {
-    move(nodeState.pressNodeId, nodeState.dragElementId, nodeState.dragDirection)
+    if (nodeState.pressNodeId.length > 0) {
+      move(nodeState.pressNodeId, nodeState.dragElementId, nodeState.dragDirection)
+    } else if (nodeState.pressTypeId.length > 0) {
+      add(nodeState.pressTypeId, nodeState.dragElementId, nodeState.dragDirection)
+    }
     nodeStateOnClick(nodeState.pressNodeId)
   } else {
     // nodeStateOnClick(nodeState.dragElementId)
@@ -396,6 +450,7 @@ export const onDragEnd = () => {
   nodeState.pressY = 0
   nodeState.dragElementId = ''
   nodeState.dragDirection = ''
+  nodeState.pressTypeId = ''
 }
 
 

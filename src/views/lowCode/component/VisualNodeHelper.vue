@@ -29,7 +29,6 @@ import { Num } from 'windicss/types/lang/tokens'
 
 const el = ref<HTMLElement | null>(null)
 
-
 const props = defineProps({
   scrollY: {
     type: Number,
@@ -94,7 +93,7 @@ const clickStyleCompute = computed(() => {
     }
   }
   return {
-    top: location.top - 70 +1 + props.scrollY + 'px',
+    top: location.top - 70 + 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
     left: location.left - 80 - 1 + 'px'
@@ -103,7 +102,7 @@ const clickStyleCompute = computed(() => {
 
 const directionStyle = computed(() => {
   let location = locationMap.get(nodeState.clickedNodeId)
-  if (!location){
+  if (!location) {
     return {}
   }
   return {
@@ -220,7 +219,7 @@ const dragInsertionStyleCompute = computed(() => {
             :offset="5"
             placement="top">
           <el-button @click="onCopy(nodeState.clickedNodeId)">
-            <el-icon :size="16" >
+            <el-icon :size="16">
               <copy-document/>
             </el-icon>
           </el-button>
@@ -231,7 +230,7 @@ const dragInsertionStyleCompute = computed(() => {
             :offset="5"
             placement="top">
           <el-button @click="onDelete(nodeState.clickedNodeId)">
-            <el-icon :size="16" >
+            <el-icon :size="16">
               <delete/>
             </el-icon>
           </el-button>
@@ -241,20 +240,21 @@ const dragInsertionStyleCompute = computed(() => {
   </div>
 
   <div
-      v-if="nodeState.isDrag"
+      v-if="nodeState.pressNodeId.length > 0 && nodeState.isDrag"
       ref="el"
       class="absolute bg-gray-400 bg-opacity-50 cursor-move select-none"
       :style="pressStyleCompute"
   >
-    <div
-        class="fixed cursor-move select-none z-10 bg-gray-500 w-auto px-40px"
-        :style="dragStyleCompute"
-    ><p class="text-sm cursor-move">{{ elementMap.get(nodeState.pressNodeId).name }}</p>
-    </div>
+  </div>
+  <div
+      v-if="nodeState.isDrag"
+      class="fixed cursor-move select-none z-999 bg-gray-500 w-auto px-40px"
+      :style="dragStyleCompute"
+  ><p class="text-sm cursor-move">{{ nodeState.currentCursorName}}</p>
   </div>
 
   <div
-      v-if="nodeState.isDrag && nodeState.isShowInsertion"
+      v-if="nodeState.isShowInsertion"
       class="absolute cursor-move select-none"
       :class="{'bg-blue-500':nodeState.dragDirection !== 'center',
            'bg-blue-600 bg-opacity-50':nodeState.dragDirection === 'center'

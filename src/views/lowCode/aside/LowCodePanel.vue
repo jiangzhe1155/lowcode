@@ -44,7 +44,7 @@ const onAffix = () => {
 
 const target = ref(null)
 onClickOutside(target, () => {
-  if (props.isVisible) {
+  if (props.isVisible && !isAffix.value) {
     emit('onPanelClose')
   }
 })
@@ -52,9 +52,10 @@ onClickOutside(target, () => {
 </script>
 
 <template>
-  <div v-if="isVisible" :class="[isAffix ? 'relative' : 'absolute']" ref="target"
-       class='z-100'
-       :style="{left:(isAffix?0:store.asideWidth)+'px',height:getHeight,top:store.headerHeight,width:width+'px'}">
+  <div
+      v-show="isVisible" :class="[isAffix ? 'relative' : 'absolute']" ref="target"
+      class='z-100'
+      :style="{left:(isAffix?0:store.asideWidth)+'px',height:getHeight,top:store.headerHeight,width:width+'px'}">
     <el-card class="h-full" :body-style="{padding:0}">
       <template #header>
         <div class="flex justify-between">

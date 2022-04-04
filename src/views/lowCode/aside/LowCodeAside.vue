@@ -1,14 +1,24 @@
 <script setup lang="ts">
 import { Operation, PieChart } from '@element-plus/icons-vue'
 import { useConfigStore } from '@/stores/constant'
-import { reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
+import { emitter } from '@/views/lowCode/workbenchStatusMange'
 
 const store = useConfigStore()
 const state = reactive({
   treeTabShow: false,
   componentTabShow: false,
+})
+
+onMounted(() => {
+  emitter.on('onComponentPanelClose', () => {
+    state.componentTabShow = false
+  })
+  emitter.on('onComponentPanelOpen', () => {
+    state.componentTabShow = true
+  })
 })
 
 </script>

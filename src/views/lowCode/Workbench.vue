@@ -20,13 +20,14 @@ const store = useConfigStore()
 const longPressed = ref(false)
 onLongPress(el, ()=>{
   longPressed.value = true;
+  nodeState.pressNodeId = nodeState.currentHoveredId
   onStartSelect()
-}, { delay: 300 })
+}, { delay: 200 })
 
 
 watch(pressed, (n) => {
-  console.log('按压了',n)
   if (n) {
+
   } else {
     onDragEnd()
     longPressed.value = false;
@@ -41,7 +42,10 @@ const onCLick = () => {
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      {{ x }} {{ y }} {{ pressed }} {{ nodeState.isDrag }} {{longPressed}}
+      {{ x }} {{ y }}
+      是否显示条：{{nodeState.isShowInsertion}} 是否在拖拽：{{ nodeState.isDrag }} 拖拽id{{nodeState.dragElementId}}
+      {{nodeState.currentHoveredId}} {{nodeState.hoverNodeId}}
+      选择的type:{{nodeState.pressTypeId}}
     </el-header>
     <el-container>
       <LowCodeAside></LowCodeAside>
