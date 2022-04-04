@@ -6,7 +6,7 @@ import OperationPanel from '@/views/lowCode/main/OperationPanel.vue'
 
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 import { ref, watch } from 'vue'
-import { useMousePressed, useScroll } from '@vueuse/core'
+import { onLongPress, useMousePressed, useScroll } from '@vueuse/core'
 import { nodeState, onDragEnd, onStartSelect, x, y, renderPage, nodeStateOnClick,locationMap } from './workbenchStatusMange'
 
 const el = ref<HTMLElement | null>(null)
@@ -17,11 +17,20 @@ const {
 const { pressed } = useMousePressed({ target: el })
 const store = useConfigStore()
 
+const longPressed = ref(false)
+onLongPress(el, ()=>{
+  longPressed.value = true;
+  onStartSelect()
+}, { delay: 300 })
+
+
 watch(pressed, (n) => {
+  console.log('按压了',n)
   if (n) {
-    onStartSelect()
+
   } else {
     onDragEnd()
+    longPressed.value = false;
   }
 })
 
@@ -33,7 +42,7 @@ const onCLick = () => {
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      {{ x }} {{ y }} {{ nodeState }}{{ pressed }} {{ nodeState.isDrag }}
+      {{ x }} {{ y }} {{ pressed }} {{ nodeState.isDrag }} {{longPressed}}
     </el-header>
     <el-container>
       <LowCodeAside></LowCodeAside>
