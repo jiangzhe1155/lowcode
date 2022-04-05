@@ -9,12 +9,18 @@ import {
   onBeforeUpdate,
   nextTick,
   getCurrentInstance,
-  onDeactivated, toRefs, onActivated
+  onDeactivated, toRefs, onActivated, toRaw
 } from 'vue'
-import { useElementBounding } from '@vueuse/core'
-import { emitter, locationMap, nodeStateOnHover } from '@/views/lowCode/workbenchStatusMange'
+import { onLongPress, useElementBounding, useMousePressed } from '@vueuse/core'
+import {
+  emitter,
+  locationMap,
+  nodeStateOnHover,
+  elementMap,
+  nodeStateOnClick, nodeState, onStartSelect
+} from '@/views/lowCode/workbenchStatusMange'
 import { vElementHover } from '@vueuse/components'
-import useComponentHelp  from '@/views/lowCode/componentHelp'
+import useComponentHelp from '@/views/lowCode/componentHelp'
 
 const props = defineProps({
   element: {
@@ -26,11 +32,10 @@ const props = defineProps({
 
 const el = ref(null)
 const location = reactive(useElementBounding(el))
-
-useComponentHelp(props,location)
+const {onHover:onHover_}  = useComponentHelp(props, location)
 
 function onHover (state: boolean) {
-  nodeStateOnHover(props.element.id, state)
+  onHover_(state)
 }
 
 </script>

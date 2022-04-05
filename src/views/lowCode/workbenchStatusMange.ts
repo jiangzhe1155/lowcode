@@ -1,15 +1,31 @@
-import { computed, getCurrentInstance, nextTick, onMounted, reactive, UnwrapRef, watch, watchEffect } from 'vue'
+import {
+  computed,
+  getCurrentInstance,
+  nextTick,
+  onMounted,
+  reactive,
+  ref,
+  toRaw,
+  UnwrapRef,
+  watch,
+  watchEffect
+} from 'vue'
 import { useMouse, usePointer } from '@vueuse/core'
 import { v4 } from 'uuid'
 import mitt from 'mitt'
 
 export const emitter = mitt()
 export const nodeState = reactive({
+  hoverInfo:[],
+  currenHoverInfo:computed(()=>{
+    return nodeState.hoverInfo[nodeState.hoverInfo.length - 1]
+  }),
   clickedNodeId: '',
   clickLocation: computed(() => {
     return locationMap.get(nodeState.clickedNodeId)
   }),
   hoverNodeId: [],
+  hoverLocations:[],
   hoverItemNodeId: '',
   currentHoveredId: computed(() => {
     if (nodeState.hoverItemNodeId.length > 0) {
@@ -49,7 +65,11 @@ export const nodeState = reactive({
     }
 
     // 这个组件的父组件支持这个方向的操作
-    let i = elementMap.get(elementMap.get(nodeState.dragElementId).pid).supportDirection.indexOf(nodeState.dragDirection)
+    let pElement = elementMap.get(elementMap.get(nodeState.dragElementId).pid);
+    if (!pElement){
+      return false;
+    }
+    let i = pElement.supportDirection.indexOf(nodeState.dragDirection)
     if (i < 0) {
       return false
     }
@@ -68,7 +88,7 @@ export const nodeState = reactive({
   })
 })
 
-export const renderPage = reactive({
+export const renderPage = {
   root: {
     id: '1',
     pid: '',
@@ -114,6 +134,7 @@ export const renderPage = reactive({
               type: 'CardComponent',
               level: 1,
               isContainer: false,
+              supportDirection: ['top', 'bottom', 'center'],
               children: [],
               slots: [],
             }],
@@ -130,11 +151,21 @@ export const renderPage = reactive({
         supportDirection: ['top', 'bottom', 'center'],
         children: [],
         slots: [],
+      },{
+        id: '8',
+        pid: '1',
+        name: '對話框',
+        type: 'DialogComponent',
+        level: 1,
+        isContainer: true,
+        supportDirection: ['top', 'bottom', 'center'],
+        children: [],
+        slots: [],
       }
     ]
   },
   modelBoxes: []
-})
+}
 
 export const elementMap = reactive(new Map())
 export const locationMap = reactive(new Map())
@@ -172,15 +203,20 @@ const buildElementMap = () => {
   let root = renderPage.root
   elementMap.clear()
   build(root, 0)
+
+  console.log('gengx map',toRaw(elementMap))
+  window.parent.postMessage(
+    {
+      type: 'elementMapChange',
+      elementMap:toRaw(elementMap)
+    }, '*')
+
 }
 
 buildElementMap()
 
-export const {
-  x,
-  y,
-  pressure
-} = usePointer()
+export const x = ref(0);
+export const y = ref(0);
 
 export const nodeStateOnClick = (elementId: string) => {
   // console.log('点击', elementId)
@@ -194,13 +230,15 @@ export function compareLevel (elementId: string, clickedNodeId: string): number 
   return pre.level - next.level
 }
 
-export const nodeStateOnHover = (elementId: string, isHover: boolean) => {
+export const nodeStateOnHover = (element: any, isHover: boolean,location:any) => {
   // console.log(elementId + '\t' + isHover)
   if (!isHover) {
     nodeState.hoverNodeId.pop()
+    nodeState.hoverLocations.pop();
     return
   }
-  nodeState.hoverNodeId.push(elementId)
+  nodeState.hoverNodeId.push(element.id)
+  nodeState.hoverLocations.push(location)
 }
 
 export const nodeStateOnHoverItem = (elementId: string, isHover: boolean) => {
@@ -307,7 +345,8 @@ function findInArea (x: number, y: number) {
 
 export const onDrag = () => {
   // 获取层级最深 且在指定范围内的元素
-  findInArea(x.value, y.value)
+  console.log('移動中')
+  findInArea(x.value - 80, y.value - 70)
 }
 
 export const onStartSelect = () => {
@@ -316,7 +355,7 @@ export const onStartSelect = () => {
   nodeState.pressY = y.value
 }
 
-function move (pressNodeId: string, dragElementId: string, dragDirection: string) {
+export function move (pressNodeId: string, dragElementId: string, dragDirection: string) {
   let element = elementMap.get(pressNodeId)
   let pElement = elementMap.get(element.pid)
   let i = pElement.children.indexOf(element)
@@ -343,6 +382,7 @@ function move (pressNodeId: string, dragElementId: string, dragDirection: string
       newParentElement.children.splice(j + shift, 0, element)
     }
   }
+  buildElementMap()
 }
 
 export const onCopy = (elementId: string) => {
@@ -350,15 +390,14 @@ export const onCopy = (elementId: string) => {
   let element = elementMap.get(elementId)
 
   function doCopy (element: any) {
-    let target = Object.assign({}, element)
+    let target =Object.assign({},element);
     target.id = v4()
-
     target.children = target.children.map(e => doCopy(e))
     return target
   }
 
   let res = doCopy(element)
-
+  res = JSON.parse(JSON.stringify(res))
   let pElement = elementMap.get(element.pid)
   let i = pElement.children.indexOf(element)
   if (i + 1 >= pElement.children.length) {
@@ -370,9 +409,7 @@ export const onCopy = (elementId: string) => {
   locationMap.clear()
   emitter.emit('onUpdateElement')
 
-  setTimeout(() => {
-    nodeStateOnClick(res.id)
-  }, 200)
+  return res.id;
 }
 
 onMounted(() => {
@@ -392,7 +429,7 @@ export const onDelete = (elementId: string) => {
   emitter.emit('onUpdateElement')
 }
 
-function add (pressTypeId: string, dragElementId: string, dragDirection: string) {
+export function add (pressTypeId: string, dragElementId: string, dragDirection: string) {
   console.log('添加')
   let element = {
     id: v4(),
@@ -403,7 +440,7 @@ function add (pressTypeId: string, dragElementId: string, dragDirection: string)
     isContainer: false,
     children: [],
     slots: [],
-    supportDirection: ['top', 'bottom', 'center'],
+    supportDirection: ['top', 'bottom', 'center']
   }
 
   let dragElement = elementMap.get(dragElementId)
@@ -427,20 +464,25 @@ function add (pressTypeId: string, dragElementId: string, dragDirection: string)
       newParentElement.children.splice(j + shift, 0, element)
     }
   }
-
   buildElementMap()
   locationMap.clear()
   emitter.emit('onUpdateElement')
+  return element.id
 }
 
 export const onDragEnd = () => {
   if (nodeState.isShowInsertion) {
     if (nodeState.pressNodeId.length > 0) {
-      move(nodeState.pressNodeId, nodeState.dragElementId, nodeState.dragDirection)
+      nodeState.iframeWin.postMessage({
+        type:'elementMove',
+        info:{pressNodeId:nodeState.pressNodeId,dragElementId:nodeState.dragElementId,dragDirection:nodeState.dragDirection}
+      },"*")
     } else if (nodeState.pressTypeId.length > 0) {
-      add(nodeState.pressTypeId, nodeState.dragElementId, nodeState.dragDirection)
+      nodeState.iframeWin.postMessage({
+        type:'elementAdd',
+        info:{pressNodeId:nodeState.pressNodeId,dragElementId:nodeState.dragElementId,dragDirection:nodeState.dragDirection}
+      },"*")
     }
-    nodeStateOnClick(nodeState.pressNodeId)
   } else {
     // nodeStateOnClick(nodeState.dragElementId)
   }

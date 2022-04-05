@@ -1,25 +1,49 @@
-import { onBeforeUnmount, onMounted, onUnmounted, onUpdated, watch } from 'vue'
-import { elementMap, emitter, locationMap } from '@/views/lowCode/workbenchStatusMange'
+import { onBeforeUnmount, onMounted, onUnmounted, onUpdated, toRaw, toRefs, unref, watch } from 'vue'
+import { elementMap, emitter, locationMap, nodeStateOnHover } from '@/views/lowCode/workbenchStatusMange'
 
 export default function useComponentHelp (props: any, location: any) {
   onMounted(() => {
     emitter.on('onUpdateElement', () => {
       if (elementMap.has(props.element.id)) {
-        console.log('更新位置', props.element.id, location)
-        locationMap.set(props.element.id, location)
+        notifyLocationChange();
+        //
+        // locationMap.set(props.element.id, location)
+        // location.update()
       }
     })
   })
 
   onUpdated(() => {
-    locationMap.set(props.element.id, location)
-    location.update()
+    notifyLocationChange();
+    // locationMap.set(props.element.id, location)
+    // location.update()
   })
 
   watch(location, (n) => {
-    locationMap.set(props.element.id, location)
-    location.update()
+    notifyLocationChange();
+
+    // locationMap.set(props.element.id, location)
+    // location.update()
   })
 
-  return {}
+  function onHover (state: boolean) {
+    window.parent.postMessage(
+      {
+        type: 'onHover',
+        location: {left:location.left,top:location.top,width:location.width,height:location.height},
+        element:toRaw(elementMap.get(props.element.id)),
+        state:state
+      }, '*')
+  }
+
+  function notifyLocationChange(){
+    window.parent.postMessage(
+      {
+        type: 'locationChange',
+        location: {left:location.left,top:location.top,width:location.width,height:location.height},
+        elementId:props.element.id,
+      }, '*')
+  }
+
+  return {onHover}
 }

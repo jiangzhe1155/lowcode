@@ -20,9 +20,7 @@ import {
   locationMap,
   elementMap,
   x,
-  y, onDrag,
-  onCopy,
-  onDelete, renderPage
+  y, onDrag
 } from '@/views/lowCode/workbenchStatusMange'
 import { isClient, toReactive, useDraggable, useMousePressed } from '@vueuse/core'
 import { Num } from 'windicss/types/lang/tokens'
@@ -48,15 +46,15 @@ const styleCompute = computed(() => {
     }
   }
   return {
-    top: location.top - 70 + 1 + props.scrollY + 'px',
+    top: location.top + 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
-    left: location.left - 80 - 1 + 'px'
+    left: location.left  - 1 + 'px',
   }
 })
 
 const pressStyleCompute = computed(() => {
-  let location = locationMap.get(nodeState.pressNodeId)
+  let location =  locationMap.get(nodeState.pressNodeId)
   if (!location) {
     return {
       top: 0,
@@ -66,23 +64,23 @@ const pressStyleCompute = computed(() => {
     }
   }
   return {
-    top: location.top - 70 - 1 + props.scrollY + 'px',
+    top: location.top - 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
-    left: location.left - 80 - 1 + 'px'
+    left: location.left - 1 + 'px'
   }
 })
 
 const dragStyleCompute = computed(() => {
   onDrag()
   return {
-    left: x.value - 10 + 'px',
+    left: x.value - 10  + 'px',
     top: y.value - 10 + 'px',
   }
 })
 
 const clickStyleCompute = computed(() => {
-  console.log('获取点击样式')
+  // console.log('获取点击样式')
   let location = nodeState.clickLocation
   if (!location) {
     return {
@@ -93,10 +91,10 @@ const clickStyleCompute = computed(() => {
     }
   }
   return {
-    top: location.top - 70 + 1 + props.scrollY + 'px',
+    top: location.top  + 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
-    left: location.left - 80 - 1 + 'px'
+    left: location.left - 1 + 'px'
   }
 })
 
@@ -123,8 +121,8 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       width: '4px',
       height: height + 'px',
-      left: left + width - 80 - 4 + 'px',
-      top: top - 70 + props.scrollY + 'px'
+      left: left + width  - 4 + 'px',
+      top: top  + props.scrollY + 'px'
     }
   }
 
@@ -132,8 +130,8 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       width: '4px',
       height: height + 'px',
-      left: left - 80 + 'px',
-      top: top - 70 + props.scrollY + 'px'
+      left: left  + 'px',
+      top: top  + props.scrollY + 'px'
     }
   }
 
@@ -141,8 +139,8 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       height: '4px',
       width: width + 'px',
-      left: left - 80 + 'px',
-      top: top - 70 + props.scrollY + 'px'
+      left: left  + 'px',
+      top: top  + props.scrollY + 'px'
     }
   }
 
@@ -150,35 +148,49 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       height: '4px',
       width: width + 'px',
-      left: left - 80 + 'px',
-      top: top - 70 + height + props.scrollY - 4 + 'px'
+      left: left  + 'px',
+      top: top  + height + props.scrollY - 4 + 'px'
     }
   }
 
   return {
     height: height + 'px',
     width: width + 'px',
-    left: left - 80 + 'px',
-    top: top - 70 + props.scrollY - 4 + 'px'
+    left: left + 'px',
+    top: top  + props.scrollY - 4 + 'px'
   }
 })
+
+ const onCopy = ()=>{
+   nodeState.iframeWin.postMessage({
+     type:'elementCopy',
+     info:{clickedNodeId:nodeState.clickedNodeId}
+   },"*")
+}
+
+const onDelete = ()=>{
+  nodeState.iframeWin.postMessage({
+    type:'elementDelete',
+    info:{clickedNodeId:nodeState.clickedNodeId}
+  },"*")
+}
 
 </script>
 
 <template>
   <div
       v-if="nodeState.currentHoveredId && nodeState.currentHoveredId !==nodeState.clickedNodeId && !nodeState.isDrag"
-      class="absolute z-1"
+      class="absolute z-850 cursor-move"
       :style="styleCompute"
-      :class="[{'pointer-events-none':true},{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true}]">
+      :class="[{'pointer-events-none':!nodeState.isDrag},{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true}]">
     <div>
-      <p class="absolute -top-20px text-blue-300 text-sm">{{ elementMap.get(nodeState.currentHoveredId).name }}</p>
+      <p class="absolute -top-20px text-blue-300 text-sm">{{ elementMap.get(nodeState.currentHoveredId)?.name }}</p>
     </div>
   </div>
 
   <div
       v-if="nodeState.clickedNodeId && !nodeState.isDrag"
-      class="z-2 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
+      class="z-850 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyleCompute"
   >
     <div
@@ -186,7 +198,7 @@ const dragInsertionStyleCompute = computed(() => {
         :class="directionStyle"
     >
       <el-dropdown size="small" type="primary" trigger="hover" class="mr-2px">
-        <el-button type="primary" size="small">{{ elementMap.get(nodeState.clickedNodeId).name }}</el-button>
+        <el-button type="primary" size="small">{{ elementMap.has(nodeState.clickedNodeId) ?elementMap.get(nodeState.clickedNodeId).name:'' }}</el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>
@@ -218,7 +230,7 @@ const dragInsertionStyleCompute = computed(() => {
             content="复制"
             :offset="5"
             placement="top">
-          <el-button @click="onCopy(nodeState.clickedNodeId)">
+          <el-button @click="onCopy">
             <el-icon :size="16">
               <copy-document/>
             </el-icon>
@@ -229,7 +241,7 @@ const dragInsertionStyleCompute = computed(() => {
             content="移除"
             :offset="5"
             placement="top">
-          <el-button @click="onDelete(nodeState.clickedNodeId)">
+          <el-button @click="onDelete">
             <el-icon :size="16">
               <delete/>
             </el-icon>
@@ -242,22 +254,23 @@ const dragInsertionStyleCompute = computed(() => {
   <div
       v-if="nodeState.pressNodeId.length > 0 && nodeState.isDrag"
       ref="el"
-      class="absolute bg-gray-400 bg-opacity-50 cursor-move select-none"
+      class="absolute bg-gray-400 bg-opacity-50 select-none z-852"
       :style="pressStyleCompute"
   >
   </div>
+
   <div
       v-if="nodeState.isDrag"
-      class="fixed cursor-move select-none z-999 bg-gray-500 w-auto px-40px"
+      class="fixed cursor-move select-none bg-gray-500 w-auto px-40px z-1000"
       :style="dragStyleCompute"
-  ><p class="text-sm cursor-move">{{ nodeState.currentCursorName}}</p>
+  ><p class="text-sm">{{ nodeState.currentCursorName }}</p>
   </div>
 
   <div
       v-if="nodeState.isShowInsertion"
-      class="absolute cursor-move select-none"
+      class="absolute cursor-move select-none z-853"
       :class="{'bg-blue-500':nodeState.dragDirection !== 'center',
-           'bg-blue-600 bg-opacity-50':nodeState.dragDirection === 'center'
+           'bg-blue-600 bg-opacity-50':nodeState.dragDirection === 'center',
         }"
       :style="dragInsertionStyleCompute"
   >
