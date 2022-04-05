@@ -21,7 +21,6 @@ export default function useComponentHelp (props: any, location: any) {
 
   watch(location, (n) => {
     notifyLocationChange();
-
     // locationMap.set(props.element.id, location)
     // location.update()
   })
