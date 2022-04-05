@@ -2,11 +2,12 @@
 import {
   defineProps,
   ref,
-  reactive,
+  reactive, onMounted,
 
 } from 'vue'
 import { useElementBounding} from '@vueuse/core'
 import useComponentHelp from '@/views/lowCode/componentHelp'
+import { sortUserPlugins } from 'vite'
 
 const props = defineProps({
   element: {
@@ -26,11 +27,20 @@ const el = ref(null)
 // }
 const dialogVisible = ref(true)
 
+onMounted(()=>{
+  console.log(el)
+})
+
+const onOpen = ()=>{
+  console.log('打開了',el.value)
+  let elementsByClassName = document.getElementsByClassName("el-dialog")
+
+}
 </script>
 
 <template>
 <div>
-  <el-dialog v-model="dialogVisible" title="Tips" width="30%">
+  <el-dialog ref="el" v-model="dialogVisible" title="Tips" width="30%" @opened="onOpen($event)">
     <span>It's a draggable Dialog</span>
     <template #footer>
         <span class="dialog-footer">
