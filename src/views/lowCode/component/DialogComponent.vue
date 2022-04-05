@@ -31,9 +31,15 @@ onMounted(()=>{
   console.log(el)
 })
 
+const location = reactive({})
+
 const onOpen = ()=>{
   console.log('打開了',el.value)
-  let elementsByClassName = document.getElementsByClassName("el-dialog")
+  let elementsByClassName = document.getElementsByClassName("el-dialog")[0]
+  console.log(elementsByClassName)
+  location = {height:elementsByClassName.offsetHeight,width:elementsByClassName.width,left:elementsByClassName.offsetLeft,top:elementsByClassName.offsetTop}
+  console.log(location)
+
 
 }
 </script>
