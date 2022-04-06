@@ -10,11 +10,21 @@ import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 
 const el = ref<HTMLElement | null>(null)
 const store = useConfigStore()
+
+import { createSharedComposable, useMouse } from '@vueuse/core'
+import { useRenderPageData } from '@/views/lowCode/service'
+const useSharedMouse = createSharedComposable(useMouse)
+const { x, y } = useSharedMouse()
+
+
+let {state}  = useRenderPageData('12312')
+
 </script>
 
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
+      {{x}} {{y}} {{state}} <el-button @click="state.hello = 'xxx'"></el-button>
     </el-header>
     <el-container>
       <LowCodeAside></LowCodeAside>
