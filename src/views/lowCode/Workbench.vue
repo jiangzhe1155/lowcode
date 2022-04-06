@@ -108,17 +108,12 @@ onMounted(() => {
 onUnmounted(() => {
 
 })
-
-
 const { isOutside } = useMouseInElement(el)
 
 </script>
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      {{ x }} {{ y }} {{ nodeState.currentHoveredId }} {{ nodeState.clickedNodeId }} 拖拽元素 {{ nodeState.dragElementId }}
-      {{ nodeState.pressTypeId }} {{isOutside}}
-      <el-button @click="nodeStateOnClick('8')">asda</el-button>
     </el-header>
     <el-container>
       <LowCodeAside></LowCodeAside>
