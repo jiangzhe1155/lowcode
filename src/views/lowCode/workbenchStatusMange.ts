@@ -1,16 +1,12 @@
 import {
   computed,
   getCurrentInstance,
-  nextTick,
   onMounted,
   reactive,
   ref,
   toRaw,
-  UnwrapRef,
-  watch,
   watchEffect
 } from 'vue'
-import { useMouse, usePointer } from '@vueuse/core'
 import { v4 } from 'uuid'
 import mitt from 'mitt'
 
@@ -18,7 +14,6 @@ export const emitter = mitt()
 
 function findInElementArea (x: number, y: number, e: any) {
   let location = locationMap.get(e.id)
-
   if (!location) {
     return null
   }
@@ -40,7 +35,7 @@ function findInElementArea (x: number, y: number, e: any) {
   }
 
   if (x >= left && x <= left + width && y >= top && y <= top + height) {
-    return e.id
+    return e
   }
   return null
 }
@@ -76,7 +71,11 @@ export const nodeState = reactive({
       }
 
       if (e.type === 'DialogComponent' && e.visible && width > 0) {
-        elementId = findInElementArea(x_, y_, e)
+        let element = findInElementArea(x_, y_, e)
+        console.log('找到最终',e.id)
+        if (element){
+          elementId = element.id
+        }
         break
       }
 
@@ -198,7 +197,7 @@ export const renderPage = reactive({
               pid: '4',
               name: '卡片5',
               type: 'CardComponent',
-              level: 1,
+              level: 3,
               isContainer: false,
               supportDirection: ['top', 'bottom', 'center'],
               children: [],
@@ -236,6 +235,14 @@ export const renderPage = reactive({
   modelBoxes: []
 })
 
+watchEffect(()=>{
+  window.parent.postMessage(
+    {
+      type: 'renderPageChange',
+      renderPage: toRaw(renderPage).root
+    }, '*')
+})
+
 export const elementMap = reactive(new Map())
 export const locationMap = reactive(new Map())
 
@@ -270,6 +277,7 @@ const build = (root, level: number): void => {
 
 const buildElementMap = () => {
   let root = renderPage.root
+  console.log('重载',root)
   elementMap.clear()
   build(root, 0)
 
@@ -278,7 +286,6 @@ const buildElementMap = () => {
       type: 'elementMapChange',
       elementMap: toRaw(elementMap)
     }, '*')
-
 }
 
 buildElementMap()
@@ -399,9 +406,10 @@ function findInArea (x: number, y: number) {
 
     if (e.type === 'DialogComponent' && e.visible && width > 0) {
       if (x >= left && x <= left + width && y >= top && y <= top + height) {
-        elementId = e.id
-        level = e.level
-        targetLocation = location[1]
+        let element = findInElementArea(x,y,e);
+        elementId = element.id
+        level = element.level
+        targetLocation = locationMap.get(elementId)
       }
       break
     }
@@ -573,7 +581,7 @@ export const onDragEnd = () => {
       }, '*')
     }
   } else {
-    // nodeStateOnClick(nodeState.dragElementId)
+    nodeStateOnClick(nodeState.dragElementId)
   }
 
   nodeState.pressNodeId = ''

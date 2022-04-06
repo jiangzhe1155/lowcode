@@ -140,12 +140,13 @@ const { isOutside } = useMouseInElement(el)
                 id="workbench-iframe"
                 ref="iframeRef" class="h-full w-full" name="Overview"
                 src="http://localhost:3000/#/lowCode/overview"
-            >>
+            >
+              >
             </iframe>
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1"></el-aside>
+      <el-aside class="border-l-1">{{ elementMap }}</el-aside>
     </el-container>
   </el-container>
 </template>
