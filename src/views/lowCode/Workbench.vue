@@ -74,6 +74,7 @@ function handleMessage (event) {
     let moveId = event.data.elementId
     nodeStateOnClick(moveId)
   } else if (type === 'elementDelete') {
+    nodeState.clickedNodeId = null
     console.log('删除')
   } else if (type === 'elementMapChange') {
     console.log('elementMap 變化', event.data.elementMap)
@@ -90,6 +91,7 @@ function handleMessage (event) {
 watch(() => iframeWin.value, (n) => {
   console.log('iframe 变化', iframeWin.value.scrollX)
 })
+
 onMounted(() => {
   iframeWin.value = iframeRef.value.contentWindow
   nodeState.iframeWin = iframeRef.value.contentWindow

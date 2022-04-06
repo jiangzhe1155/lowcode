@@ -18,7 +18,6 @@ const onCLick = () => {
       }, '*')
 }
 
-
 </script>
 
 <template>

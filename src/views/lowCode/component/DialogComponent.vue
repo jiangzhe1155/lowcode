@@ -2,7 +2,7 @@
 import {
   defineProps,
   ref,
-  reactive, onMounted, toRaw, watch,
+  reactive, onMounted, toRaw, watch, onUpdated,
 
 } from 'vue'
 import { useElementBounding } from '@vueuse/core'
@@ -66,21 +66,25 @@ const onClose = () => {
       }, '*')
 }
 
+const onClose2 = () => {
+  let elementsByClassName = document.getElementById('dialog_data').firstElementChild.firstElementChild.firstElementChild
+  console.log(elementsByClassName.offsetWidth, elementsByClassName.offsetHeight, elementsByClassName.offsetLeft, elementsByClassName.offsetTop)
+}
 
 </script>
 
 <template>
   <div id="dialog_data">
     <el-dialog
-        ref="el" v-model="dialogVisible" title="Tips" width="30%" destroy-on-close
+        ref="el" v-model="dialogVisible" title="Tips" width="30%" destroy-on-close @mouseenter="onClose2"
         @opened="onOpen" @closed="onClose">
       <span>It's a draggable Dialog</span>
+      <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="dialogVisible = false"
-          >Confirm</el-button
-          >
+          >Confirm</el-button>
         </span>
       </template>
     </el-dialog>

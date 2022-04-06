@@ -15,6 +15,36 @@ import { v4 } from 'uuid'
 import mitt from 'mitt'
 
 export const emitter = mitt()
+
+function findInElementArea (x: number, y: number, e: any) {
+  let location = locationMap.get(e.id)
+
+  if (!location) {
+    return null
+  }
+
+  let {
+    left,
+    top,
+    width,
+    height
+  } = location
+
+  if (e.children?.length > 0) {
+    for (let child of e.children) {
+      let res = findInElementArea(x, y, child)
+      if (res && res.length > 0) {
+        return res
+      }
+    }
+  }
+
+  if (x >= left && x <= left + width && y >= top && y <= top + height) {
+    return e.id
+  }
+  return null
+}
+
 export const nodeState = reactive({
   hoverInfo: [],
   currenHoverInfo: computed(() => {
@@ -46,7 +76,7 @@ export const nodeState = reactive({
       }
 
       if (e.type === 'DialogComponent' && e.visible && width > 0) {
-        elementId = null
+        elementId = findInElementArea(x_, y_, e)
         break
       }
 
@@ -356,15 +386,30 @@ function findInArea (x: number, y: number) {
   let targetLocation = null
   for (let location of locationMap) {
     let e = elementMap.get(location[0])
-    if (!e || e.level <= level) {
-      continue
-    }
     let {
       left,
       top,
       width,
       height
     } = location[1]
+
+    if (!e) {
+      continue
+    }
+
+    if (e.type === 'DialogComponent' && e.visible && width > 0) {
+      if (x >= left && x <= left + width && y >= top && y <= top + height) {
+        elementId = e.id
+        level = e.level
+        targetLocation = location[1]
+      }
+      break
+    }
+
+    if (e.level <= level) {
+      continue
+    }
+
     if (x >= left && x <= left + width && y >= top && y <= top + height) {
       elementId = e.id
       level = e.level

@@ -35,7 +35,7 @@ export default function useComponentHelp (props: any, location: any) {
   }
 
   function notifyLocationChange () {
-    console.log('位置编号', props.element.id)
+    // console.log('位置编号', props.element.id)
     window.parent.postMessage(
       {
         type: 'locationChange',
