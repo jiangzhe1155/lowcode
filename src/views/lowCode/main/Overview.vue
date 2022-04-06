@@ -10,40 +10,20 @@ import {
 } from '@/views/lowCode/workbenchStatusMange'
 import { onLongPress, useMousePressed, useScroll } from '@vueuse/core'
 
-const el = ref<HTMLElement | null>(null)
-const { pressed } = useMousePressed({ target: el })
-const longPressed = ref(false)
-
-onLongPress(el, () => {
-  longPressed.value = true
-  console.log('长按了')
-  onStartSelect()
-}, { delay: 200 })
-
-watch(pressed, (n) => {
-  if (n) {
-
-  } else {
-    console.log('长按结束了')
-    onDragEnd()
-    longPressed.value = false
-  }
-})
-
-const onCLick = (event) => {
-  console.log('点击了')
+const onCLick = () => {
+  console.log('点击事件')
   window.parent.postMessage(
       {
-        type: 'onClick'
+        type: 'onClick',
       }, '*')
 }
+
 
 </script>
 
 <template>
-
-<!--  {{longPressed}} {{pressed}} {{x}} {{y}}-->
-  <OperationPanel ref="el" @click="onCLick($event)">
+  <!--  {{longPressed}} {{pressed}} {{x}} {{y}}-->
+  <OperationPanel @click="onCLick">
   </OperationPanel>
 </template>
 <style scoped>

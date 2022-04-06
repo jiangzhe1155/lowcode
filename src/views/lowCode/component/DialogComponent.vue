@@ -2,10 +2,10 @@
 import {
   defineProps,
   ref,
-  reactive, onMounted,
+  reactive, onMounted, toRaw, watch,
 
 } from 'vue'
-import { useElementBounding} from '@vueuse/core'
+import { useElementBounding } from '@vueuse/core'
 import useComponentHelp from '@/views/lowCode/componentHelp'
 import { sortUserPlugins } from 'vite'
 
@@ -27,37 +27,64 @@ const el = ref(null)
 // }
 const dialogVisible = ref(true)
 
-onMounted(()=>{
+onMounted(() => {
   console.log(el)
 })
 
 const location = reactive({})
 
-const onOpen = ()=>{
-  console.log('打開了',el.value)
-  let elementsByClassName = document.getElementsByClassName("el-dialog")[0]
-  console.log(elementsByClassName)
-  location = {height:elementsByClassName.offsetHeight,width:elementsByClassName.width,left:elementsByClassName.offsetLeft,top:elementsByClassName.offsetTop}
-  console.log(location)
+const onOpen = () => {
+  console.log('打開了', el.value)
+  let elementsByClassName = document.getElementById('dialog_data').firstElementChild.firstElementChild.firstElementChild
+  console.log(elementsByClassName.offsetWidth, elementsByClassName.offsetHeight, elementsByClassName.offsetLeft, elementsByClassName.offsetTop)
 
+  location.width = elementsByClassName.offsetWidth
+  location.height = elementsByClassName.offsetHeight
+  location.top = elementsByClassName.offsetTop
+  location.left = elementsByClassName.offsetLeft
 
+  window.parent.postMessage(
+      {
+        type: 'locationChange',
+        location: toRaw(location),
+        elementId: props.element.id,
+      }, '*')
 }
+
+const onClose = () => {
+  console.log('关闭了')
+  window.parent.postMessage(
+      {
+        type: 'locationChange',
+        location: {
+          width: 0,
+          height: 0,
+          top: 0,
+          left: 0
+        },
+        elementId: props.element.id,
+      }, '*')
+}
+
+
 </script>
 
 <template>
-<div>
-  <el-dialog ref="el" v-model="dialogVisible" title="Tips" width="30%" @opened="onOpen($event)">
-    <span>It's a draggable Dialog</span>
-    <template #footer>
+  <div id="dialog_data">
+    <el-dialog
+        ref="el" v-model="dialogVisible" title="Tips" width="30%" destroy-on-close
+        @opened="onOpen" @closed="onClose">
+      <span>It's a draggable Dialog</span>
+      <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>
           <el-button type="primary" @click="dialogVisible = false"
           >Confirm</el-button
           >
         </span>
-    </template>
-  </el-dialog>
-</div>
+      </template>
+    </el-dialog>
+  </div>
 
 </template>
 

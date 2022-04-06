@@ -49,10 +49,6 @@ watch(pressed, (n) => {
   }
 })
 
-onMounted(()=>{
-
-})
-
 </script>
 
 <template>

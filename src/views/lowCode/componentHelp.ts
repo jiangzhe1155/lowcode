@@ -3,46 +3,54 @@ import { elementMap, emitter, locationMap, nodeStateOnHover } from '@/views/lowC
 
 export default function useComponentHelp (props: any, location: any) {
   onMounted(() => {
+    console.log('初始化', props.element.id)
     emitter.on('onUpdateElement', () => {
       if (elementMap.has(props.element.id)) {
-        notifyLocationChange();
-        //
-        // locationMap.set(props.element.id, location)
-        // location.update()
+        notifyLocationChange()
       }
     })
   })
 
   onUpdated(() => {
-    notifyLocationChange();
-    // locationMap.set(props.element.id, location)
-    // location.update()
+    notifyLocationChange()
   })
 
   watch(location, (n) => {
-    notifyLocationChange();
-    // locationMap.set(props.element.id, location)
-    // location.update()
+    notifyLocationChange()
   })
 
   function onHover (state: boolean) {
     window.parent.postMessage(
       {
         type: 'onHover',
-        location: {left:location.left,top:location.top,width:location.width,height:location.height},
-        element:toRaw(elementMap.get(props.element.id)),
-        state:state
+        location: {
+          left: location.left,
+          top: location.top,
+          width: location.width,
+          height: location.height
+        },
+        element: toRaw(elementMap.get(props.element.id)),
+        state: state
       }, '*')
   }
 
-  function notifyLocationChange(){
+  function notifyLocationChange () {
+    console.log('位置编号', props.element.id)
     window.parent.postMessage(
       {
         type: 'locationChange',
-        location: {left:location.left,top:location.top,width:location.width,height:location.height},
-        elementId:props.element.id,
+        location: {
+          left: location.left,
+          top: location.top,
+          width: location.width,
+          height: location.height
+        },
+        elementId: props.element.id,
       }, '*')
   }
 
-  return {onHover}
+  return {
+    onHover,
+    notifyLocationChange
+  }
 }

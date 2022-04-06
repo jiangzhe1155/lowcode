@@ -46,7 +46,7 @@ watch(pressed, (n) => {
   if (n) {
 
   } else {
-    console.log('长按结束了',props.element.id)
+    console.log('长按结束了')
     longPressed.value = false
     window.parent.postMessage(
         {

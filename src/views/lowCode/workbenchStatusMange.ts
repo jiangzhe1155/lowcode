@@ -16,8 +16,8 @@ import mitt from 'mitt'
 
 export const emitter = mitt()
 export const nodeState = reactive({
-  hoverInfo:[],
-  currenHoverInfo:computed(()=>{
+  hoverInfo: [],
+  currenHoverInfo: computed(() => {
     return nodeState.hoverInfo[nodeState.hoverInfo.length - 1]
   }),
   clickedNodeId: '',
@@ -25,13 +25,46 @@ export const nodeState = reactive({
     return locationMap.get(nodeState.clickedNodeId)
   }),
   hoverNodeId: [],
-  hoverLocations:[],
   hoverItemNodeId: '',
   currentHoveredId: computed(() => {
-    if (nodeState.hoverItemNodeId.length > 0) {
-      return nodeState.hoverItemNodeId
+    let elementId = undefined
+    let level = -1
+    let x_ = x.value - 80
+    let y_ = y.value - 70
+    for (let location of locationMap) {
+      // 如果是对话框并且打开了
+      let e = elementMap.get(location[0])
+      let {
+        left,
+        top,
+        width,
+        height
+      } = location[1]
+
+      if (!e) {
+        continue
+      }
+
+      if (e.type === 'DialogComponent' && e.visible && width > 0) {
+        elementId = null
+        break
+      }
+
+      if (e.level <= level) {
+        continue
+      }
+
+      if (x_ >= left && x_ <= left + width && y_ >= top && y_ <= top + height) {
+        elementId = e.id
+        level = e.level
+      }
     }
-    return nodeState.hoverNodeId[nodeState.hoverNodeId.length - 1]
+
+    return elementId
+    // if (nodeState.hoverItemNodeId.length > 0) {
+    //   return nodeState.hoverItemNodeId
+    // }
+    // return nodeState.hoverNodeId[nodeState.hoverNodeId.length - 1]
   }),
   hoverLocation: computed(() => {
     return locationMap.get(nodeState.currentHoveredId)
@@ -65,15 +98,14 @@ export const nodeState = reactive({
     }
 
     // 这个组件的父组件支持这个方向的操作
-    let pElement = elementMap.get(elementMap.get(nodeState.dragElementId).pid);
-    if (!pElement){
-      return false;
+    let pElement = elementMap.get(elementMap.get(nodeState.dragElementId).pid)
+    if (!pElement) {
+      return false
     }
     let i = pElement.supportDirection.indexOf(nodeState.dragDirection)
     if (i < 0) {
       return false
     }
-
     return true
   }),
   asideHoverType: '',
@@ -88,7 +120,7 @@ export const nodeState = reactive({
   })
 })
 
-export const renderPage = {
+export const renderPage = reactive({
   root: {
     id: '1',
     pid: '',
@@ -98,6 +130,7 @@ export const renderPage = {
     level: 0,
     isContainer: true,
     supportDirection: ['top', 'bottom', 'center'],
+    visible: true,
     children: [
       {
         id: '2',
@@ -108,6 +141,7 @@ export const renderPage = {
         level: 1,
         isContainer: true,
         supportDirection: ['top', 'bottom', 'center'],
+        visible: true,
         children: [
           {
             id: '3',
@@ -119,6 +153,7 @@ export const renderPage = {
             children: [],
             slots: [],
             supportDirection: ['top', 'bottom', 'center'],
+            visible: true,
           }, {
             id: '4',
             pid: '2',
@@ -127,6 +162,7 @@ export const renderPage = {
             level: 2,
             isContainer: false,
             supportDirection: ['top', 'bottom', 'center'],
+            visible: true,
             children: [{
               id: '5',
               pid: '4',
@@ -137,6 +173,7 @@ export const renderPage = {
               supportDirection: ['top', 'bottom', 'center'],
               children: [],
               slots: [],
+              visible: true,
             }],
             slots: [],
           }
@@ -151,7 +188,8 @@ export const renderPage = {
         supportDirection: ['top', 'bottom', 'center'],
         children: [],
         slots: [],
-      },{
+        visible: true,
+      }, {
         id: '8',
         pid: '1',
         name: '對話框',
@@ -161,11 +199,12 @@ export const renderPage = {
         supportDirection: ['top', 'bottom', 'center'],
         children: [],
         slots: [],
+        visible: true,
       }
     ]
   },
   modelBoxes: []
-}
+})
 
 export const elementMap = reactive(new Map())
 export const locationMap = reactive(new Map())
@@ -204,19 +243,18 @@ const buildElementMap = () => {
   elementMap.clear()
   build(root, 0)
 
-  console.log('gengx map',toRaw(elementMap))
   window.parent.postMessage(
     {
       type: 'elementMapChange',
-      elementMap:toRaw(elementMap)
+      elementMap: toRaw(elementMap)
     }, '*')
 
 }
 
 buildElementMap()
 
-export const x = ref(0);
-export const y = ref(0);
+export const x = ref(0)
+export const y = ref(0)
 
 export const nodeStateOnClick = (elementId: string) => {
   // console.log('点击', elementId)
@@ -230,15 +268,13 @@ export function compareLevel (elementId: string, clickedNodeId: string): number 
   return pre.level - next.level
 }
 
-export const nodeStateOnHover = (element: any, isHover: boolean,location:any) => {
+export const nodeStateOnHover = (element: any, isHover: boolean, location: any) => {
   // console.log(elementId + '\t' + isHover)
   if (!isHover) {
     nodeState.hoverNodeId.pop()
-    nodeState.hoverLocations.pop();
     return
   }
   nodeState.hoverNodeId.push(element.id)
-  nodeState.hoverLocations.push(location)
 }
 
 export const nodeStateOnHoverItem = (elementId: string, isHover: boolean) => {
@@ -390,7 +426,7 @@ export const onCopy = (elementId: string) => {
   let element = elementMap.get(elementId)
 
   function doCopy (element: any) {
-    let target =Object.assign({},element);
+    let target = Object.assign({}, element)
     target.id = v4()
     target.children = target.children.map(e => doCopy(e))
     return target
@@ -408,13 +444,11 @@ export const onCopy = (elementId: string) => {
   buildElementMap()
   locationMap.clear()
   emitter.emit('onUpdateElement')
-
-  return res.id;
+  return res.id
 }
 
 onMounted(() => {
   const { proxy } = getCurrentInstance() as any
-
 })
 
 export const onDelete = (elementId: string) => {
@@ -440,6 +474,7 @@ export function add (pressTypeId: string, dragElementId: string, dragDirection: 
     isContainer: false,
     children: [],
     slots: [],
+    visible: true,
     supportDirection: ['top', 'bottom', 'center']
   }
 
@@ -464,6 +499,7 @@ export function add (pressTypeId: string, dragElementId: string, dragDirection: 
       newParentElement.children.splice(j + shift, 0, element)
     }
   }
+
   buildElementMap()
   locationMap.clear()
   emitter.emit('onUpdateElement')
@@ -474,14 +510,22 @@ export const onDragEnd = () => {
   if (nodeState.isShowInsertion) {
     if (nodeState.pressNodeId.length > 0) {
       nodeState.iframeWin.postMessage({
-        type:'elementMove',
-        info:{pressNodeId:nodeState.pressNodeId,dragElementId:nodeState.dragElementId,dragDirection:nodeState.dragDirection}
-      },"*")
+        type: 'elementMove',
+        info: {
+          pressNodeId: nodeState.pressNodeId,
+          dragElementId: nodeState.dragElementId,
+          dragDirection: nodeState.dragDirection
+        }
+      }, '*')
     } else if (nodeState.pressTypeId.length > 0) {
       nodeState.iframeWin.postMessage({
-        type:'elementAdd',
-        info:{pressNodeId:nodeState.pressNodeId,dragElementId:nodeState.dragElementId,dragDirection:nodeState.dragDirection}
-      },"*")
+        type: 'elementAdd',
+        info: {
+          pressNodeId: nodeState.pressNodeId,
+          dragElementId: nodeState.dragElementId,
+          dragDirection: nodeState.dragDirection
+        }
+      }, '*')
     }
   } else {
     // nodeStateOnClick(nodeState.dragElementId)

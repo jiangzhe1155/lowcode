@@ -36,7 +36,7 @@ const props = defineProps({
 })
 
 const styleCompute = computed(() => {
-  let location = nodeState.hoverLocation
+  let location = locationMap.get(nodeState.currentHoveredId)
   if (!location) {
     return {
       top: 0,
@@ -49,12 +49,12 @@ const styleCompute = computed(() => {
     top: location.top + 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
-    left: location.left  - 1 + 'px',
+    left: location.left - 1 + 'px',
   }
 })
 
 const pressStyleCompute = computed(() => {
-  let location =  locationMap.get(nodeState.pressNodeId)
+  let location = locationMap.get(nodeState.pressNodeId)
   if (!location) {
     return {
       top: 0,
@@ -74,7 +74,7 @@ const pressStyleCompute = computed(() => {
 const dragStyleCompute = computed(() => {
   onDrag()
   return {
-    left: x.value - 10  + 'px',
+    left: x.value - 10 + 'px',
     top: y.value - 10 + 'px',
   }
 })
@@ -91,7 +91,7 @@ const clickStyleCompute = computed(() => {
     }
   }
   return {
-    top: location.top  + 1 + props.scrollY + 'px',
+    top: location.top + 1 + props.scrollY + 'px',
     width: location.width + 'px',
     height: location.height + 'px',
     left: location.left - 1 + 'px'
@@ -121,8 +121,8 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       width: '4px',
       height: height + 'px',
-      left: left + width  - 4 + 'px',
-      top: top  + props.scrollY + 'px'
+      left: left + width - 4 + 'px',
+      top: top + props.scrollY + 'px'
     }
   }
 
@@ -130,8 +130,8 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       width: '4px',
       height: height + 'px',
-      left: left  + 'px',
-      top: top  + props.scrollY + 'px'
+      left: left + 'px',
+      top: top + props.scrollY + 'px'
     }
   }
 
@@ -139,8 +139,8 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       height: '4px',
       width: width + 'px',
-      left: left  + 'px',
-      top: top  + props.scrollY + 'px'
+      left: left + 'px',
+      top: top + props.scrollY + 'px'
     }
   }
 
@@ -148,8 +148,8 @@ const dragInsertionStyleCompute = computed(() => {
     return {
       height: '4px',
       width: width + 'px',
-      left: left  + 'px',
-      top: top  + height + props.scrollY - 4 + 'px'
+      left: left + 'px',
+      top: top + height + props.scrollY - 4 + 'px'
     }
   }
 
@@ -157,22 +157,22 @@ const dragInsertionStyleCompute = computed(() => {
     height: height + 'px',
     width: width + 'px',
     left: left + 'px',
-    top: top  + props.scrollY - 4 + 'px'
+    top: top + props.scrollY - 4 + 'px'
   }
 })
 
- const onCopy = ()=>{
-   nodeState.iframeWin.postMessage({
-     type:'elementCopy',
-     info:{clickedNodeId:nodeState.clickedNodeId}
-   },"*")
+const onCopy = () => {
+  nodeState.iframeWin.postMessage({
+    type: 'elementCopy',
+    info: { clickedNodeId: nodeState.clickedNodeId }
+  }, '*')
 }
 
-const onDelete = ()=>{
+const onDelete = () => {
   nodeState.iframeWin.postMessage({
-    type:'elementDelete',
-    info:{clickedNodeId:nodeState.clickedNodeId}
-  },"*")
+    type: 'elementDelete',
+    info: { clickedNodeId: nodeState.clickedNodeId }
+  }, '*')
 }
 
 </script>
@@ -189,7 +189,7 @@ const onDelete = ()=>{
   </div>
 
   <div
-      v-if="nodeState.clickedNodeId && !nodeState.isDrag"
+      v-if="nodeState.clickedNodeId && !nodeState.isDrag && locationMap.get(nodeState.clickedNodeId)?.width > 0"
       class="z-850 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyleCompute"
   >
@@ -198,7 +198,9 @@ const onDelete = ()=>{
         :class="directionStyle"
     >
       <el-dropdown size="small" type="primary" trigger="hover" class="mr-2px">
-        <el-button type="primary" size="small">{{ elementMap.has(nodeState.clickedNodeId) ?elementMap.get(nodeState.clickedNodeId).name:'' }}</el-button>
+        <el-button type="primary" size="small">
+          {{ elementMap.has(nodeState.clickedNodeId) ? elementMap.get(nodeState.clickedNodeId).name : '' }}
+        </el-button>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item>
