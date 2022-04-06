@@ -228,7 +228,7 @@ export const renderPage = reactive({
         supportDirection: ['top', 'bottom', 'center'],
         children: [],
         slots: [],
-        visible: true,
+        visible: false,
       }
     ]
   },
