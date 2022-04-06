@@ -65,8 +65,6 @@ const onClose = () => {
         elementId: props.element.id,
       }, '*')
 }
-
-
 </script>
 
 <template>
@@ -85,6 +83,5 @@ const onClose = () => {
       </template>
     </el-dialog>
   </div>
-
 </template>
 
