@@ -18,9 +18,7 @@ export function useRenderPageData (pageId: string) {
 
   sessionStorage.removeItem(pageId)
   const renderPage= useStorage(pageId, data, sessionStorage)
-
   const locationState= useStorage(pageId+"_locationState", '' , sessionStorage)
-  locationState.value = null
 
   const currentHoverComponent = (target:Node) => {
       function doFind (model: Component):Component | null {
@@ -42,7 +40,7 @@ export function useRenderPageData (pageId: string) {
        let targetComponent = doFind(component);
        if (targetComponent && targetComponent.id  !== locationState.value ){
          locationState.value = targetComponent.id
-         // console.log('找到',targetComponent.name)
+         console.log('找到',targetComponent.name)
        }
     }
   }
