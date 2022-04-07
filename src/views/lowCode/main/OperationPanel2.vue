@@ -4,7 +4,6 @@ import CardComponent from '@/views/lowCode/component/CardComponent.vue'
 import RootContainer from '@/views/lowCode/component/RootContainer.vue'
 import PageContainer from '@/views/lowCode/component/PageContainer.vue'
 import { nodeState, nodeStateOnClick } from '@/views/lowCode/workbenchStatusMange'
-import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 
 const onCLick = () => {
   nodeStateOnClick(nodeState.currentHoveredId)

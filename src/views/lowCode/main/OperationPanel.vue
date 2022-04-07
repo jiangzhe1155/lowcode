@@ -1,32 +1,37 @@
 <script setup lang="ts">
 
-import { nodeState, nodeStateOnClick, renderPage} from '@/views/lowCode/workbenchStatusMange'
-import { computed, h, resolveComponent, watch, getCurrentInstance, onUpdated, ref, reactive } from 'vue'
-import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
+import { computed, h, onBeforeUpdate, onMounted, onUpdated, resolveComponent } from 'vue'
 import { useRenderPageData } from '@/views/lowCode/service'
 
-let { ctx: that } = getCurrentInstance()
+const { renderPage } = useRenderPageData('12312')
 
-const render = computed(() => {
-  function doRender (node: any) {
-    const resolve = resolveComponent(node.type)
-    if (node.visible) {
-      return h(resolve, { element: node }, () => {
-        return node.children.map((e: any) => doRender(e))
-      })
-    }
+function doRender (node: any) {
+  const resolve = resolveComponent(node.type)
+  if (node.visible) {
+    return h(resolve, {
+      element: node,
+    }, () => {
+      return node.children.map((e: any) => doRender(e))
+    })
   }
+}
 
-  return doRender(renderPage.root)
+onMounted(() => {
+  console.log('初始化生成')
 })
 
-let {state}  = useRenderPageData('12312')
-
+onBeforeUpdate(() => {
+  console.log('更新')
+})
+const componentRender = computed(() => {
+  // 2.渲染对话框
+  return h('div', {}, [...renderPage.value.components, ...renderPage.value.models,].map(m => doRender(m)).filter(m => m))
+})
 
 </script>
+
 <template>
-  {{state}}
-  <render></render>
+  <componentRender/>
 </template>
 <style scoped>
 

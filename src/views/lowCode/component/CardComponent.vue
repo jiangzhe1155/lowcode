@@ -6,30 +6,21 @@ import {
 
 } from 'vue'
 import { onLongPress, useElementBounding, useMousePressed } from '@vueuse/core'
+import { Component } from '@/views/lowCode/service'
 
-import { vElementHover } from '@vueuse/components'
-import useComponentHelp from '@/views/lowCode/componentHelp'
+import { useComponentLocation } from '@/views/lowCode/componentLocation'
 
-const props = defineProps({
-  element: {
-    type: Object,
-    require: true,
-    default: null
-  }
-})
+const props = defineProps<{
+  element: Component
+}>()
 
 const el = ref(null)
-const location = reactive(useElementBounding(el))
-const { onHover: onHover_ } = useComponentHelp(props, location)
-
-function onHover (state: boolean) {
-  onHover_(state)
-}
+useComponentLocation(props.element, el)
 
 </script>
 
 <template>
-  <el-card v-element-hover="onHover" ref="el">
+  <el-card>
     <template #header>
       <p>一个卡片</p>
     </template>

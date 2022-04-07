@@ -24,11 +24,11 @@ const props = defineProps({
 const el = ref(null)
 const location = reactive(useElementBounding(el))
 
-const {onHover:onHover_}  = useComponentHelp(props, location)
-
-function onHover (state: boolean) {
-  onHover_(state)
-}
+// const {onHover:onHover_}  = useComponentHelp(props, location)
+//
+// function onHover (state: boolean) {
+//   onHover_(state)
+// }
 
 const { pressed } = useMousePressed({ target: el })
 const longPressed = ref(false)
@@ -104,7 +104,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div ref="el" v-element-hover="onHover" class="!min-h-100vh flex !flex-col">
+  <div ref="el" class="!min-h-100vh flex !flex-col">
     <slot></slot>
   </div>
 </template>

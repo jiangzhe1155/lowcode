@@ -16,16 +16,16 @@ const props = defineProps({
 const el = ref(null)
 const location = reactive(useElementBounding(el))
 
-const {onHover:onHover_}  = useComponentHelp(props, location)
-
-function onHover (state: boolean) {
-  onHover_(state)
-}
+// const {onHover:onHover_}  = useComponentHelp(props, location)
+//
+// function onHover (state: boolean) {
+//   onHover_(state)
+// }
 
 </script>
 
 <template>
-  <el-container v-element-hover="onHover" ref="el" class="space-y-6 min-h-100vh !bg-transparent !flex-col p-20px">
+  <el-container ref="el" class="space-y-6 min-h-100vh !bg-transparent !flex-col p-20px">
     <slot></slot>
   </el-container>
 </template>

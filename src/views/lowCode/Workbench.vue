@@ -1,30 +1,32 @@
 <script setup lang="ts">
 import LowCodeAside from './aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
-import OperationPanel2 from '@/views/lowCode/main/OperationPanel2.vue'
-import OperationPanel from '@/views/lowCode/main/OperationPanel.vue'
 
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
-import { onMounted, onUnmounted, reactive, ref, watch } from 'vue'
-
+import { ref} from 'vue'
 
 const el = ref<HTMLElement | null>(null)
 const store = useConfigStore()
-
-import { createSharedComposable, useMouse } from '@vueuse/core'
 import { useRenderPageData } from '@/views/lowCode/service'
-const useSharedMouse = createSharedComposable(useMouse)
-const { x, y } = useSharedMouse()
 
 
-let {state}  = useRenderPageData('12312')
+let { renderPage } = useRenderPageData('12312')
+
+// const iframeRef = ref(null)
+//
+// const iframeWin = ref(null)
+// const onLoad = () => {
+//   iframeWin.value = iframeRef.value.contentWindow
+//   console.log('加载', iframeWin)
+//   iframeWin.value.focus({ preventScroll: false })
+// }
 
 </script>
 
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      {{x}} {{y}} {{state}} <el-button @click="state.hello = 'xxx'"></el-button>
+      <el-button></el-button>
     </el-header>
     <el-container>
       <LowCodeAside></LowCodeAside>
@@ -32,14 +34,13 @@ let {state}  = useRenderPageData('12312')
         <div class="relative h-full shadow border-solid border-1">
           <div
               ref="el"
-              class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
-          ><div
-                class="absolute left-0 top-0 z-800 w-full h-full select-none"
-            >
-              <VisualNodeHelper :scroll-y="scrollY">
+              class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-visible overflow-x-hidden"
+          >
+            <div
+                class="absolute left-0 top-0 z-800 w-full h-full select-none pointer-events-none">
+              <VisualNodeHelper>
               </VisualNodeHelper>
             </div>
-
             <iframe
                 id="workbench-iframe"
                 ref="iframeRef" class="h-full w-full" name="Overview"
