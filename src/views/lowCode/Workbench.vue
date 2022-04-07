@@ -10,7 +10,7 @@ const store = useConfigStore()
 import { useRenderPageData } from '@/views/lowCode/service'
 
 
-let { renderPage } = useRenderPageData('12312')
+let { renderPage,componentMap,locationState } = useRenderPageData('12312')
 
 // const iframeRef = ref(null)
 //
@@ -50,7 +50,7 @@ let { renderPage } = useRenderPageData('12312')
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1"></el-aside>
+      <el-aside class="border-l-1">{{locationState}}</el-aside>
     </el-container>
   </el-container>
 </template>

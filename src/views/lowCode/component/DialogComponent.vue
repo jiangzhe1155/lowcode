@@ -49,13 +49,12 @@ const dialogVisible = ref(true)
 //       }, '*')
 // }
 
-
 </script>
 
 <template>
   <div id="dialog_data">
     <el-dialog
-        v-model="dialogVisible" title="Tips" width="30%" destroy-on-close>
+        v-model="dialogVisible" title="Tips" width="30%" destroy-on-close :modal="false">
       <span>It's a draggable Dialog</span>
       <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
       <template #footer>

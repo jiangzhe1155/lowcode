@@ -14,9 +14,6 @@ const props = defineProps<{
   element: Component
 }>()
 
-const el = ref(null)
-useComponentLocation(props.element, el)
-
 </script>
 
 <template>

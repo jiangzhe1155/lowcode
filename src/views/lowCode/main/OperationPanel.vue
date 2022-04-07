@@ -3,7 +3,7 @@
 import { computed, createElementBlock, h, onBeforeUpdate, onMounted, onUpdated, resolveComponent } from 'vue'
 import { useRenderPageData } from '@/views/lowCode/service'
 
-const { renderPage } = useRenderPageData('12312')
+const { renderPage,componentMap,currentHoverComponent } = useRenderPageData('12312')
 
 function doRender (node: any) {
   const resolve = resolveComponent(node.type)
@@ -17,29 +17,27 @@ function doRender (node: any) {
   }
 }
 
-onMounted(() => {
-  console.log('初始化生成')
-  let elementById = document.getElementById(renderPage.value.components[0].id)
-  console.log(elementById)
-})
+onMounted(()=>{
+  document.addEventListener('mousemove',(e:Event)=>{
+    for (let entry of componentMap.value) {
+      let [id,component] = entry;
+      let element = document.getElementById(id)
+      currentHoverComponent(<Node>e.target)
+    }
+  })
 
-onBeforeUpdate(() => {
-  console.log('更新')
 })
 
 const componentRender = computed(() => {
   // 2.渲染对话框
-  return h('div', { id: 'asdad' }, [...renderPage.value.components, ...renderPage.value.models,].map(m => doRender(m)).filter(m => m))
-})
 
-function render () {
-}
+  return h('div', { class:'!min-h-100vh flex !flex-col' }, [...renderPage.value.components, ...renderPage.value.models,].map(m => doRender(m)).filter(m => m))
+})
 
 </script>
 
 <template>
   <componentRender/>
-  <render></render>
 </template>
 <style scoped>
 

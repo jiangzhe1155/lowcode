@@ -1,25 +1,56 @@
-import { useStorage } from '@vueuse/core'
-import { computed } from 'vue'
+import { useSessionStorage, useStorage, useStorageAsync } from '@vueuse/core'
+import { computed, watchEffect } from 'vue'
 import { v4 } from 'uuid'
+import { Location } from '@/views/lowCode/componentLocation'
 
 export function useRenderPageData (pageId: string) {
+
   // 构造假数据
   let page = new Page()
-  let card = new Card()
-  card.children.push(new Card())
-  page.children.push(new Card(), card, new Card())
-  const data: { components: Component[], models: Component[] } = {
-    components: [page, new Card()],
+  let card = new Card('卡片1')
+  card.children.push(new Card('卡片2'))
+  page.children.push(new Card('卡片3'), card, new Card('卡片4'))
+  const data: {
+    components: Component[], models: Component[] } = {
+    components: [page, new Card('卡片5')],
     models: [new Dialog()]
   }
 
   sessionStorage.removeItem(pageId)
-  const renderPage = useStorage(pageId, data, sessionStorage)
+  const renderPage= useStorage(pageId, data, sessionStorage)
+
+  const locationState= useStorage(pageId+"_locationState", '' , sessionStorage)
+  locationState.value = null
+
+  const currentHoverComponent = (target:Node) => {
+      function doFind (model: Component):Component | null {
+        let element = document.getElementById(model.id);
+        if (element?.contains(target)){
+          for (let child of model.children) {
+            let res = doFind(child);
+            if (res){
+              return res;
+            }
+          }
+          return model;
+        }
+        return null;
+      }
+
+    // 先搜索模态框
+    for (let component of [...data.models, ...data.components]) {
+       let targetComponent = doFind(component);
+       if (targetComponent && targetComponent.id  !== locationState.value ){
+         locationState.value = targetComponent.id
+         // console.log('找到',targetComponent.name)
+       }
+    }
+  }
+
   const componentMap = computed(() => {
     let models = renderPage.value.models
     let components = renderPage.value.components
     let map = new Map()
-
     function doBuild (component: Component, level: number = 0) {
       component.level = level
       map.set(component.id, component)
@@ -37,47 +68,12 @@ export function useRenderPageData (pageId: string) {
     }
     return map
   })
-  // const add = (pressTypeId: string, dragElementId: string, dragDirection: string) => {
-  //   console.log('添加')
-  //   let element = {
-  //     id: v4(),
-  //     name: '卡片',
-  //     level: 0,
-  //     pid: '',
-  //     type: 'CardComponent',
-  //     isContainer: false,
-  //     children: [],
-  //     slots: [],
-  //     visible: true,
-  //     supportDirection: ['top', 'bottom', 'center']
-  //   }
-  //
-  //   let dragElement = elementMap.get(dragElementId)
-  //   if (dragDirection === 'center') {
-  //     dragElement.children.push(element)
-  //     element.level = dragElement.level + 1
-  //     element.pid = dragElement.id
-  //   } else {
-  //     let newParentElement = elementMap.get(dragElement.pid)
-  //     element.level = newParentElement.level + 1
-  //     element.pid = newParentElement.id
-  //
-  //     let j = newParentElement.children.indexOf(dragElement)
-  //     let shift = 0
-  //     if (dragDirection === 'bottom' || dragDirection === 'right') {
-  //       shift = 1
-  //     }
-  //     if (j + shift >= newParentElement.children.length) {
-  //       newParentElement.children.push(element)
-  //     } else {
-  //       newParentElement.children.splice(j + shift, 0, element)
-  //     }
-  //   }
-  //   return element.id
-  // }
+
   return {
     renderPage,
-    componentMap
+    componentMap,
+    currentHoverComponent,
+    locationState
   }
 }
 
@@ -92,31 +88,59 @@ export interface Component {
   children: Component[],
   supportDirection: Direction[]
   slots: any[],
-  visible: boolean
+  visible: boolean,
 }
 
 abstract class BaseComponent implements Component {
   id: string = v4()
-  abstract name: string
+  name: string
   abstract type: string
   children: Component[] = []
   supportDirection: Direction[] = ['top', 'bottom', 'center']
   slots = []
   visible = true
+  fetchLocation:Function = ():Location => {
+    let element = document.getElementById(this.id)
+    return {
+      height: element?.offsetHeight,
+      left: element?.offsetLeft,
+      top: element?.offsetTop,
+      width: element?.offsetWidth
+    };
+  }
 }
 
 class Card extends BaseComponent {
   type = 'CardComponent'
-  name = '卡片'
+  constructor (name:string = '卡片') {
+    super();
+    this.name = name;
+  }
 }
 
 class Page extends BaseComponent {
   type = 'PageContainer'
-  name = '页面'
+  constructor (name:string = '页面') {
+    super();
+    this.name = name;
+  }
 }
 
 class Dialog extends BaseComponent {
   type = 'DialogComponent'
-  name = '对话框'
-  visible = false
+  visible = true
+  fetchLocation = ():Location => {
+    let element :Element | null | undefined = document.getElementById(this.id)?.firstElementChild?.firstElementChild?.firstElementChild
+    console.log(element)
+    return {
+      height: element?.offsetHeight,
+      left: element?.offsetLeft,
+      top: element?.offsetTop,
+      width: element?.offsetWidth
+    };
+  }
+  constructor (name:string = '对话框') {
+    super();
+    this.name = name;
+  }
 }

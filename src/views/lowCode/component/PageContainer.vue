@@ -5,16 +5,8 @@ import { emitter, locationMap, nodeStateOnHover } from '@/views/lowCode/workbenc
 import { vElementHover } from '@vueuse/components'
 import useComponentHelp from '@/views/lowCode/componentHelp'
 
-const props = defineProps({
-  element: {
-    type: Object,
-    require: true,
-    default: null
-  }
-})
 
-const el = ref(null)
-const location = reactive(useElementBounding(el))
+
 
 // const {onHover:onHover_}  = useComponentHelp(props, location)
 //
@@ -25,7 +17,7 @@ const location = reactive(useElementBounding(el))
 </script>
 
 <template>
-  <el-container ref="el" class="space-y-6 min-h-100vh !bg-transparent !flex-col p-20px">
+  <el-container class="space-y-6 min-h-100vh !bg-transparent !flex-col p-20px">
     <slot></slot>
   </el-container>
 </template>
