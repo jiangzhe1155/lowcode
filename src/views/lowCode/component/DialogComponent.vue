@@ -2,8 +2,7 @@
 
 import {
   defineProps,
-  ref,
-  reactive
+  ref
 
 } from 'vue'
 
@@ -15,7 +14,7 @@ const props = defineProps({
   }
 })
 
-const dialogVisible = ref(true)
+const dialogVisible = ref(false)
 
 // const onOpen = () => {
 //   let elementsByClassName = document.getElementById('dialog_data').firstElementChild.firstElementChild.firstElementChild
@@ -34,27 +33,16 @@ const dialogVisible = ref(true)
 //       }, '*')
 // }
 //
-// const onClose = () => {
-//   console.log('关闭了')
-//   window.parent.postMessage(
-//       {
-//         type: 'locationChange',
-//         location: {
-//           width: 0,
-//           height: 0,
-//           top: 0,
-//           left: 0
-//         },
-//         elementId: props.element.id,
-//       }, '*')
-// }
+const onClose = () => {
+  console.log('关闭了')
+}
 
 </script>
 
 <template>
-  <div id="dialog_data">
+  <div>
     <el-dialog
-        v-model="dialogVisible" title="Tips" width="30%" destroy-on-close :modal="false">
+        v-model="dialogVisible" title="Tips" width="30%" destroy-on-close :modal="true" @closed="onClose">
       <span>It's a draggable Dialog</span>
       <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
       <template #footer>

@@ -2,7 +2,7 @@ import { onMounted, onUpdated, reactive, ref } from 'vue'
 import { Component } from '@/views/lowCode/service'
 import { useElementBounding } from '@vueuse/core'
 
-export const locationMap = reactive(new Map<string,Location>())
+export const locationMap = reactive(new Map<string, Location>())
 
 export function useComponentLocation (component: Component, el: any) {
   const location = reactive(useElementBounding(el))
@@ -20,9 +20,9 @@ export function useComponentLocation (component: Component, el: any) {
 }
 
 export interface Location {
-  left?:number,
-  top?:number,
-  height?:number
-  width?:number
+  left?: number,
+  top?: number,
+  height?: number
+  width?: number
 }
 

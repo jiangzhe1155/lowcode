@@ -1,44 +1,27 @@
 <script setup lang="ts">
 
-import { computed, createElementBlock, h, onBeforeUpdate, onMounted, onUpdated, resolveComponent } from 'vue'
-import { useRenderPageData } from '@/views/lowCode/service'
+import { nodeState, nodeStateOnClick, renderPage, x, y } from '@/views/lowCode/workbenchStatusMange'
+import { computed, h, resolveComponent, watch, getCurrentInstance, onUpdated, ref, reactive } from 'vue'
 
-const { renderPage,componentMap,currentHoverComponent } = useRenderPageData('12312')
-
-function doRender (node: any) {
-  const resolve = resolveComponent(node.type)
-  if (node.visible) {
-    return h(resolve, {
-      element: node,
-      id: node.id
-    }, () => {
+const render = computed(() => {
+  function doRender (node: any) {
+    const resolve = resolveComponent(node.type)
+    return h(resolve, { element: node }, () => {
       return node.children.map((e: any) => doRender(e))
     })
-  }
-}
-
-onMounted(()=>{
-  document.addEventListener('mousemove',(e:Event)=>{
-    for (let entry of componentMap.value) {
-      let [id,component] = entry;
-      let element = document.getElementById(id)
-      currentHoverComponent(<Node>e.target)
+    if (node.visible) {
+      return h(resolve, { element: node }, () => {
+        return node.children.map((e: any) => doRender(e))
+      })
     }
-  })
+  }
 
+  return doRender(renderPage.root)
 })
 
-const componentRender = computed(() => {
-  // 2.渲染对话框
-
-  return h('div', { class:'!min-h-100vh flex !flex-col' }, [...renderPage.value.components, ...renderPage.value.models,].map(m => doRender(m)).filter(m => m))
-})
 
 </script>
 
 <template>
-  <componentRender/>
+  <render></render>
 </template>
-<style scoped>
-
-</style>

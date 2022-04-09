@@ -72,8 +72,8 @@ export const nodeState = reactive({
 
       if (e.type === 'DialogComponent' && e.visible && width > 0) {
         let element = findInElementArea(x_, y_, e)
-        console.log('找到最终',e.id)
-        if (element){
+        console.log('找到最终', e.id)
+        if (element) {
           elementId = element.id
         }
         break
@@ -235,7 +235,7 @@ export const renderPage = reactive({
   modelBoxes: []
 })
 
-watchEffect(()=>{
+watchEffect(() => {
   window.parent.postMessage(
     {
       type: 'renderPageChange',
@@ -277,7 +277,7 @@ const build = (root, level: number): void => {
 
 const buildElementMap = () => {
   let root = renderPage.root
-  console.log('重载',root)
+  console.log('重载', root)
   elementMap.clear()
   build(root, 0)
 
@@ -406,7 +406,7 @@ function findInArea (x: number, y: number) {
 
     if (e.type === 'DialogComponent' && e.visible && width > 0) {
       if (x >= left && x <= left + width && y >= top && y <= top + height) {
-        let element = findInElementArea(x,y,e);
+        let element = findInElementArea(x, y, e)
         elementId = element.id
         level = element.level
         targetLocation = locationMap.get(elementId)
@@ -501,7 +501,6 @@ export const onCopy = (elementId: string) => {
 }
 
 onMounted(() => {
-  const { proxy } = getCurrentInstance() as any
 })
 
 export const onDelete = (elementId: string) => {

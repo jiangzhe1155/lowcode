@@ -24,18 +24,18 @@ const props = defineProps({
 const el = ref(null)
 const location = reactive(useElementBounding(el))
 
-// const {onHover:onHover_}  = useComponentHelp(props, location)
-//
-// function onHover (state: boolean) {
-//   onHover_(state)
-// }
+const {onHover:onHover_}  = useComponentHelp(props, location)
+
+function onHover (state: boolean) {
+  onHover_(state)
+}
 
 const { pressed } = useMousePressed({ target: el })
 const longPressed = ref(false)
 
 onLongPress(el, () => {
   longPressed.value = true
-  console.log('长按了',props.element.id)
+  console.log('长按了', props.element.id)
   window.parent.postMessage(
       {
         type: 'onStartSelect'
@@ -56,55 +56,69 @@ watch(pressed, (n) => {
 })
 
 onMounted(() => {
-  window.addEventListener('mousemove', (event)=>{
-    x.value = event.clientX;
-    y.value = event.clientY;
+  window.addEventListener('mousemove', (event) => {
+    x.value = event.clientX
+    y.value = event.clientY
     window.parent.postMessage(
         {
           type: 'onMouseMove',
-          x:x.value,
-          y:y.value
+          x: x.value,
+          y: y.value
         }, '*')
   })
 
   window.addEventListener('message', (event) => {
-    let {type,location,element} = event.data;
-    if (type === 'elementMove'){
-      let {pressNodeId,dragElementId,dragDirection} = event.data.info;
+    let {
+      type,
+      location,
+      element
+    } = event.data
+    if (type === 'elementMove') {
+      let {
+        pressNodeId,
+        dragElementId,
+        dragDirection
+      } = event.data.info
       move(pressNodeId, dragElementId, dragDirection)
       window.parent.postMessage({
-        type:'elementMove',
-        elementId:pressNodeId
-      },"*")
-    }else if (type === 'elementAdd'){
-      let {pressTypeId,dragElementId,dragDirection} = event.data.info;
+        type: 'elementMove',
+        elementId: pressNodeId
+      }, '*')
+    } else if (type === 'elementAdd') {
+      let {
+        pressTypeId,
+        dragElementId,
+        dragDirection
+      } = event.data.info
       let addId = add(pressTypeId, dragElementId, dragDirection)
       window.parent.postMessage({
-        type:'elementAdd',
-        elementId:addId
-      },"*")
-    }if (type === 'elementCopy'){
-      let {clickedNodeId} = event.data.info;
+        type: 'elementAdd',
+        elementId: addId
+      }, '*')
+    }
+    if (type === 'elementCopy') {
+      let { clickedNodeId } = event.data.info
       let elementId = onCopy(clickedNodeId)
       window.parent.postMessage({
-        type:'elementCopy',
-        elementId:elementId
-      },"*")
-    }if (type === 'elementDelete'){
-      let {clickedNodeId} = event.data.info;
+        type: 'elementCopy',
+        elementId: elementId
+      }, '*')
+    }
+    if (type === 'elementDelete') {
+      let { clickedNodeId } = event.data.info
       onDelete(clickedNodeId)
       window.parent.postMessage({
-        type:'elementDelete',
-        elementId:clickedNodeId
-      },"*")
+        type: 'elementDelete',
+        elementId: clickedNodeId
+      }, '*')
     }
-  });
+  })
 })
 
 </script>
 
 <template>
-  <div ref="el" class="!min-h-100vh flex !flex-col">
+  <div ref="el" v-element-hover="onHover" class="!min-h-100vh flex !flex-col">
     <slot></slot>
   </div>
 </template>

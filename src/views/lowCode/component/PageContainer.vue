@@ -5,19 +5,26 @@ import { emitter, locationMap, nodeStateOnHover } from '@/views/lowCode/workbenc
 import { vElementHover } from '@vueuse/components'
 import useComponentHelp from '@/views/lowCode/componentHelp'
 
+const props = defineProps({
+  element: {
+    type: Object,
+    require: true,
+    default: null
+  }
+})
 
+const el = ref(null)
 
+const {onHover:onHover_}  = useComponentHelp(props, location)
 
-// const {onHover:onHover_}  = useComponentHelp(props, location)
-//
-// function onHover (state: boolean) {
-//   onHover_(state)
-// }
+function onHover (state: boolean) {
+  onHover_(state)
+}
 
 </script>
 
 <template>
-  <el-container class="space-y-6 min-h-100vh !bg-transparent !flex-col p-20px">
+  <el-container ref="el" v-element-hover="onHover" class="space-y-6 min-h-100vh !bg-transparent !flex-col p-20px">
     <slot></slot>
   </el-container>
 </template>

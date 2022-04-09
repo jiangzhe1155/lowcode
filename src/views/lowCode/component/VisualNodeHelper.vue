@@ -254,7 +254,7 @@ const onDelete = () => {
   </div>
 
   <div
-      v-if="nodeState.pressNodeId.length > 0 && nodeState.isDrag"
+      v-if="nodeState.pressNodeId?.length > 0 && nodeState.isDrag"
       ref="el"
       class="absolute bg-gray-400 bg-opacity-50 select-none z-852"
       :style="pressStyleCompute"

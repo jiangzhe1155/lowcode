@@ -2,23 +2,34 @@
 import LowCodeAside from './aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
 
+import VisualNodeHelper2 from '@/views/lowCode/VisualNodeHelper2.vue'
 import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
-import { ref} from 'vue'
+
+import { onMounted, ref } from 'vue'
 
 const el = ref<HTMLElement | null>(null)
 const store = useConfigStore()
-import { useRenderPageData } from '@/views/lowCode/service'
+import { addMessageListener } from '@/views/lowCode/iframeUtil'
+import { controlState, isInside, locationState, renderPage, point, x, y } from '@/views/lowCode/state'
+import { vElementHover } from '@vueuse/components'
 
-
-let { renderPage,componentMap,locationState } = useRenderPageData('12312')
-
-// const iframeRef = ref(null)
+onMounted(() => {
+  addMessageListener('locationStateChange', (payload: any) => {
+    locationState.value = payload.locationState
+  })
+  addMessageListener('renderPageUpdate', (payload: any) => {
+    renderPage.value = payload.renderPage
+  })
+  addMessageListener('controlStateUpdate', (payload: any) => {
+    controlState.value = payload.controlState
+  })
+  document.addEventListener('mousemove', (event) => {
+    console.log('鼠标移动',event.x,event.y)
+  })
+})
 //
-// const iframeWin = ref(null)
-// const onLoad = () => {
-//   iframeWin.value = iframeRef.value.contentWindow
-//   console.log('加载', iframeWin)
-//   iframeWin.value.focus({ preventScroll: false })
+// function onHover (state: boolean) {
+//   isInside.value = state
 // }
 
 </script>
@@ -26,6 +37,7 @@ let { renderPage,componentMap,locationState } = useRenderPageData('12312')
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
+            {{ isInside }} {{ point }} {{ x }} {{ y }} {{controlState}}
       <el-button></el-button>
     </el-header>
     <el-container>
@@ -33,13 +45,12 @@ let { renderPage,componentMap,locationState } = useRenderPageData('12312')
       <el-main class="bg-gray-200 !p-0 !select-none">
         <div class="relative h-full shadow border-solid border-1">
           <div
-              ref="el"
-              class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-visible overflow-x-hidden"
+              class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
           >
             <div
-                class="absolute left-0 top-0 z-800 w-full h-full select-none pointer-events-none">
-              <VisualNodeHelper>
-              </VisualNodeHelper>
+                class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
+              <VisualNodeHelper2>
+              </VisualNodeHelper2>
             </div>
             <iframe
                 id="workbench-iframe"

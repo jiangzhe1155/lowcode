@@ -83,7 +83,7 @@ function handleMessage (event) {
     for (var entry of elementMap2) { // 遍历Map
       elementMap.set(entry[0], entry[1])
     }
-  }else if (type === 'renderPageChange'){
+  } else if (type === 'renderPageChange') {
     renderPage.root = event.data.renderPage
   } else {
     console.log(event)
@@ -109,7 +109,6 @@ onUnmounted(() => {
 
 })
 
-
 const { isOutside } = useMouseInElement(el)
 
 </script>
@@ -117,7 +116,7 @@ const { isOutside } = useMouseInElement(el)
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
       {{ x }} {{ y }} {{ nodeState.currentHoveredId }} {{ nodeState.clickedNodeId }} 拖拽元素 {{ nodeState.dragElementId }}
-      {{ nodeState.pressTypeId }} {{isOutside}}
+      {{ nodeState.pressTypeId }} {{ isOutside }}
       <el-button @click="nodeStateOnClick('8')">asda</el-button>
     </el-header>
     <el-container>
@@ -146,7 +145,7 @@ const { isOutside } = useMouseInElement(el)
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1">{{ elementMap }}</el-aside>
+      <el-aside class="border-l-1">{{nodeState}}</el-aside>
     </el-container>
   </el-container>
 </template>
