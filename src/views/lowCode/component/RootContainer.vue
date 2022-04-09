@@ -24,7 +24,7 @@ const props = defineProps({
 const el = ref(null)
 const location = reactive(useElementBounding(el))
 
-const {onHover:onHover_}  = useComponentHelp(props, location)
+const { onHover: onHover_ } = useComponentHelp(props, location)
 
 function onHover (state: boolean) {
   onHover_(state)
@@ -59,6 +59,7 @@ onMounted(() => {
   window.addEventListener('mousemove', (event) => {
     x.value = event.clientX
     y.value = event.clientY
+    console.log('鼠標移動中',x.value,y.value)
     window.parent.postMessage(
         {
           type: 'onMouseMove',
