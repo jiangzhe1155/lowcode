@@ -1,10 +1,11 @@
-import { computed, onMounted, reactive, ref, toRaw, watch, watchEffect } from 'vue'
+import { computed, onMounted, reactive, toRaw, watch, watchEffect } from 'vue'
 import { v4 } from 'uuid'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import { Location } from '@/views/lowCode/componentLocation'
-import { useMouse, useMousePressed, useScroll } from '@vueuse/core'
+import { onLongPress, useMouse, useMousePressed, useScroll } from '@vueuse/core'
 
 export function useRenderPageData (pageId?: string) {
+  console.log(pageId)
   let page = new Page()
   let card = new Card('卡片1')
   card.children.push(new Card('卡片2'))
@@ -21,6 +22,7 @@ export function useRenderPageData (pageId?: string) {
     x,
     y
   } = useMouse()
+
   const { y: scrollY } = useScroll(window)
 
   const locationState: LocationState = reactive(new LocationState())
@@ -38,9 +40,13 @@ export function useRenderPageData (pageId?: string) {
     sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
   })
 
+  const {
+    isScrolling,
+    arrivedState,
+    directions
+  } = useScroll(document)
+
   watchEffect(() => {
-    controlState.x = x.value
-    controlState.y = y.value
     controlState.scroll = scrollY.value
   })
 
@@ -199,13 +205,105 @@ export function useRenderPageData (pageId?: string) {
     locationState.currentPressComponent = currentComponent(e)
   }
 
-  function onDragging () {
+  const fetchDirection = (x: number, y: number) => {
+    let location = locationState.currentHoverComponent?.location
+    if (!location || !location.width) {
+      return
+    }
 
+    let {
+      width,
+      height,
+      left,
+      top
+    } = location
+
+    let halfWidth = width / 5
+    let halfHeight = height / 5
+
+    let left_ = x - left
+    let right_ = left + width - x
+    let top_ = y - top
+    let bottom_ = top + height - y
+
+    // 离那边最近
+    if (left_ <= halfWidth) {
+      if (top_ <= halfHeight) {
+        return (left / halfWidth < top_ / halfHeight) ? 'left' : 'top'
+      }
+
+      if (bottom_ <= halfHeight) {
+        return (left / halfWidth < bottom_ / halfHeight) ? 'left' : 'bottom'
+      }
+      return 'left'
+    }
+
+    if (right_ <= halfWidth) {
+      if (top_ <= halfHeight) {
+        return (right_ / halfWidth < top_ / halfHeight) ? 'right' : 'top'
+      }
+
+      if (bottom_ <= halfHeight) {
+        return (right_ / halfWidth < bottom_ / halfHeight) ? 'right' : 'bottom'
+      }
+      return 'right'
+    }
+
+    if (top_ <= halfHeight) {
+      if (left_ <= halfWidth) {
+        return (left_ / halfWidth < top_ / halfHeight) ? 'left' : 'top'
+      }
+
+      if (right_ <= halfWidth) {
+        return (right_ / halfWidth < top_ / halfHeight) ? 'right' : 'top'
+      }
+      return 'top'
+    }
+
+    if (bottom_ <= halfHeight) {
+      if (left_ <= halfWidth) {
+        return (left_ / halfWidth < bottom_ / halfHeight) ? 'left' : 'bottom'
+      }
+
+      if (right_ <= halfWidth) {
+        return (right_ / halfWidth < bottom_ / halfHeight) ? 'right' : 'bottom'
+      }
+      return 'bottom'
+    }
+    return 'center'
+  }
+
+  function onDragging () {
+    // 获取方向
+    controlState.direction = fetchDirection(x.value, y.value - controlState.scroll)
+
+    // 如果鼠标已经靠近了上下边缘
+    scrollToTop()
   }
 
   function onDragEnd () {
 
   }
+
+  const scrollToTop = () => {
+    let hScrollTop = window.scrollY
+    let hScrollHeight = window.innerHeight
+
+    // 如果
+    if (y.value <= hScrollTop) {
+      window.scrollTo({ top: hScrollTop - 1 / 2 * (hScrollTop - y.value) })
+    } else if (y.value >= hScrollTop + hScrollHeight) {
+      window.scrollTo({ top: hScrollTop + 1 / 2 * (y.value - (hScrollTop + hScrollHeight)) })
+    }
+
+    // window.scrollTo({ top: 2000 })
+    // console.log(hScrollTop, hScrollHeight, y.value)
+  }
+
+  onLongPress(document.documentElement, () => {
+    console.log('长按')
+    controlState.isLongPress = true
+  }, { delay: 200 })
 
   onMounted(() => {
     window.addEventListener('scroll', () => {
@@ -220,45 +318,55 @@ export function useRenderPageData (pageId?: string) {
       // console.log('收集的位置', locationMap)
     })
 
-    window.addEventListener('mouseup', (e: Event) => {
-      console.log('鼠标弹起', e.target)
-      controlState.isPress = false
+    window.addEventListener('mouseup', (event: Event) => {
+      locationState.currentClickComponent = currentComponent(<Node>event.target)
+    }, { passive: true })
+
+    window.addEventListener('mousemove', (event: MouseEvent) => {
+      locationState.currentHoverComponent = currentComponent(<Node>event.target)
+    }, { passive: true })
+
+    window.addEventListener('focusin', () => {
+      console.log('获取焦点')
+    }, { passive: true })
+
+    window.addEventListener('focusout', () => {
+      console.log('失去焦点')
+    }, { passive: true })
+
+    window.addEventListener('mousemove', (event: MouseEvent) => {
+      controlState.x = event.clientX
+      controlState.y = event.clientY
+      if (controlState.isLongPress) {
+        if (!controlState.isDrag) {
+          controlState.isDrag = true
+          onDragStart(<Node>event.target)
+        } else {
+          console.log(event)
+          onDragging()
+
+        }
+      }
+      sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
+    }, { passive: true })
+
+    window.addEventListener('mouseup', () => {
+      controlState.isLongPress = false
       if (controlState.isDrag) {
         controlState.isDrag = false
         onDragEnd()
       }
-      locationState.currentClickComponent = currentComponent(<Node>e.target)
+
+      sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
     }, { passive: true })
 
     window.addEventListener('mouseleave', (e: Event) => {
       console.log('鼠标移出', e.target)
-      controlState.isPress = false
+      controlState.isLongPress = false
     }, { passive: true })
 
-    window.addEventListener('mousedown', () => {
-      controlState.isPress = true
-    }, { passive: true })
-
-    window.addEventListener('mousemove', (e: Event) => {
-      if (controlState.isPress) {
-        if (!controlState.isDrag) {
-          controlState.isDrag = true
-          onDragStart(e.target)
-        } else {
-          onDragging()
-        }
-      }
-      locationState.currentHoverComponent = currentComponent(<Node>e.target)
-    }, { passive: true })
-
-    document.addEventListener('focusin', () => {
-      console.log('获取焦点')
-    }, { passive: true })
-
-    document.addEventListener('focusout', () => {
-      console.log('失去焦点')
-    }, { passive: true })
-
+    // 全局静止选择文字
+    document.onselectstart = () => false
   })
 
   return {
@@ -268,7 +376,10 @@ export function useRenderPageData (pageId?: string) {
     locationState,
     locationMap,
     controlState,
-    pressed
+    pressed,
+    isScrolling,
+    arrivedState,
+    directions
   }
 }
 
@@ -343,9 +454,10 @@ export class RenderPage {
 }
 
 export class ControlState {
-  isPress: boolean = false
+  isLongPress: boolean = false
   isDrag: boolean = false
   x: number = 0
   y: number = 0
   scroll: number = 0
+  direction?: Direction
 }

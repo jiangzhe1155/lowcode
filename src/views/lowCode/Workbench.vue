@@ -10,7 +10,7 @@ import { onMounted, ref } from 'vue'
 const el = ref<HTMLElement | null>(null)
 const store = useConfigStore()
 import { addMessageListener } from '@/views/lowCode/iframeUtil'
-import { controlState, isInside, locationState, renderPage, point, x, y } from '@/views/lowCode/state'
+import { controlState, isInside, locationState, renderPage, point, x, y ,isShowInsertion} from '@/views/lowCode/state'
 import { vElementHover } from '@vueuse/components'
 
 onMounted(() => {
@@ -22,22 +22,28 @@ onMounted(() => {
   })
   addMessageListener('controlStateUpdate', (payload: any) => {
     controlState.value = payload.controlState
+    // console.log('接收变化', controlState.value.x, controlState.value.y)
   })
   document.addEventListener('mousemove', (event) => {
-    console.log('鼠标移动',event.x,event.y)
+    // console.log('鼠标移动', event.x, event.y)
+  })
+
+  document.addEventListener('mousedown', (event) => {
+    console.log('按钮按下', event)
+
   })
 })
-//
-// function onHover (state: boolean) {
-//   isInside.value = state
-// }
+
+function onHover (state: boolean) {
+  isInside.value = state
+}
 
 </script>
 
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-            {{ isInside }} {{ point }} {{ x }} {{ y }} {{controlState}}
+      {{ isInside }} {{ point }} {{ x }} {{ y }} {{ controlState }} {{isShowInsertion}}
       <el-button></el-button>
     </el-header>
     <el-container>
@@ -61,7 +67,7 @@ onMounted(() => {
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1">{{locationState}}</el-aside>
+      <el-aside class="border-l-1">{{ locationState }}</el-aside>
     </el-container>
   </el-container>
 </template>

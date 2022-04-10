@@ -19,10 +19,10 @@ export function useComponentLocation (component: Component, el: any) {
   return
 }
 
-export interface Location {
-  left?: number,
-  top?: number,
-  height?: number
-  width?: number
+export class Location {
+  left: number = 0
+  top: number =0
+  height: number = 0
+  width: number = 0
 }
 

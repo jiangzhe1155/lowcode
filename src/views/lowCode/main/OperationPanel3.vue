@@ -5,7 +5,8 @@ import { useRenderPageData } from '@/views/lowCode/service'
 
 const {
   renderPage,
-  locationMap
+  locationMap,
+  isScrolling
 } = useRenderPageData('12312')
 
 function doRender (node: any) {

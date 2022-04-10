@@ -1,9 +1,19 @@
 <script setup lang="ts">
-import { locationState, componentMap, isInside, controlState, location, point, x, y } from '@/views/lowCode/state'
+import {
+  locationState,
+  componentMap,
+  isInside,
+  controlState,
+  point,
+  x,
+  y,
+  isShowInsertion
+} from '@/views/lowCode/state'
 import { computed, toRaw } from 'vue'
 
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
+import { nodeState } from '@/views/lowCode/workbenchStatusMange'
 
 const hoverStyle = computed(() => {
   let location = locationState.value.currentHoverComponent?.location
@@ -53,11 +63,65 @@ const pressStyleCompute = computed(() => {
   }
 })
 
+const dragInsertionStyle = computed(() => {
+  let {
+    top,
+    width,
+    height,
+    left
+  } = locationState.value.currentHoverComponent?.location
+  let direction = controlState.value.direction
+
+  // console.log(locationState.value.currentHoverComponent?.location,direction,scrollY)
+  if (direction == 'right') {
+    return {
+      width: '4px',
+      height: height + 'px',
+      left: left + width - 4 + 'px',
+      top: top + 'px'
+    }
+  }
+
+  if (direction == 'left') {
+    return {
+      width: '4px',
+      height: height + 'px',
+      left: left + 'px',
+      top: top + 'px'
+    }
+  }
+
+  if (direction == 'top') {
+    return {
+      height: '4px',
+      width: width + 'px',
+      left: left + 'px',
+      top: top + 'px'
+    }
+  }
+
+  if (direction == 'bottom') {
+    return {
+      height: '4px',
+      width: width + 'px',
+      left: left + 'px',
+      top: top + height - 4 + 'px'
+    }
+  }
+
+  return {
+    height: height + 'px',
+    width: width + 'px',
+    left: left + 'px',
+    top: top + 'px'
+  }
+})
+
 </script>
 
 <template>
   <div
-      v-if="locationState.currentHoverComponent && locationState.currentHoverComponent.location.width"
+      v-if="locationState.currentHoverComponent && locationState.currentHoverComponent.location.width && !controlState.isDrag"
       class="absolute"
       :style="hoverStyle"
       :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true},'pointer-events-none']">
@@ -68,7 +132,7 @@ const pressStyleCompute = computed(() => {
   </div>
 
   <div
-      v-if="locationState.currentClickComponent && locationState.currentClickComponent.location.width"
+      v-if="locationState.currentClickComponent && locationState.currentClickComponent.location.width && !controlState.isDrag"
       class="z-400 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyle"
   >
@@ -143,16 +207,19 @@ const pressStyleCompute = computed(() => {
       v-if="controlState.isDrag"
       class="fixed bg-gray-500 w-auto px-40px z-4000  pointer-events-auto	select-auto	cursor-move"
       :style="dragStyle"
-  ><p class="text-sm">{{ componentMap.get(locationState.currentPressComponent.id).name }}</p>
+  ><p class="text-sm cursor-move">{{ componentMap.get(locationState.currentPressComponent?.id)?.name }}</p>
   </div>
 
-  <!--  <div-->
-  <!--      class="fixed bg-gray-500 w-auto px-40px !z-4000 pointer-events-auto	select-auto	cursor-move	"-->
-  <!--      style="left: 200px;top: 200px"-->
-  <!--  ><p class="text-sm">娃哈哈</p>-->
-  <!--  </div>-->
+  <div
+      v-if="controlState.isDrag && isShowInsertion"
+      class="absolute cursor-move select-none z-853"
+      :class="{'bg-blue-500':controlState.direction !== 'center',
+           'bg-blue-600 bg-opacity-50':controlState.direction === 'center',
+        }"
+      :style="dragInsertionStyle"
+  >
+  </div>
 
-  <!--  v-if="controlState.isDrag"-->
 
 </template>
 
