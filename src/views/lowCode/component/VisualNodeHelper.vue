@@ -6,7 +6,7 @@ import {
   onBeforeUnmount,
   onMounted,
   reactive,
-  ref,
+  ref, toRaw,
   watch,
   watchEffect
 } from 'vue'
@@ -24,6 +24,7 @@ import {
 } from '@/views/lowCode/workbenchStatusMange'
 import { isClient, toReactive, useDraggable, useMousePressed } from '@vueuse/core'
 import { Num } from 'windicss/types/lang/tokens'
+import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 
 const el = ref<HTMLElement | null>(null)
 

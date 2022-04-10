@@ -9,7 +9,6 @@ import PageContainer from '@/views/lowCode/component/PageContainer.vue'
 import RootContainer from '@/views/lowCode/component/RootContainer.vue'
 import CardComponent from '@/views/lowCode/component/CardComponent.vue'
 import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
-
 import mitt from 'mitt'
 
 const app = createApp(App)

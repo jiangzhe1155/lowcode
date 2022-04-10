@@ -7,13 +7,14 @@ import {
   point,
   x,
   y,
-  isShowInsertion
+  isShowInsertion, iframeWin,
+  asideHoverType
 } from '@/views/lowCode/state'
 import { computed, toRaw } from 'vue'
 
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
-import { nodeState } from '@/views/lowCode/workbenchStatusMange'
+import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 
 const hoverStyle = computed(() => {
   let location = locationState.value.currentHoverComponent?.location
@@ -53,6 +54,13 @@ const dragStyle = computed(() => {
   }
 })
 
+const asideDragStyle = computed(() => {
+  return {
+    left: point.x - 20 + 'px',
+    top: point.y - 10 + 'px',
+  }
+})
+
 const pressStyleCompute = computed(() => {
   let location = locationState.value.currentPressComponent?.location
   return {
@@ -73,49 +81,26 @@ const dragInsertionStyle = computed(() => {
   let direction = controlState.value.direction
 
   // console.log(locationState.value.currentHoverComponent?.location,direction,scrollY)
-  if (direction == 'right') {
-    return {
-      width: '4px',
-      height: height + 'px',
-      left: left + width - 4 + 'px',
-      top: top + 'px'
-    }
-  }
-
-  if (direction == 'left') {
-    return {
-      width: '4px',
-      height: height + 'px',
-      left: left + 'px',
-      top: top + 'px'
-    }
-  }
-
-  if (direction == 'top') {
-    return {
-      height: '4px',
-      width: width + 'px',
-      left: left + 'px',
-      top: top + 'px'
-    }
-  }
-
-  if (direction == 'bottom') {
-    return {
-      height: '4px',
-      width: width + 'px',
-      left: left + 'px',
-      top: top + height - 4 + 'px'
-    }
-  }
+  width = direction == 'right' || direction == 'left' ? 4 : width
+  height = direction == 'top' || direction == 'bottom' ? 4 : height
+  left = direction == 'right' ? left + width - 4 : left
+  top = direction == 'bottom' ? top + height - 4 : top
 
   return {
-    height: height + 'px',
     width: width + 'px',
+    height: height + 'px',
     left: left + 'px',
     top: top + 'px'
   }
 })
+
+const onCopy = () => {
+  sendIframeMessage(iframeWin.value, 'componentCopy', { id: locationState.value.currentClickComponent?.id })
+}
+
+const onDelete = () => {
+  sendIframeMessage(iframeWin.value, 'componentDelete', { id: locationState.value.currentClickComponent?.id })
+}
 
 </script>
 
@@ -132,7 +117,7 @@ const dragInsertionStyle = computed(() => {
   </div>
 
   <div
-      v-if="locationState.currentClickComponent && locationState.currentClickComponent.location.width && !controlState.isDrag"
+      v-if="locationState.currentClickComponent && locationState.currentClickComponent.location?.width && !controlState.isDrag"
       class="z-400 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyle"
   >
@@ -175,7 +160,7 @@ const dragInsertionStyle = computed(() => {
             content="复制"
             :offset="5"
             placement="top">
-          <el-button>
+          <el-button @click="onCopy">
             <el-icon :size="16">
               <copy-document/>
             </el-icon>
@@ -186,7 +171,7 @@ const dragInsertionStyle = computed(() => {
             content="移除"
             :offset="5"
             placement="top">
-          <el-button>
+          <el-button @click="onDelete">
             <el-icon :size="16">
               <delete/>
             </el-icon>
@@ -197,7 +182,7 @@ const dragInsertionStyle = computed(() => {
   </div>
 
   <div
-      v-if="controlState.isDrag"
+      v-if="controlState.isDrag && !controlState.asideComponentType"
       class="absolute bg-gray-400 bg-opacity-50 select-none z-4000 pointer-events-none select-auto cursor-move"
       :style="pressStyleCompute"
   >
@@ -205,13 +190,22 @@ const dragInsertionStyle = computed(() => {
 
   <div
       v-if="controlState.isDrag"
-      class="fixed bg-gray-500 w-auto px-40px z-4000  pointer-events-auto	select-auto	cursor-move"
+      class="fixed bg-gray-500 w-auto px-40px z-4000  pointer-events-none	select-auto	cursor-move"
       :style="dragStyle"
   ><p class="text-sm cursor-move">{{ componentMap.get(locationState.currentPressComponent?.id)?.name }}</p>
   </div>
 
+
   <div
-      v-if="controlState.isDrag && isShowInsertion"
+      v-if="controlState.asideComponentType "
+      class="fixed bg-gray-500 w-auto px-40px z-4000  pointer-events-none	select-auto	cursor-move"
+      :style="asideDragStyle"
+  ><p class="text-sm cursor-move">{{ asideHoverType }}</p>
+  </div>
+
+
+  <div
+      v-if="controlState.isDrag && isShowInsertion && isInside"
       class="absolute cursor-move select-none z-853"
       :class="{'bg-blue-500':controlState.direction !== 'center',
            'bg-blue-600 bg-opacity-50':controlState.direction === 'center',

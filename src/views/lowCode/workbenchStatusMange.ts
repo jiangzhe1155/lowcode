@@ -444,7 +444,7 @@ export const onStartSelect = () => {
   nodeState.pressY = y.value
 }
 
-export function move (pressNodeId: string, dragElementId: string, dragDirection: string) {
+export function move(pressNodeId: string, dragElementId: string, dragDirection: string) {
   let element = elementMap.get(pressNodeId)
   let pElement = elementMap.get(element.pid)
   let i = pElement.children.indexOf(element)

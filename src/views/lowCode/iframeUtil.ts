@@ -7,8 +7,8 @@ export const addMessageListener = (eventType: string, callback: Function) => {
   })
 }
 
-export const sendIframeMessage = (window: Window, eventType: string, payload: any) => {
-  window.postMessage(
+export const sendIframeMessage = (html: Window, eventType: string, payload: any) => {
+  html.postMessage(
     {
       type: eventType,
       payload: payload

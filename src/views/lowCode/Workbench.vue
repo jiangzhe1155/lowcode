@@ -8,9 +8,22 @@ import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
 import { onMounted, ref } from 'vue'
 
 const el = ref<HTMLElement | null>(null)
+const iframeRef = ref(null)
+
 const store = useConfigStore()
 import { addMessageListener } from '@/views/lowCode/iframeUtil'
-import { controlState, isInside, locationState, renderPage, point, x, y ,isShowInsertion} from '@/views/lowCode/state'
+import {
+  controlState,
+  isInside,
+  locationState,
+  renderPage,
+  point,
+  x,
+  y,
+  isShowInsertion,
+  iframeWin,
+  asideHoverType
+} from '@/views/lowCode/state'
 import { vElementHover } from '@vueuse/components'
 
 onMounted(() => {
@@ -18,6 +31,7 @@ onMounted(() => {
     locationState.value = payload.locationState
   })
   addMessageListener('renderPageUpdate', (payload: any) => {
+    // console.log('接收变化 renderPageUpdate',payload.renderPage)
     renderPage.value = payload.renderPage
   })
   addMessageListener('controlStateUpdate', (payload: any) => {
@@ -26,12 +40,17 @@ onMounted(() => {
   })
   document.addEventListener('mousemove', (event) => {
     // console.log('鼠标移动', event.x, event.y)
+
   })
 
   document.addEventListener('mousedown', (event) => {
-    console.log('按钮按下', event)
 
   })
+
+  if (iframeRef.value) {
+    iframeWin.value = iframeRef.value?.contentWindow
+  }
+
 })
 
 function onHover (state: boolean) {
@@ -43,7 +62,7 @@ function onHover (state: boolean) {
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      {{ isInside }} {{ point }} {{ x }} {{ y }} {{ controlState }} {{isShowInsertion}}
+      {{ isInside }} {{ point }} {{ x }} {{ y }} {{ controlState }} {{ isShowInsertion }} {{asideHoverType}}
       <el-button></el-button>
     </el-header>
     <el-container>
@@ -51,6 +70,7 @@ function onHover (state: boolean) {
       <el-main class="bg-gray-200 !p-0 !select-none">
         <div class="relative h-full shadow border-solid border-1">
           <div
+              v-element-hover="onHover"
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
           >
             <div
