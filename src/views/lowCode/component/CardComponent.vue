@@ -1,16 +1,7 @@
 <script setup lang="ts">
 import {
   defineProps,
-  ref,
-  reactive,
-
 } from 'vue'
-import { onLongPress, useElementBounding, useMousePressed } from '@vueuse/core'
-import { Component } from '@/views/lowCode/service'
-import { vElementHover } from '@vueuse/components'
-
-import { useComponentLocation } from '@/views/lowCode/componentLocation'
-import useComponentHelp from '@/views/lowCode/componentHelp'
 
 const props = defineProps({
   element: {
@@ -20,19 +11,11 @@ const props = defineProps({
   }
 })
 
-const el = ref(null)
-const location = reactive(useElementBounding(el))
-
-const { onHover: onHover_ } = useComponentHelp(props, location)
-
-function onHover (state: boolean) {
-  onHover_(state)
-}
 
 </script>
 
 <template>
-  <el-card ref="el" v-element-hover="onHover">
+  <el-card>
     <template #header>
       <p>一个卡片</p>
     </template>

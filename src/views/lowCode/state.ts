@@ -1,6 +1,7 @@
 import { computed, reactive, ref, watch, watchEffect } from 'vue'
 import { Component, ControlState, Direction, LocationState, RenderPage } from '@/views/lowCode/service'
 import { useMouse } from '@vueuse/core'
+import mitt from 'mitt'
 
 export const locationState = ref<LocationState>(new LocationState())
 export const renderPage = ref<RenderPage>(new RenderPage())
@@ -9,6 +10,7 @@ export const isInside = ref(false)
 export const iframeWin = ref<any>(null)
 export const asideHoverType = ref<string | null>(null)
 
+export const emitter = mitt()
 export const {
   x,
   y

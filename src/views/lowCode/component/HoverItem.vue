@@ -2,7 +2,8 @@
 
 import { defineProps } from 'vue'
 import { vElementHover } from '@vueuse/components'
-import { nodeStateOnHover, nodeStateOnHoverItem,nodeStateOnClick } from '@/views/lowCode/workbenchStatusMange'
+import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { iframeWin, locationState } from '@/views/lowCode/state'
 
 const props = defineProps({
   elementId: {
@@ -12,13 +13,17 @@ const props = defineProps({
 })
 
 function onHover (state: boolean) {
-  nodeStateOnHoverItem(props.elementId, state)
+  sendIframeMessage(iframeWin.value, 'onHoverComponent', { id: props.elementId })
+}
+
+function onClick (state: boolean) {
+  sendIframeMessage(iframeWin.value, 'onClickComponent', { id: props.elementId })
 }
 
 </script>
 
 <template>
-  <div v-element-hover="onHover" @click="nodeStateOnClick(elementId)">
+  <div v-element-hover="onHover" @click="onClick">
     <slot></slot>
   </div>
 </template>

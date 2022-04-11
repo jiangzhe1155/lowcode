@@ -1,16 +1,5 @@
 <script setup lang="ts">
-import { defineProps, onMounted, onUnmounted, onUpdated, reactive, ref, watch, watchEffect } from 'vue'
-import { onLongPress, useElementBounding, useMousePressed, useScroll, UseScrollReturn } from '@vueuse/core'
-import {
-  add,
-  emitter,
-  locationMap, move,
-  nodeState,
-  nodeStateOnHover, onCopy, onDelete,
-  onDragEnd,
-  onStartSelect, x, y
-} from '@/views/lowCode/workbenchStatusMange'
-
+import { defineProps } from 'vue'
 
 const props = defineProps({
   element: {

@@ -1,7 +1,6 @@
 import { computed, nextTick, onMounted, reactive, toRaw, watch, watchEffect } from 'vue'
 import { v4 } from 'uuid'
 import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
-import { Location } from '@/views/lowCode/componentLocation'
 import { onLongPress, useEventListener, useMouse, useScroll } from '@vueuse/core'
 
 export function useRenderPageData (pageId?: string) {
@@ -11,7 +10,7 @@ export function useRenderPageData (pageId?: string) {
   let card = new Card('卡片1')
   card.children.push(new Card('卡片2'))
   page.children.push(new Card('卡片3'), card, new Card('卡片4'))
-  let dialog = new Dialog();
+  let dialog = new Dialog()
   dialog.children.push(new Card('卡片6'))
   root.children.push(page, new Card('卡片6'))
 
@@ -531,7 +530,7 @@ export function useRenderPageData (pageId?: string) {
         id: clickId,
         location: toRaw(locationMap.get(componentMap.get(clickId)))
       }
-    }, 2000)
+    }, 300)
   })
 
   addMessageListener('componentDelete', (payload: any) => {
@@ -552,6 +551,14 @@ export function useRenderPageData (pageId?: string) {
     controlState.isDrag = false
     controlState.direction = undefined
     controlState.asideComponentType = null
+  })
+
+  addMessageListener('onHoverComponent', (payload: any) => {
+    console.log('移動了', payload.id)
+  })
+
+  addMessageListener('onClickComponent', (payload: any) => {
+    console.log('點擊了', payload.id)
   })
 
   onMounted(() => {
@@ -664,4 +671,9 @@ export class ControlState {
   asideComponentType: string | null = null
 }
 
-
+export class Location {
+  left: number = 0
+  top: number = 0
+  height: number = 0
+  width: number = 0
+}

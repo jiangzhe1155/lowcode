@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { defineProps, onMounted, ref, toRaw, watch } from 'vue'
-import { emitter } from '@/views/lowCode/workbenchStatusMange'
 import { vElementHover } from '@vueuse/components'
 import { onLongPress, useMousePressed } from '@vueuse/core'
-import { asideHoverType, controlState, iframeWin, locationState, x, y } from '@/views/lowCode/state'
+import { asideHoverType, controlState, emitter, iframeWin, locationState, x, y } from '@/views/lowCode/state'
 import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
 
 const props = defineProps({
@@ -63,12 +62,12 @@ onMounted(() => {
 
   window.addEventListener('mouseup', (event: MouseEvent) => {
     isDrag.value = false
-    longPressed.value = false;
+    longPressed.value = false
 
     sendIframeMessage(iframeWin.value, 'onDragEnd', {})
   }, { passive: true })
 
-  addMessageListener('onDragEnd', (payload) => {
+  addMessageListener('onDragEnd', () => {
     longPressed.value = false
     emitter.emit('onComponentPanelOpen')
   })

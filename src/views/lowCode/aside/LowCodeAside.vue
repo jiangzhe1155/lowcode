@@ -4,7 +4,7 @@ import { useConfigStore } from '@/stores/constant'
 import { onMounted, reactive } from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
-import { emitter } from '@/views/lowCode/workbenchStatusMange'
+import { emitter } from '@/views/lowCode/state'
 
 const store = useConfigStore()
 const state = reactive({

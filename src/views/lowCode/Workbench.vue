@@ -2,12 +2,9 @@
 import LowCodeAside from './aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
 
-import VisualNodeHelper2 from '@/views/lowCode/VisualNodeHelper2.vue'
-import VisualNodeHelper from '@/views/lowCode/component/VisualNodeHelper.vue'
-
+import VisualNodeHelper from '@/views/lowCode/VisualNodeHelper.vue'
 import { onMounted, ref } from 'vue'
 
-const el = ref<HTMLElement | null>(null)
 const iframeRef = ref(null)
 
 const store = useConfigStore()
@@ -40,7 +37,6 @@ onMounted(() => {
   })
   document.addEventListener('mousemove', (event) => {
     // console.log('鼠标移动', event.x, event.y)
-
   })
 
   document.addEventListener('mousedown', (event) => {
@@ -62,7 +58,7 @@ function onHover (state: boolean) {
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      {{ isInside }} {{ point }} {{ x }} {{ y }} {{ controlState }} {{ isShowInsertion }} {{asideHoverType}}
+      {{ isInside }} {{ point }} {{ x }} {{ y }} {{ controlState }} {{ isShowInsertion }} {{ asideHoverType }}
       <el-button></el-button>
     </el-header>
     <el-container>
@@ -75,8 +71,8 @@ function onHover (state: boolean) {
           >
             <div
                 class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
-              <VisualNodeHelper2>
-              </VisualNodeHelper2>
+              <VisualNodeHelper>
+              </VisualNodeHelper>
             </div>
             <iframe
                 id="workbench-iframe"
