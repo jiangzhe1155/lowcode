@@ -1,6 +1,6 @@
 import { computed, reactive, ref, watch, watchEffect } from 'vue'
 import { Component, ControlState, Direction, LocationState, RenderPage } from '@/views/lowCode/service'
-import { useMouse } from '@vueuse/core'
+import { useMouse, usePointer } from '@vueuse/core'
 import mitt from 'mitt'
 
 export const locationState = ref<LocationState>(new LocationState())
@@ -14,7 +14,7 @@ export const emitter = mitt()
 export const {
   x,
   y
-} = useMouse()
+} = usePointer()
 
 export const point = reactive({
   x: 0,

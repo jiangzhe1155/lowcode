@@ -12,7 +12,7 @@ const routes = [
     path: '/lowCode/workbench',
     name: 'lc-workbench',
     component: Workbench
-  },  {
+  }, {
     path: '/lowCode/overview',
     name: 'Overview',
     component: Overview

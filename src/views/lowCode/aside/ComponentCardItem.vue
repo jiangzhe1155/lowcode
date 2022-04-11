@@ -63,7 +63,6 @@ onMounted(() => {
   window.addEventListener('mouseup', (event: MouseEvent) => {
     isDrag.value = false
     longPressed.value = false
-
     sendIframeMessage(iframeWin.value, 'onDragEnd', {})
   }, { passive: true })
 

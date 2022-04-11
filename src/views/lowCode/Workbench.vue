@@ -35,9 +35,6 @@ onMounted(() => {
     controlState.value = payload.controlState
     // console.log('接收变化', controlState.value.x, controlState.value.y)
   })
-  document.addEventListener('mousemove', (event) => {
-    // console.log('鼠标移动', event.x, event.y)
-  })
 
   document.addEventListener('mousedown', (event) => {
 

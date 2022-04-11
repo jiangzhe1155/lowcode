@@ -23,4 +23,3 @@ app.component('PageContainer', PageContainer) // 注册组件
 app.component('RootContainer', RootContainer) // 注册组件
 app.component('CardComponent', CardComponent)
 app.component('DialogComponent', DialogComponent)
-

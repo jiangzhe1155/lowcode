@@ -13,7 +13,6 @@ export function useRenderPageData (pageId?: string) {
   let dialog = new Dialog()
   dialog.children.push(new Card('卡片6'))
   root.children.push(page, new Card('卡片6'))
-
   root.children.push(dialog)
   const renderPage: RenderPage = reactive({
     components: [root],
@@ -554,11 +553,25 @@ export function useRenderPageData (pageId?: string) {
   })
 
   addMessageListener('onHoverComponent', (payload: any) => {
-    console.log('移動了', payload.id)
+    if (locationMap.size == 0) {
+      updateLocation()
+    }
+
+    locationState.currentHoverComponent = {
+      id: payload.id,
+      location: toRaw(locationMap.get(componentMap.get(payload.id)))
+    }
   })
 
   addMessageListener('onClickComponent', (payload: any) => {
-    console.log('點擊了', payload.id)
+    if (locationMap.size == 0) {
+      updateLocation()
+    }
+
+    locationState.currentClickComponent = {
+      id: payload.id,
+      location: toRaw(locationMap.get(componentMap.get(payload.id)))
+    }
   })
 
   onMounted(() => {
@@ -638,7 +651,7 @@ class Page extends BaseComponent {
 
 class Dialog extends BaseComponent {
   type = 'DialogComponent'
-  visible = true
+  visible = false
   getElement = ((id: string) => {
     return document.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
   }).toString()

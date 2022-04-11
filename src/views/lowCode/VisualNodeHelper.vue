@@ -15,6 +15,7 @@ import { computed, toRaw } from 'vue'
 import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { Component } from '@/views/lowCode/service'
 
 const hoverStyle = computed(() => {
   let location = locationState.value.currentHoverComponent?.location
@@ -102,13 +103,34 @@ const onDelete = () => {
   sendIframeMessage(iframeWin.value, 'componentDelete', { id: locationState.value.currentClickComponent?.id })
 }
 
+const parentComponent = computed(() => {
+  // 获取父级的组件（3）个
+  let parentComponents: Component[] = []
+  let i = 0
+  let componentId = componentMap.get(locationState.value.currentClickComponent?.id).pid
+  while (i < 3 && componentId.length > 0) {
+    let pE = componentMap.get(componentMap.get(componentId).id)
+    parentComponents.push(pE)
+    componentId = pE.pid
+    i++
+  }
+  return parentComponents
+})
+
+const componentName = computed(() => {
+  return componentMap.get(locationState.value.currentClickComponent?.id)?.name
+})
+
 </script>
 
 <template>
   <div
-      v-if="isInside && locationState.currentHoverComponent && locationState.currentHoverComponent.location
-      && locationState.currentHoverComponent.location.width && !controlState.isDrag &&
-            locationState.currentHoverComponent.id !== locationState.currentClickComponent?.id"
+      v-if="isInside &&
+      locationState.currentHoverComponent &&
+      locationState.currentHoverComponent.location &&
+      locationState.currentHoverComponent.location.width &&
+      !controlState.isDrag &&
+      locationState.currentHoverComponent.id !== locationState.currentClickComponent?.id"
       class="absolute"
       :style="hoverStyle"
       :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true},'pointer-events-none']">
@@ -129,18 +151,12 @@ const onDelete = () => {
     >
       <el-dropdown size="small" type="primary" trigger="hover" class="mr-2px">
         <el-button type="primary" size="small">
-          {{ componentMap.get(locationState.currentClickComponent?.id)?.name }}
+          {{ componentName }}
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>
-              <HoverItem element-id="3">卡片</HoverItem>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <HoverItem element-id="2">頁面</HoverItem>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <HoverItem element-id="1">root</HoverItem>
+            <el-dropdown-item v-for="c in parentComponent">
+              <HoverItem :element-id="c.id">{{ c.name }}</HoverItem>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>

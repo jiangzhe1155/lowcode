@@ -3,7 +3,7 @@
 import { defineProps } from 'vue'
 import { vElementHover } from '@vueuse/components'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
-import { iframeWin, locationState } from '@/views/lowCode/state'
+import { iframeWin, isInside } from '@/views/lowCode/state'
 
 const props = defineProps({
   elementId: {
@@ -13,10 +13,13 @@ const props = defineProps({
 })
 
 function onHover (state: boolean) {
-  sendIframeMessage(iframeWin.value, 'onHoverComponent', { id: props.elementId })
+  if (state) {
+    sendIframeMessage(iframeWin.value, 'onHoverComponent', { id: props.elementId })
+  }
+  isInside.value = state
 }
 
-function onClick (state: boolean) {
+function onClick () {
   sendIframeMessage(iframeWin.value, 'onClickComponent', { id: props.elementId })
 }
 

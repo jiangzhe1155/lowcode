@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { computed, createElementBlock, h, onBeforeUpdate, onMounted, onUpdated, resolveComponent } from 'vue'
+import { computed, h, resolveComponent } from 'vue'
 import { useRenderPageData } from '@/views/lowCode/service'
 
 const {
@@ -23,6 +23,7 @@ const componentRender = computed(() => {
   // 2.渲染对话框
   return h('div', { class: '!min-h-100vh flex !flex-col' }, [...renderPage.components].map(m => doRender(m)).filter(m => m))
 })
+
 </script>
 
 <template>
