@@ -1,11 +1,19 @@
 <script setup lang="ts">
 
 import { computed, h, resolveComponent } from 'vue'
-import { useRenderPageData } from '@/views/lowCode/service'
+import { Root, useRenderPageData } from '@/views/lowCode/service'
 
 const {
   renderPage
 } = useRenderPageData('12312')
+
+
+const renderData = computed(()=>{
+  let root = new Root();
+  root.children.push(...renderPage.components);
+  root.children.push(...renderPage.models)
+  return root;
+})
 
 function doRender (node: any) {
   const resolve = resolveComponent(node.type)
@@ -20,8 +28,13 @@ function doRender (node: any) {
 }
 
 const componentRender = computed(() => {
+  let root = new Root();
+  root.children.push(...renderPage.components);
+  root.children.push(...renderPage.models)
+
+  console.log(root)
   // 2.渲染对话框
-  return h('div', { class: '!min-h-100vh flex !flex-col' }, [...renderPage.components].map(m => doRender(m)).filter(m => m))
+  return h('div', { class: '!min-h-100vh flex !flex-col' }, doRender(root))
 })
 
 </script>

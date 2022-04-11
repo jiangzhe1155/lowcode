@@ -5,19 +5,18 @@ import { onLongPress, useEventListener, useMouse, useScroll } from '@vueuse/core
 
 export function useRenderPageData (pageId?: string) {
   console.log(pageId)
-  let root = new Root()
   let page = new Page()
   let card = new Card('卡片1')
   card.children.push(new Card('卡片2'))
   page.children.push(new Card('卡片3'), card, new Card('卡片4'))
   let dialog = new Dialog()
   dialog.children.push(new Card('卡片6'))
-  root.children.push(page, new Card('卡片6'))
-  root.children.push(dialog)
   const renderPage: RenderPage = reactive({
-    components: [root],
-    models: []
+    components: [page, new Card('卡片6')],
+    models: [dialog]
   })
+
+
 
   const {
     x,
@@ -40,12 +39,6 @@ export function useRenderPageData (pageId?: string) {
   watch(locationState, () => {
     sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
   })
-
-  const {
-    isScrolling,
-    arrivedState,
-    directions
-  } = useScroll(document)
 
   watchEffect(() => {
     controlState.scroll = scrollY.value
@@ -123,7 +116,7 @@ export function useRenderPageData (pageId?: string) {
     let components = renderPage.components
     componentMap.clear()
 
-    function doBuild (component: Component, level: number = 0) {
+    function doBuild (component: Component, level: number = 1) {
       component.level = level
       componentMap.set(component.id, component)
       component.children?.forEach(child => {
@@ -133,7 +126,7 @@ export function useRenderPageData (pageId?: string) {
     }
 
     for (let component of [...components, ...models]) {
-      doBuild(component, 0)
+      doBuild(component, 1)
     }
   }
 
@@ -210,29 +203,39 @@ export function useRenderPageData (pageId?: string) {
     if (locationState.currentHoverComponent) {
       locationState.currentHoverComponent.location = locationMap.get(componentMap.get(locationState.currentHoverComponent.id))
     }
-
   }
 
   const onDelete = (componentId: string) => {
     let element = componentMap.get(componentId)
+    if (element.level == 0) {
+      console.log('无法删除根节点')
+      return
+    }
     let pElement = componentMap.get(element.pid)
     let i = pElement.children.indexOf(element)
     pElement.children.splice(i, 1)
     console.log('删除dialog', renderPage)
   }
 
-  function add (pressTypeId: string, hoverId: string, dragDirection: string) {
-    let element = new Card()
+  function add (pressTypeId: ComponentType,pressGroup:ComponentGroup, hoverId: string, dragDirection: string) {
+    let newInstance = <Component>newInstanceByType(pressTypeId)
+
+    if (pressGroup ==='Model'){
+      renderPage.models.push(newInstance)
+      return newInstance.id
+    }
+
+    // 如果是模态框,直接添加到后面
 
     let dragElement = componentMap.get(hoverId)
     if (dragDirection === 'center') {
-      dragElement.children.push(element)
-      element.level = dragElement.level + 1
-      element.pid = dragElement.id
+      dragElement.children.push(newInstance)
+      newInstance.level = dragElement.level + 1
+      newInstance.pid = dragElement.id
     } else {
       let newParentElement = componentMap.get(dragElement.pid)
-      element.level = newParentElement.level + 1
-      element.pid = newParentElement.id
+      newInstance.level = newParentElement.level + 1
+      newInstance.pid = newParentElement.id
 
       let j = newParentElement.children.indexOf(dragElement)
       let shift = 0
@@ -240,13 +243,13 @@ export function useRenderPageData (pageId?: string) {
         shift = 1
       }
       if (j + shift >= newParentElement.children.length) {
-        newParentElement.children.push(element)
+        newParentElement.children.push(newInstance)
       } else {
-        newParentElement.children.splice(j + shift, 0, element)
+        newParentElement.children.splice(j + shift, 0, newInstance)
       }
     }
-
-    return element.id
+    console.log('添加成功')
+    return newInstance.id
   }
 
   const onCopy = (componentId: string) => {
@@ -393,7 +396,7 @@ export function useRenderPageData (pageId?: string) {
     if (locationState.currentHoverComponent && isShowInsertion.value && controlState.direction) {
       let clickId: string = ''
       if (controlState.asideComponentType) {
-        clickId = add(controlState.asideComponentType, locationState.currentHoverComponent?.id, controlState.direction)
+        clickId = add(controlState.asideComponentType, controlState.asideComponentGroup,locationState.currentHoverComponent?.id, controlState.direction)
         sendIframeMessage(window.parent, 'onDragEnd', {})
       } else if (locationState.currentPressComponent) {
         clickId = move(locationState.currentPressComponent?.id, locationState.currentHoverComponent?.id, controlState.direction)
@@ -413,6 +416,7 @@ export function useRenderPageData (pageId?: string) {
     if (pressNodeId === dragElementId) {
       return true
     }
+
     let element = componentMap.get(pressNodeId)
     if (element && element.children) {
       for (let child of element.children) {
@@ -427,10 +431,12 @@ export function useRenderPageData (pageId?: string) {
   const isShowInsertion = computed(() => {
     let pressId = locationState.currentPressComponent?.id
     let hoverId = locationState.currentHoverComponent?.id
-
+    let pressGroup = pressId ? componentMap.get(pressId).group : controlState.asideComponentGroup;
     if (!controlState.isDrag || !hoverId) {
       return false
     }
+
+    console.log(pressGroup)
 
     // 如果是子元素 不允許
     if (pressId && isSubElement(pressId, hoverId)) {
@@ -440,7 +446,7 @@ export function useRenderPageData (pageId?: string) {
     if (controlState.direction === 'center') {
       // 如果这个容器已经存在子元素时
       let e = componentMap.get(hoverId)
-      if (!e || e.children.length > 0 || e.supportDirection.indexOf('center') < 0) {
+      if (!e || e.children.length > 0 || e.supportDirection.indexOf('center') < 0 || e.supportGroup.indexOf(pressGroup) < 0) {
         return false
       } else {
         return true
@@ -449,13 +455,11 @@ export function useRenderPageData (pageId?: string) {
 
     // 这个组件的父组件支持这个方向的操作
     let pElement = componentMap.get(componentMap.get(hoverId)?.pid)
-    // console.log(pressId, hoverId, controlState.isDrag, pElement, componentMap)
     if (!pElement) {
       return false
     }
 
-    let i = pElement.supportDirection.indexOf(<Direction>controlState.direction)
-    if (i < 0) {
+    if (pElement.supportDirection.indexOf(<Direction>controlState.direction) < 0 || pElement.supportGroup.indexOf(pressGroup) < 0) {
       return false
     }
     return true
@@ -512,7 +516,8 @@ export function useRenderPageData (pageId?: string) {
     if (controlState.isDrag) {
       onDragEnd()
       controlState.isDrag = false
-      controlState.asideComponentType = null
+      controlState.asideComponentType = undefined
+      controlState.asideComponentGroup = undefined
     }
     sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
   }, { passive: true })
@@ -542,6 +547,7 @@ export function useRenderPageData (pageId?: string) {
 
   addMessageListener('onStartDrag', (payload: any) => {
     controlState.asideComponentType = payload.componentType
+    controlState.asideComponentGroup = payload.componentGroup
     controlState.isLongPress = true
   })
 
@@ -549,7 +555,8 @@ export function useRenderPageData (pageId?: string) {
     controlState.isLongPress = false
     controlState.isDrag = false
     controlState.direction = undefined
-    controlState.asideComponentType = null
+    controlState.asideComponentType = undefined
+    controlState.asideComponentGroup = undefined
   })
 
   addMessageListener('onHoverComponent', (payload: any) => {
@@ -586,9 +593,6 @@ export function useRenderPageData (pageId?: string) {
     locationState,
     locationMap,
     controlState,
-    isScrolling,
-    arrivedState,
-    directions
   }
 }
 
@@ -599,20 +603,37 @@ export interface Component {
   pid?: string,
   level?: number,
   name: string,
-  type: string,
+  type: ComponentType,
   children: Component[],
   supportDirection: Direction[]
   slots: any[],
   visible: boolean,
-  getElement: string
+  getElement: string,
+  group:ComponentGroup,
+  supportGroup: ComponentGroup[]
 }
+
+const newInstanceByType = (type: ComponentType): Component | undefined => {
+  if (type === 'CardComponent') {
+    return new Card()
+  } else if (type === 'RootContainer') {
+    return new Root()
+  } else if (type === 'PageContainer') {
+    return new Page()
+  } else if (type === 'DialogComponent') {
+    return new Dialog()
+  }
+}
+
+export type ComponentType = 'CardComponent' | 'RootContainer' | 'PageContainer' | 'DialogComponent';
+export type ComponentGroup = 'Input' | 'Container' | 'Model';
 
 abstract class BaseComponent implements Component {
   id: string = v4()
   pid: string = ''
   name: string = ''
   level?: number
-  abstract type: string
+  abstract type: ComponentType
   children: Component[] = []
   supportDirection: Direction[] = ['top', 'bottom', 'center']
   slots = []
@@ -620,10 +641,14 @@ abstract class BaseComponent implements Component {
   getElement = ((id: string) => {
     return document.getElementById(id)
   }).toString()
+  abstract group:ComponentGroup
+  supportGroup: ComponentGroup[] = []
 }
 
 class Card extends BaseComponent {
-  type = 'CardComponent'
+  type: ComponentType = 'CardComponent'
+  group:ComponentGroup = 'Container'
+  supportGroup: ComponentGroup[] = ['Input','Container']
 
   constructor (name: string = '卡片') {
     super()
@@ -632,7 +657,9 @@ class Card extends BaseComponent {
 }
 
 export class Root extends BaseComponent {
-  type = 'RootContainer'
+  type: ComponentType = 'RootContainer'
+  group:ComponentGroup = 'Container'
+  supportGroup: ComponentGroup[] = ['Container','Model']
 
   constructor (name: string = '根节点') {
     super()
@@ -641,7 +668,9 @@ export class Root extends BaseComponent {
 }
 
 class Page extends BaseComponent {
-  type = 'PageContainer'
+  type: ComponentType = 'PageContainer'
+  group:ComponentGroup = 'Container'
+  supportGroup: ComponentGroup[] = ['Container','Input']
 
   constructor (name: string = '页面') {
     super()
@@ -650,17 +679,17 @@ class Page extends BaseComponent {
 }
 
 class Dialog extends BaseComponent {
-  type = 'DialogComponent'
-  visible = false
+  type: ComponentType = 'DialogComponent'
+  group:ComponentGroup = 'Model'
+  supportGroup: ComponentGroup[] = ['Container','Input']
+  visible = true
   getElement = ((id: string) => {
     return document.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
   }).toString()
-
   constructor (name: string = '对话框') {
     super()
     this.name = name
   }
-
 }
 
 export class LocationState {
@@ -681,7 +710,8 @@ export class ControlState {
   y: number = 0
   scroll: number = 0
   direction?: Direction
-  asideComponentType: string | null = null
+  asideComponentType: ComponentType | undefined
+  asideComponentGroup:ComponentGroup|undefined
 }
 
 export class Location {

@@ -1,6 +1,6 @@
 import { computed, reactive, ref, watch, watchEffect } from 'vue'
 import { Component, ControlState, Direction, LocationState, RenderPage } from '@/views/lowCode/service'
-import { useMouse, usePointer } from '@vueuse/core'
+import { usePointer } from '@vueuse/core'
 import mitt from 'mitt'
 
 export const locationState = ref<LocationState>(new LocationState())
@@ -36,7 +36,6 @@ export function updateComponentMap (renderPage: any) {
       doBuild(child, level + 1)
     })
   }
-
   for (let component of [...components, ...models]) {
     doBuild(component, 0)
   }
@@ -63,9 +62,11 @@ const isSubElement = (pressNodeId: string | undefined, dragElementId: string | u
   }
   return false
 }
+
 export const isShowInsertion = computed(() => {
   let pressId = locationState.value.currentPressComponent?.id
   let hoverId = locationState.value.currentHoverComponent?.id
+  let pressGroup = pressId ? componentMap.get(pressId).group : controlState.value.asideComponentGroup;
 
   if (!controlState.value.isDrag || !hoverId) {
     return false
@@ -77,9 +78,9 @@ export const isShowInsertion = computed(() => {
   }
 
   if (controlState.value.direction === 'center') {
-    // 如果这个容器已经存在子元素时
+    // 如果这个容器已经存在子元素时 或者不支持這個分類
     let e = componentMap.get(hoverId)
-    if (!e || e.children.length > 0 || e.supportDirection.indexOf('center') < 0) {
+    if (!e || e.children.length > 0 || e.supportDirection.indexOf('center') < 0|| e.supportGroup.indexOf(pressGroup) < 0) {
       return false
     } else {
       return true
@@ -92,9 +93,7 @@ export const isShowInsertion = computed(() => {
     return false
   }
 
-  let i = pElement.supportDirection.indexOf(<Direction>controlState.value.direction)
-
-  if (i < 0) {
+  if (pElement.supportDirection.indexOf(<Direction>controlState.value.direction) < 0 || pElement.supportGroup.indexOf(pressGroup) < 0) {
     return false
   }
 

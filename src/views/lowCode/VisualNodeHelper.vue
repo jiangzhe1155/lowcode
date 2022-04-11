@@ -218,7 +218,7 @@ const componentName = computed(() => {
       v-if="controlState.asideComponentType "
       class="fixed bg-gray-500 w-auto px-40px z-4000  pointer-events-none	select-auto	cursor-move"
       :style="asideDragStyle"
-  ><p class="text-sm cursor-move">{{ asideHoverType }}</p>
+  ><p class="text-sm cursor-move">{{ controlState.asideComponentType }}</p>
   </div>
 
 

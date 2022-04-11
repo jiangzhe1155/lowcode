@@ -20,11 +20,13 @@ const props = defineProps({
     type: String,
     require: true,
     default: ''
+  },group: {
+    type: String,
+    require: true,
+    default: ''
   }
 })
 
-function onHover (state: boolean) {
-}
 
 const el = ref<HTMLElement | null>(null)
 const longPressed = ref(false)
@@ -32,7 +34,6 @@ const isDrag = ref(false)
 
 onLongPress(el, () => {
   longPressed.value = true
-  asideHoverType.value = props.type
   emitter.emit('onComponentPanelClose')
 }, { delay: 200 })
 
@@ -43,7 +44,6 @@ watch(pressed, (n) => {
 
   } else {
     longPressed.value = false
-    asideHoverType.value = null
     emitter.emit('onComponentPanelOpen')
   }
 })
@@ -54,7 +54,8 @@ onMounted(() => {
       if (!isDrag.value) {
         isDrag.value = true
         sendIframeMessage(iframeWin.value, 'onStartDrag', {
-          componentType: asideHoverType.value
+          componentType: props.type,
+          componentGroup: props.group
         })
       }
     }
@@ -70,7 +71,6 @@ onMounted(() => {
     longPressed.value = false
     emitter.emit('onComponentPanelOpen')
   })
-
 })
 
 </script>
