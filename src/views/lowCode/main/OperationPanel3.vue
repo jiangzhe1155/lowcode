@@ -17,7 +17,7 @@ function doRender (node: any) {
       element: node,
       id: node.id
     }, () => {
-      return node.children.map((e: any) => doRender(e)).filter(m => m)
+      return node.children.map((e: any) => doRender(e)).filter((m: any) => m)
     })
   }
 }
@@ -26,16 +26,19 @@ const componentRender = computed(() => {
   // 2.渲染对话框
   return h('div', { class: '!min-h-100vh flex !flex-col' }, [...renderPage.components].map(m => doRender(m)).filter(m => m))
 })
-
-const componentModelRender = computed(() => {
-  // 2.渲染对话框
-  return h('div', {}, [...renderPage.models,].map(m => doRender(m)).filter(m => m))
-})
+//
+// const componentModelRender = computed(() => {
+//   if (renderPage.models && renderPage.models.length > 0) {
+//     // 2.渲染对话框
+//     return h('div', {}, [...renderPage.models,].map(m => doRender(m)).filter(m => m))
+//   }
+// })
 
 </script>
 
 <template>
   <componentRender></componentRender>
+<!--  <componentModelRender></componentModelRender>-->
 </template>
 <style scoped>
 

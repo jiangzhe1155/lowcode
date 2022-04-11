@@ -14,25 +14,7 @@ const props = defineProps({
   }
 })
 
-const dialogVisible = ref(false)
-
-// const onOpen = () => {
-//   let elementsByClassName = document.getElementById('dialog_data').firstElementChild.firstElementChild.firstElementChild
-//   console.log(elementsByClassName.offsetWidth, elementsByClassName.offsetHeight, elementsByClassName.offsetLeft, elementsByClassName.offsetTop)
-//
-//   location.width = elementsByClassName.offsetWidth
-//   location.height = elementsByClassName.offsetHeight
-//   location.top = elementsByClassName.offsetTop
-//   location.left = elementsByClassName.offsetLeft
-//
-//   window.parent.postMessage(
-//       {
-//         type: 'locationChange',
-//         location: toRaw(location),
-//         elementId: props.element.id,
-//       }, '*')
-// }
-//
+const dialogVisible = ref(true)
 const onClose = () => {
   console.log('关闭了')
 }

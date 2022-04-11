@@ -80,12 +80,12 @@ const dragInsertionStyle = computed(() => {
   } = locationState.value.currentHoverComponent?.location
   let direction = controlState.value.direction
 
-  // console.log(locationState.value.currentHoverComponent?.location,direction,scrollY)
-  width = direction == 'right' || direction == 'left' ? 4 : width
-  height = direction == 'top' || direction == 'bottom' ? 4 : height
-  left = direction == 'right' ? left + width - 4 : left
-  top = direction == 'bottom' ? top + height - 4 : top
+  left = direction === 'right' ? left + width - 4 : left
+  top = direction === 'bottom' ? top + height - 4 : top
+  width = direction === 'right' || direction === 'left' ? 4 : width
+  height = direction === 'top' || direction === 'bottom' ? 4 : height
 
+  // console.log(width, height, left, top)
   return {
     width: width + 'px',
     height: height + 'px',
@@ -106,7 +106,9 @@ const onDelete = () => {
 
 <template>
   <div
-      v-if="locationState.currentHoverComponent && locationState.currentHoverComponent.location.width && !controlState.isDrag"
+      v-if="isInside && locationState.currentHoverComponent && locationState.currentHoverComponent.location
+      && locationState.currentHoverComponent.location.width && !controlState.isDrag &&
+            locationState.currentHoverComponent.id !== locationState.currentClickComponent?.id"
       class="absolute"
       :style="hoverStyle"
       :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true},'pointer-events-none']">

@@ -2,7 +2,7 @@ import { computed, nextTick, onMounted, reactive, toRaw, watch, watchEffect } fr
 import { v4 } from 'uuid'
 import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import { Location } from '@/views/lowCode/componentLocation'
-import { onLongPress, useMouse, useScroll } from '@vueuse/core'
+import { onLongPress, useEventListener, useMouse, useScroll } from '@vueuse/core'
 
 export function useRenderPageData (pageId?: string) {
   console.log(pageId)
@@ -11,12 +11,14 @@ export function useRenderPageData (pageId?: string) {
   let card = new Card('卡片1')
   card.children.push(new Card('卡片2'))
   page.children.push(new Card('卡片3'), card, new Card('卡片4'))
-  let dialog = new Dialog()
+  let dialog = new Dialog();
   dialog.children.push(new Card('卡片6'))
   root.children.push(page, new Card('卡片6'))
+
+  root.children.push(dialog)
   const renderPage: RenderPage = reactive({
     components: [root],
-    models: [dialog]
+    models: []
   })
 
   const {
@@ -200,6 +202,17 @@ export function useRenderPageData (pageId?: string) {
     for (let component of [...renderPage.components, ...renderPage.models]) {
       doGetLocation(component)
     }
+
+    if (locationState.currentClickComponent) {
+      locationState.currentClickComponent.location = locationMap.get(componentMap.get(locationState.currentClickComponent.id))
+    }
+    if (locationState.currentPressComponent) {
+      locationState.currentPressComponent.location = locationMap.get(componentMap.get(locationState.currentPressComponent.id))
+    }
+    if (locationState.currentHoverComponent) {
+      locationState.currentHoverComponent.location = locationMap.get(componentMap.get(locationState.currentHoverComponent.id))
+    }
+
   }
 
   const onDelete = (componentId: string) => {
@@ -207,10 +220,10 @@ export function useRenderPageData (pageId?: string) {
     let pElement = componentMap.get(element.pid)
     let i = pElement.children.indexOf(element)
     pElement.children.splice(i, 1)
+    console.log('删除dialog', renderPage)
   }
 
   function add (pressTypeId: string, hoverId: string, dragDirection: string) {
-    console.log('添加')
     let element = new Card()
 
     let dragElement = componentMap.get(hoverId)
@@ -387,6 +400,7 @@ export function useRenderPageData (pageId?: string) {
       } else if (locationState.currentPressComponent) {
         clickId = move(locationState.currentPressComponent?.id, locationState.currentHoverComponent?.id, controlState.direction)
       }
+
       nextTick(() => {
         updateLocation()
         locationState.currentClickComponent = {
@@ -452,7 +466,7 @@ export function useRenderPageData (pageId?: string) {
   const scrollToTopOrBottom = () => {
     let hScrollTop = window.scrollY
     let hScrollHeight = window.innerHeight
-    // 如果
+
     if (y.value <= hScrollTop + 20) {
       window.scrollTo({ top: hScrollTop - 1 / 2 * (hScrollTop + 20 - y.value) })
     } else if (y.value >= hScrollTop + hScrollHeight - 20) {
@@ -465,28 +479,20 @@ export function useRenderPageData (pageId?: string) {
     controlState.isLongPress = true
   }, { delay: 200 })
 
-  onMounted(() => {
-    window.addEventListener('scroll', () => {
-      updateLocation()
-      locationState.currentHoverComponent = currentComponentFromArea(x.value, y.value)
-      if (locationState.currentClickComponent) {
-        locationState.currentClickComponent.location = locationMap.get(componentMap.get(locationState.currentClickComponent.id))
-      }
-      if (locationState.currentPressComponent) {
-        locationState.currentPressComponent.location = locationMap.get(componentMap.get(locationState.currentPressComponent.id))
-      }
-      // console.log('收集的位置', locationMap)
-    })
+  useEventListener('scroll', () => {
+    updateLocation()
+    locationState.currentHoverComponent = currentComponentFromArea(x.value, y.value)
+  })
 
-    window.addEventListener('mouseup', (event: Event) => {
-      locationState.currentClickComponent = currentComponent(<Node>event.target)
-    }, { passive: true })
+  useEventListener('mouseup', (event: Event) => {
+    locationState.currentClickComponent = currentComponent(<Node>event.target)
+  }, { passive: true })
 
-    window.addEventListener('mousemove', (event: MouseEvent) => {
-      locationState.currentHoverComponent = currentComponent(<Node>event.target)
-    }, { passive: true })
+  useEventListener('mousemove', (event: MouseEvent) => {
+    locationState.currentHoverComponent = currentComponent(<Node>event.target)
+  }, { passive: true })
 
-    window.addEventListener('mousemove', (event: MouseEvent) => {
+  useEventListener('mousemove', (event: MouseEvent) => {
       controlState.x = event.clientX
       controlState.y = event.clientY
       if (controlState.isLongPress) {
@@ -500,56 +506,56 @@ export function useRenderPageData (pageId?: string) {
         }
       }
       sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
-    }, { passive: true })
+    }, { passive: true }
+  )
 
-    window.addEventListener('mouseup', () => {
-      console.log('鼠标提升')
-      controlState.isLongPress = false
-      if (controlState.isDrag) {
-        onDragEnd()
-        controlState.isDrag = false
-        controlState.asideComponentType = null
-      }
-      sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
-    }, { passive: true })
-
-    window.addEventListener('mouseleave', (e: Event) => {
-      console.log('鼠标移出', e.target)
-      controlState.isLongPress = false
-    }, { passive: true })
-
-    addMessageListener('componentCopy', (payload: any) => {
-      let clickId = onCopy(payload.id)
-      nextTick(() => {
-        updateLocation()
-        locationState.currentClickComponent = {
-          id: clickId,
-          location: toRaw(locationMap.get(componentMap.get(clickId)))
-        }
-      })
-    })
-
-    addMessageListener('componentDelete', (payload: any) => {
-      onDelete(payload.id)
-      nextTick(() => {
-        updateLocation()
-        locationState.currentClickComponent = undefined
-      })
-    })
-
-    addMessageListener('onStartDrag', (payload: any) => {
-      controlState.asideComponentType = payload.componentType
-      controlState.isLongPress = true
-    })
-
-    addMessageListener('onDragEnd', () => {
-      controlState.isLongPress = false
+  useEventListener('mouseup', () => {
+    controlState.isLongPress = false
+    if (controlState.isDrag) {
+      onDragEnd()
       controlState.isDrag = false
-      controlState.direction = undefined
       controlState.asideComponentType = null
-    })
+    }
+    sendIframeMessage(window.parent, 'controlStateUpdate', { controlState: toRaw(controlState) })
+  }, { passive: true })
 
-    // 全局静止选择文字
+  useEventListener('resize', () => {
+    updateLocation()
+  }, { passive: true })
+
+  addMessageListener('componentCopy', (payload: any) => {
+    let clickId = onCopy(payload.id)
+    setTimeout(() => {
+      updateLocation()
+      locationState.currentClickComponent = {
+        id: clickId,
+        location: toRaw(locationMap.get(componentMap.get(clickId)))
+      }
+    }, 2000)
+  })
+
+  addMessageListener('componentDelete', (payload: any) => {
+    onDelete(payload.id)
+    nextTick(() => {
+      updateLocation()
+      locationState.currentClickComponent = undefined
+    })
+  })
+
+  addMessageListener('onStartDrag', (payload: any) => {
+    controlState.asideComponentType = payload.componentType
+    controlState.isLongPress = true
+  })
+
+  addMessageListener('onDragEnd', () => {
+    controlState.isLongPress = false
+    controlState.isDrag = false
+    controlState.direction = undefined
+    controlState.asideComponentType = null
+  })
+
+  onMounted(() => {
+    // 全局禁止选择文字
     document.onselectstart = () => false
   })
 

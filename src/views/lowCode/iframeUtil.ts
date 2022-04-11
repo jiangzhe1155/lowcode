@@ -1,5 +1,7 @@
+import { useEventListener } from '@vueuse/core'
+
 export const addMessageListener = (eventType: string, callback: Function) => {
-  window.addEventListener('message', (event) => {
+  useEventListener('message', (event) => {
     let { type } = event.data
     if (type === eventType) {
       callback(event.data.payload)
