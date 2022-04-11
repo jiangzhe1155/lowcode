@@ -347,13 +347,13 @@ export function useRenderPageData (pageId?: string) {
         clickId = move(locationState.currentPressComponent?.id, locationState.currentHoverComponent?.id, controlState.direction)
       }
 
-      nextTick(() => {
+      setTimeout(() => {
         updateLocation()
         locationState.currentClickComponent = {
           id: clickId,
           location: toRaw(locationMap.get(componentMap.get(clickId)))
         }
-      })
+      },300)
     }
   }
 
