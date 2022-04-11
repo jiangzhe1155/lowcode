@@ -36,10 +36,6 @@ onMounted(() => {
     // console.log('接收变化', controlState.value.x, controlState.value.y)
   })
 
-  document.addEventListener('mousedown', (event) => {
-
-  })
-
   if (iframeRef.value) {
     iframeWin.value = iframeRef.value?.contentWindow
   }

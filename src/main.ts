@@ -17,7 +17,7 @@ app.use(ElementPlus)
 app.use(createPinia())
 app.mount('#app')
 
-app.config.globalProperties.mittBus = new mitt()
+app.config.globalProperties.mittBus = mitt()
 
 app.component('PageContainer', PageContainer) // 注册组件
 app.component('RootContainer', RootContainer) // 注册组件
