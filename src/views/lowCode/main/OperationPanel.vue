@@ -8,13 +8,6 @@ const {
 } = useRenderPageData('12312')
 
 
-const renderData = computed(()=>{
-  let root = new Root();
-  root.children.push(...renderPage.components);
-  root.children.push(...renderPage.models)
-  return root;
-})
-
 function doRender (node: any) {
   const resolve = resolveComponent(node.type)
   if (node.visible) {
@@ -28,13 +21,9 @@ function doRender (node: any) {
 }
 
 const componentRender = computed(() => {
-  let root = new Root();
-  root.children.push(...renderPage.components);
-  root.children.push(...renderPage.models)
-
-  console.log(root)
+  console.log(renderPage)
   // 2.渲染对话框
-  return h('div', { class: '!min-h-100vh flex !flex-col' }, doRender(root))
+  return h('div', { class: '!min-h-100vh flex !flex-col' }, doRender(renderPage))
 })
 
 </script>

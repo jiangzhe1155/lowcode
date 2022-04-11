@@ -1,10 +1,10 @@
 import { computed, reactive, ref, watch, watchEffect } from 'vue'
-import { Component, ControlState, Direction, LocationState, RenderPage } from '@/views/lowCode/service'
+import { Component, ControlState, Direction, LocationState, Root, } from '@/views/lowCode/service'
 import { usePointer } from '@vueuse/core'
 import mitt from 'mitt'
 
 export const locationState = ref<LocationState>(new LocationState())
-export const renderPage = ref<RenderPage>(new RenderPage())
+export const renderPage = ref<Component>(new Root())
 export const controlState = ref<ControlState>(new ControlState())
 export const isInside = ref(false)
 export const iframeWin = ref<any>(null)
@@ -23,11 +23,11 @@ export const point = reactive({
 
 export const componentMap = new Map()
 
-export function updateComponentMap (renderPage: any) {
-  let models = renderPage.models
-  let components = renderPage.components
+export function updateComponentMap (renderPage: Component) {
+  if (!renderPage){
+    return
+  }
   componentMap.clear()
-
   function doBuild (component: Component, level: number = 0) {
     component.level = level
     componentMap.set(component.id, component)
@@ -36,13 +36,11 @@ export function updateComponentMap (renderPage: any) {
       doBuild(child, level + 1)
     })
   }
-  for (let component of [...components, ...models]) {
-    doBuild(component, 0)
-  }
+    doBuild(renderPage, 0)
+
 }
 
 watch(renderPage, () => {
-  // console.log('變化renderpage',n)
   updateComponentMap(renderPage.value)
 }, {
   deep: true

@@ -11,12 +11,9 @@ export function useRenderPageData (pageId?: string) {
   page.children.push(new Card('卡片3'), card, new Card('卡片4'))
   let dialog = new Dialog()
   dialog.children.push(new Card('卡片6'))
-  const renderPage: RenderPage = reactive({
-    components: [page, new Card('卡片6')],
-    models: [dialog]
-  })
-
-
+  let root = new Root();
+  root.children.push(page,new Card('卡片7'),dialog)
+  const renderPage: Component = reactive(root)
 
   const {
     x,
@@ -60,63 +57,25 @@ export function useRenderPageData (pageId?: string) {
     }
 
     // 先搜索模态框
-    for (let component of [...renderPage.models, ...renderPage.components]) {
-      let targetComponent = doFind(component)
-      if (targetComponent) {
-        let rect = eval(targetComponent.getElement)(targetComponent.id)?.getBoundingClientRect()
-        let location = {
-          height: rect?.height,
-          left: rect?.left,
-          top: rect?.top,
-          width: rect?.width
-        }
-        return {
-          id: targetComponent.id,
-          location: location
-        }
+    let targetComponent = doFind(renderPage)
+    if (targetComponent) {
+      let rect = eval(targetComponent.getElement)(targetComponent.id)?.getBoundingClientRect()
+      let location = {
+        height: rect?.height,
+        left: rect?.left,
+        top: rect?.top,
+        width: rect?.width
       }
-    }
-  }
-  const currentHoverComponent = (target: Node) => {
-    function doFind (model: Component): Component | null {
-      let element = document.getElementById(model.id)
-      if (element?.contains(target)) {
-        for (let child of model.children) {
-          let res = doFind(child)
-          if (res) {
-            return res
-          }
-        }
-        return model
-      }
-      return null
-    }
-
-    // 先搜索模态框
-    for (let component of [...renderPage.models, ...renderPage.components]) {
-      let targetComponent = doFind(component)
-      if (targetComponent && targetComponent.id !== locationState.currentHoverComponent?.id) {
-        let rect = eval(targetComponent.getElement)(targetComponent.id)?.getBoundingClientRect()
-        let location = {
-          height: rect?.height,
-          left: rect?.left,
-          top: rect?.top,
-          width: rect?.width
-        }
-        locationState.currentHoverComponent = {
-          id: targetComponent.id,
-          location: location
-        }
+      return {
+        id: targetComponent.id,
+        location: location
       }
     }
   }
 
-  function updateComponentMap (renderPage: any) {
-    let models = renderPage.models
-    let components = renderPage.components
+  function updateComponentMap (renderPage: Component) {
     componentMap.clear()
-
-    function doBuild (component: Component, level: number = 1) {
+    function doBuild (component: Component, level: number = 0) {
       component.level = level
       componentMap.set(component.id, component)
       component.children?.forEach(child => {
@@ -124,10 +83,7 @@ export function useRenderPageData (pageId?: string) {
         doBuild(child, level + 1)
       })
     }
-
-    for (let component of [...components, ...models]) {
-      doBuild(component, 1)
-    }
+    doBuild(renderPage, 0)
   }
 
   watch(renderPage, (n) => {
@@ -167,11 +123,9 @@ export function useRenderPageData (pageId?: string) {
       return null
     }
 
-    for (let component of [...renderPage.models, ...renderPage.components]) {
-      let targetComponent = doFind(component)
-      if (targetComponent) {
-        return targetComponent
-      }
+    let targetComponent = doFind(renderPage)
+    if (targetComponent) {
+      return targetComponent
     }
   }
 
@@ -190,9 +144,7 @@ export function useRenderPageData (pageId?: string) {
       locationMap.set(component, location)
     }
 
-    for (let component of [...renderPage.components, ...renderPage.models]) {
-      doGetLocation(component)
-    }
+    doGetLocation(renderPage)
 
     if (locationState.currentClickComponent) {
       locationState.currentClickComponent.location = locationMap.get(componentMap.get(locationState.currentClickComponent.id))
@@ -219,13 +171,6 @@ export function useRenderPageData (pageId?: string) {
 
   function add (pressTypeId: ComponentType,pressGroup:ComponentGroup, hoverId: string, dragDirection: string) {
     let newInstance = <Component>newInstanceByType(pressTypeId)
-
-    if (pressGroup ==='Model'){
-      renderPage.models.push(newInstance)
-      return newInstance.id
-    }
-
-    // 如果是模态框,直接添加到后面
 
     let dragElement = componentMap.get(hoverId)
     if (dragDirection === 'center') {
@@ -395,7 +340,7 @@ export function useRenderPageData (pageId?: string) {
   function onDragEnd () {
     if (locationState.currentHoverComponent && isShowInsertion.value && controlState.direction) {
       let clickId: string = ''
-      if (controlState.asideComponentType) {
+      if (controlState.asideComponentType && controlState.asideComponentGroup) {
         clickId = add(controlState.asideComponentType, controlState.asideComponentGroup,locationState.currentHoverComponent?.id, controlState.direction)
         sendIframeMessage(window.parent, 'onDragEnd', {})
       } else if (locationState.currentPressComponent) {
@@ -589,7 +534,6 @@ export function useRenderPageData (pageId?: string) {
   return {
     renderPage,
     componentMap,
-    currentHoverComponent,
     locationState,
     locationMap,
     controlState,
