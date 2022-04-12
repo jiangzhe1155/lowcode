@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentCardItem from '@/views/lowCode/aside/ComponentCardItem.vue'
-const activeNames = ref(['container', 'layout'])
+const activeNames = ref(['container', 'layout','model'])
 
 </script>
 
@@ -36,7 +36,7 @@ const activeNames = ref(['container', 'layout'])
       </el-row>
     </el-collapse-item>
 
-    <el-collapse-item name="layout">
+    <el-collapse-item name="model">
       <template #title>
         <p class="pl-20px">模态框</p>
       </template>

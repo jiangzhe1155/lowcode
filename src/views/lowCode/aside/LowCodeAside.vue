@@ -1,24 +1,55 @@
 <script setup lang="ts">
 import { Operation, PieChart } from '@element-plus/icons-vue'
 import { useConfigStore } from '@/stores/constant'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
-import { emitter } from '@/views/lowCode/state'
+import { controlState, emitter, iframeRef, iframeWin } from '@/views/lowCode/state'
+import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
 
 const store = useConfigStore()
+const el = ref()
 const state = reactive({
   treeTabShow: false,
   componentTabShow: false,
+  componentIsAffix: false
 })
 
 onMounted(() => {
   emitter.on('onComponentPanelClose', () => {
-    state.componentTabShow = false
+    console.log(el.value.isAffix)
+    if (!el.value.isAffix) {
+      state.componentTabShow = false
+    }
   })
   emitter.on('onComponentPanelOpen', () => {
-    state.componentTabShow = true
+    if (!el.value.isAffix) {
+      state.componentTabShow = true
+    }
   })
+
+  window.addEventListener('mousemove', (event: MouseEvent) => {
+    if (controlState.value.isLongPress) {
+      if (!controlState.value.isDrag) {
+        controlState.value.isDrag = true
+        sendIframeMessage(iframeWin.value, 'onStartDrag', {
+          componentType: controlState.value.asideComponentType,
+          componentGroup: controlState.value.asideComponentGroup
+        })
+      } else {
+        console.log('正在移動在')
+      }
+    }
+  }, true)
+
+  window.addEventListener('drag', (event: MouseEvent) => {
+      console.log('正在被拖拽',event)
+  }, true)
+
+})
+
+addMessageListener('onDragEnd', () => {
+  emitter.emit('onComponentPanelOpen')
 })
 
 </script>
@@ -48,6 +79,7 @@ onMounted(() => {
   </LowCodePanel>
 
   <LowCodePanel
+      ref="el"
       v-model:is-visible="state.componentTabShow"
       width=500
       title="组件库"

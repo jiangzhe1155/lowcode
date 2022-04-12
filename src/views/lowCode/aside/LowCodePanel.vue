@@ -43,11 +43,16 @@ const onAffix = () => {
 }
 
 const target = ref(null)
+
 onClickOutside(target, () => {
   if (props.isVisible && !isAffix.value) {
     emit('onPanelClose')
   }
 })
+
+defineExpose({
+  isAffix
+});
 
 </script>
 

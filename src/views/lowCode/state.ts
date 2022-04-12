@@ -7,6 +7,7 @@ export const locationState = ref<LocationState>(new LocationState())
 export const renderPage = ref<Component>(new Root())
 export const controlState = ref<ControlState>(new ControlState())
 export const isInside = ref(false)
+export const iframeRef = ref<any>(null)
 export const iframeWin = ref<any>(null)
 export const asideHoverType = ref<string | null>(null)
 

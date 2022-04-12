@@ -5,9 +5,8 @@ import { useConfigStore } from '@/stores/constant'
 import VisualNodeHelper from '@/views/lowCode/VisualNodeHelper.vue'
 import { onMounted, ref } from 'vue'
 
-const iframeRef = ref(null)
-
 const store = useConfigStore()
+
 import { addMessageListener } from '@/views/lowCode/iframeUtil'
 import {
   controlState,
@@ -19,10 +18,11 @@ import {
   y,
   isShowInsertion,
   iframeWin,
-  asideHoverType
+  asideHoverType, iframeRef
 } from '@/views/lowCode/state'
 import { vElementHover } from '@vueuse/components'
 
+const iframeEl = ref(null)
 onMounted(() => {
   addMessageListener('locationStateChange', (payload: any) => {
     locationState.value = payload.locationState
@@ -36,6 +36,7 @@ onMounted(() => {
     // console.log('接收变化', controlState.value.x, controlState.value.y)
   })
 
+  iframeRef.value = iframeEl.value
   if (iframeRef.value) {
     iframeWin.value = iframeRef.value?.contentWindow
   }
@@ -69,7 +70,7 @@ function onHover (state: boolean) {
             </div>
             <iframe
                 id="workbench-iframe"
-                ref="iframeRef" class="h-full w-full" name="Overview"
+                ref="iframeEl" class="h-full w-full" name="Overview"
                 src="http://localhost:3000/#/lowCode/overview"
             >>
             </iframe>
