@@ -13,44 +13,49 @@ import {
 } from 'vue'
 import { Card, Component, Dialog, Page, Root, useRenderPageData } from '@/views/lowCode/service'
 import { app } from '@/main'
-import CardComponent from '@/views/lowCode/component/CardComponent.vue'
-import PageContainer from '@/views/lowCode/component/PageContainer.vue'
-import component from '*.vue'
-import App from '@/App.vue'
 import { ElButton } from 'element-plus'
+import PageContainer from '@/views/lowCode/component/PageContainer.vue'
+import RootContainer from '@/views/lowCode/component/RootContainer.vue'
+import CardComponent from '@/views/lowCode/component/CardComponent.vue'
+import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
 
 const store = useConfigStore()
-let iframeRef = ref<any>(null)
+
+let iframeWin: Window
+let iframeDoc: Document
+
 document.addEventListener('mousemove', (e: MouseEvent) => {
 })
 
 const {
   renderPage
-} = useRenderPageData('')
+} = useRenderPageData('123213213')
 
-// watchEffect(() => {
-//   console.log('renderPage 发生变化', iframeRef.value)
-//   if (iframeRef.value && iframeRef.value.contentWindow) {
-//     setTimeout(() => {
-//       let doc = iframeRef.value.contentWindow.document
-//       let elementById = doc.createElement('div')
-//       elementById.id = 'app'
-//       doc.appendChild(elementById)
-//       // console.log('elementById', doc, elementById)
-//       // let node = doRender(renderPage)
-//       // node!.appContext = app._context
-//       // console.log('node', node)
-//       // render(node!, elementById)
-//       // let a = createApp(CardComponent)
-//       // a._context = app._context
-//       // a.mount(elementById)
-//
-//     }, 3000)
-//   }
-// })
+watchEffect(() => {
+  let doc = iframeWin?.document
+  let body = doc?.body
+
+  if (body) {
+    const containerId = 'app'
+    let container = doc.getElementById(containerId)
+    if (!container) {
+      container = doc.createElement('div')
+      doc.body.appendChild(container)
+      container.id = containerId
+    }
+
+    const vnode = doRender(renderPage)
+    vnode!.appContext = app._context
+
+    if (vnode && container) {
+      render(vnode, container)
+    }
+  }
+})
+let componentType = new Map()
 
 function doRender (node: any): VNode | undefined {
-  const resolve = resolveComponent(node.type)
+  const resolve = componentType.get(node.type)
   if (node.visible) {
     return h(resolve, {
       element: node,
@@ -63,39 +68,35 @@ function doRender (node: any): VNode | undefined {
 
 onMounted(() => {
 
+  iframeWin = document.getElementById('workbench-iframe')?.contentWindow
+
+
+  iframeDoc = iframeWin.document
+
+  // 加载所有的组件
+  componentType.set('PageContainer', resolveComponent('PageContainer'))
+  componentType.set('CardComponent', resolveComponent('CardComponent'))
+  componentType.set('RootContainer', resolveComponent('RootContainer'))
+  componentType.set('DialogComponent', resolveComponent('DialogComponent'))
 })
 
 const onLoad = () => {
-  let doc = iframeRef.value.contentWindow.document
-
-  var linkList = document.getElementsByTagName('link')//获取父窗口link标签对象列表
-  var head = doc.getElementsByTagName('head').item(0)
-
-  for (var i = 0; i < linkList.length; i++) {
-    var l = doc.createElement('link')
-    l.rel = 'stylesheet'
-    l.type = 'text/css'
-    l.href = linkList[i].href
-    head.appendChild(l)
+  let doc = iframeWin?.document
+  let body = doc?.body
+  if (body) {
+    const containerId = 'app'
+    let container = doc.getElementById(containerId)
+    if (!container) {
+      container = doc.createElement('div')
+      doc.body.appendChild(container)
+      container.id = containerId
+    }
+    const vnode = doRender(renderPage)
+    vnode!.appContext = app._context
+    if (vnode && container) {
+      render(vnode, container)
+    }
   }
-
-  var scriptList = document.getElementsByTagName("script");
-  for (var i = 0; i < scriptList.length; i++) {
-    var _script = doc.createElement("script");
-    _script.type = 'text/javascript';
-    _script.src = scriptList[i].src;
-    head.appendChild(_script);
-  }
-
-  let body = doc.body
-  let el = doc.createElement('div')
-  body.appendChild(el)
-  el.id = 'app'
-
-  const vnode = h(CardComponent, { id: '123213213' })
-  vnode.appContext = app._context
-  render(vnode, el)
-  console.log(el, app, vnode.el)
 }
 
 </script>
@@ -113,22 +114,22 @@ const onLoad = () => {
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
           >
             <div
+
                 class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
               <!--              <VisualNodeHelper>-->
               <!--              </VisualNodeHelper>-->
             </div>
             <iframe
                 id="workbench-iframe"
-                ref="iframeRef" class="h-full w-full" name="Overview"
+                class="h-full w-full" name="Overview"
                 @load="onLoad"
-            >>
-            </iframe>
-            <!--            src="http://localhost:3000/#/lowCode/overview2"-->
 
+                src="http://localhost:3000/#/lowCode/overview2">
+            </iframe>
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1"></el-aside>
+      <el-aside class="border-l-1">123213</el-aside>
     </el-container>
   </el-container>
 </template>

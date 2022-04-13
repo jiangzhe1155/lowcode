@@ -4,7 +4,6 @@ import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUti
 import { onLongPress, useEventListener, useMouse, useScroll } from '@vueuse/core'
 
 export function useRenderPageData (pageId?: string) {
-  console.log(pageId)
   let page = new Page()
   let card = new Card('卡片1')
   card.children.push(new Card('卡片2'))

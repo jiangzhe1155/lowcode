@@ -13,6 +13,10 @@ const routes = [
     path: '/designer',
     name: 'Designer',
     component: Designer
+  },{
+    path: '/lowCode/overview2',
+    name: 'Overview2',
+    component: Overview2
   },
   {
     path: '/lowCode/workbench',
@@ -22,10 +26,6 @@ const routes = [
     path: '/lowCode/overview',
     name: 'Overview',
     component: Overview
-  },{
-    path: '/lowCode/overview2',
-    name: 'Overview2',
-    component: Overview2
   }
 ]
 
