@@ -586,7 +586,7 @@ const newInstanceByType = (type: ComponentType): Component | undefined => {
 export type ComponentType = 'CardComponent' | 'RootContainer' | 'PageContainer' | 'DialogComponent';
 export type ComponentGroup = 'Input' | 'Container' | 'Model';
 
-abstract class BaseComponent implements Component {
+export abstract class BaseComponent implements Component {
   id: string = v4()
   pid: string = ''
   name: string = ''
@@ -603,7 +603,7 @@ abstract class BaseComponent implements Component {
   supportGroup: ComponentGroup[] = []
 }
 
-class Card extends BaseComponent {
+export class Card extends BaseComponent {
   type: ComponentType = 'CardComponent'
   group: ComponentGroup = 'Container'
   supportGroup: ComponentGroup[] = ['Input', 'Container']
@@ -625,7 +625,7 @@ export class Root extends BaseComponent {
   }
 }
 
-class Page extends BaseComponent {
+export class Page extends BaseComponent {
   type: ComponentType = 'PageContainer'
   group: ComponentGroup = 'Container'
   supportGroup: ComponentGroup[] = ['Container', 'Input']
@@ -636,7 +636,7 @@ class Page extends BaseComponent {
   }
 }
 
-class Dialog extends BaseComponent {
+export class Dialog extends BaseComponent {
   type: ComponentType = 'DialogComponent'
   group: ComponentGroup = 'Model'
   supportGroup: ComponentGroup[] = ['Container', 'Input']

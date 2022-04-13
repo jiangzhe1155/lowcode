@@ -11,15 +11,13 @@ import CardComponent from '@/views/lowCode/component/CardComponent.vue'
 import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
 import mitt from 'mitt'
 
-const app = createApp(App)
+export const app = createApp(App)
 app.use(router)
 app.use(ElementPlus)
-app.use(createPinia())
 app.mount('#app')
 
 app.config.globalProperties.mittBus = mitt()
-
-app.component('PageContainer', PageContainer) // 注册组件
 app.component('RootContainer', RootContainer) // 注册组件
+app.component('PageContainer', PageContainer) // 注册组件
 app.component('CardComponent', CardComponent)
 app.component('DialogComponent', DialogComponent)
