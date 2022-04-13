@@ -21,6 +21,7 @@ import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
 
 const store = useConfigStore()
 
+let iframeRef = ref<any>(null)
 let iframeWin: Window
 let iframeDoc: Document
 
@@ -31,27 +32,8 @@ const {
   renderPage
 } = useRenderPageData('123213213')
 
-watchEffect(() => {
-  let doc = iframeWin?.document
-  let body = doc?.body
 
-  if (body) {
-    const containerId = 'app'
-    let container = doc.getElementById(containerId)
-    if (!container) {
-      container = doc.createElement('div')
-      doc.body.appendChild(container)
-      container.id = containerId
-    }
 
-    const vnode = doRender(renderPage)
-    vnode!.appContext = app._context
-
-    if (vnode && container) {
-      render(vnode, container)
-    }
-  }
-})
 let componentType = new Map()
 
 function doRender (node: any): VNode | undefined {
@@ -67,10 +49,7 @@ function doRender (node: any): VNode | undefined {
 }
 
 onMounted(() => {
-
-  iframeWin = document.getElementById('workbench-iframe')?.contentWindow
-
-
+  iframeWin = iframeRef.value?.contentWindow
   iframeDoc = iframeWin.document
 
   // 加载所有的组件
@@ -98,6 +77,12 @@ const onLoad = () => {
     }
   }
 }
+watchEffect(() => {
+  console.log('变化',iframeRef.value)
+
+  onLoad()
+
+})
 
 </script>
 
@@ -114,17 +99,16 @@ const onLoad = () => {
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
           >
             <div
-
                 class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
               <!--              <VisualNodeHelper>-->
               <!--              </VisualNodeHelper>-->
             </div>
             <iframe
                 id="workbench-iframe"
-                class="h-full w-full" name="Overview"
+                ref="iframeRef" class="h-full w-full" name="Overview"
                 @load="onLoad"
-
-                src="http://localhost:3000/#/lowCode/overview2">
+                src="http://localhost:3000/#/lowCode/overview2"
+            >
             </iframe>
           </div>
         </div>
