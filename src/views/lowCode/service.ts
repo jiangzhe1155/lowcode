@@ -640,7 +640,7 @@ export class Dialog extends BaseComponent {
   type: ComponentType = 'DialogComponent'
   group: ComponentGroup = 'Model'
   supportGroup: ComponentGroup[] = ['Container', 'Input']
-  visible = true
+  visible = false
   getElement = ((id: string, doc: Document) => {
     return doc.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
   }).toString()

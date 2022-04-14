@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, h, onMounted, ref, render, resolveComponent, VNode } from 'vue'
+
+import { computed, h, onMounted, ref, resolveComponent, VNode } from 'vue'
 import { Component } from '@/views/lowCode/service'
-import { addMessageListener } from '@/views/lowCode/iframeUtil'
+import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
 
 const renderPage = ref<Component>()
 

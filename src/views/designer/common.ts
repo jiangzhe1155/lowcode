@@ -1,15 +1,16 @@
-import { Card, Component, Dialog, Page, Root } from '@/views/lowCode/service'
+import { Card, Component, Dialog, LocationState, Page, Root } from '@/views/lowCode/service'
 import { computed, reactive, ref } from 'vue'
+import { isInside } from '@/views/lowCode/state'
 
 export const iframeRef = ref<HTMLElement>()
-
-export const iframeWin = computed(() => {
+export const iframeWin = () => {
   return iframeRef.value?.contentWindow
-})
-
-export const iframeDoc = computed(() => {
+}
+export const iframeDoc = () => {
   return iframeRef.value?.contentWindow.document
-})
+}
+
+const isInside = ref(false)
 
 let page = new Page()
 let card = new Card('卡片1')
@@ -36,8 +37,10 @@ export const componentMap = computed(() => {
   return map
 })
 
+export const locationState: LocationState = reactive(new LocationState())
+
 export const currentComponent = (target: Node) => {
-  let doc = iframeDoc.value
+  let doc = iframeDoc()
 
   function doFind (model: Component): Component | null {
     let element = doc.getElementById(model.id)
@@ -72,4 +75,6 @@ export const currentComponent = (target: Node) => {
   }
 
 }
+
+
 
