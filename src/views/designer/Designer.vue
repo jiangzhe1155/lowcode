@@ -2,32 +2,27 @@
 import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
 import {
-  computed,
-  createApp, createVNode,
-  h, nextTick,
-  onMounted, reactive,
-  ref,
-  render,
-  resolveComponent, toRaw,
-  VNode, watch,
+  onMounted, ref, toRaw,
   watchEffect
 } from 'vue'
 import { ElButton } from 'element-plus'
 
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
-import { config, currentComponent, renderPage } from '@/views/designer/common'
+import { currentComponent, renderPage, iframeWin, iframeRef, componentMap } from '@/views/designer/common'
 
 const store = useConfigStore()
-let iframeRef = ref<HTMLElement>()
+const el = ref<HTMLElement>()
 
 const onLoad = () => {
-  sendIframeMessage(config.iframeWin, 'render', {
-    renderPage: toRaw(renderPage)
-  })
+  if (iframeWin.value) {
+    sendIframeMessage(iframeWin.value, 'render', {
+      renderPage: toRaw(renderPage)
+    })
+  }
 }
 
 watchEffect(() => {
-  if (renderPage && config.iframeWin) {
+  if (renderPage && iframeWin.value) {
     onLoad()
   }
 })
@@ -36,13 +31,13 @@ const onIframeMouseMove = (e: MouseEvent) => {
   console.log('鼠标移动', e.clientX, e.clientY)
   if (e && e.target) {
     let c = currentComponent(<Node>e.target)
-    console.log(c,e.target)
+    console.log('找到目标', componentMap.value.get(c?.id).name)
   }
 }
 
 const onIframeMouseDown = (e: Event) => {
   console.log('鼠标按下', e)
-  config.iframeWin.addEventListener('mouseup', onIframeMouseUp)
+  iframeWin.value.addEventListener('mouseup', onIframeMouseUp)
 }
 
 const onIframeMouseUp = (e: Event) => {
@@ -50,11 +45,9 @@ const onIframeMouseUp = (e: Event) => {
 }
 
 onMounted(() => {
-  config.iframeWin = iframeRef.value?.contentWindow
-  config.iframeDoc = config.iframeWin.document
-  config.iframeWin.addEventListener('mousedown', onIframeMouseDown)
-  config.iframeWin.addEventListener('mousemove', onIframeMouseMove)
-
+  iframeRef.value = el.value
+  iframeWin.value.addEventListener('mousedown', onIframeMouseDown)
+  iframeWin.value.addEventListener('mousemove', onIframeMouseMove)
 })
 
 </script>
@@ -76,7 +69,7 @@ onMounted(() => {
               <!--                    </VisualNodeHelper>-->
             </div>
             <iframe
-                ref="iframeRef"
+                ref="el"
                 id="workbench-iframe"
                 class="h-full w-full" name="Overview2"
                 @load="onLoad"

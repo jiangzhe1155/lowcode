@@ -1,10 +1,15 @@
 import { Card, Component, Dialog, Page, Root } from '@/views/lowCode/service'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
-export const config: {
-  iframeWin: Window,
-  iframeDoc: Document
-}= reactive({})
+export const iframeRef = ref<HTMLElement>()
+
+export const iframeWin = computed(() => {
+  return iframeRef.value?.contentWindow
+})
+
+export const iframeDoc = computed(() => {
+  return iframeRef.value?.contentWindow.document
+})
 
 let page = new Page()
 let card = new Card('卡片1')
@@ -15,7 +20,6 @@ dialog.children.push(new Card('卡片6'))
 let root = new Root()
 root.children.push(page, new Card('卡片7'), dialog)
 export const renderPage: Component = reactive(root)
-
 export const componentMap = computed(() => {
   let map = new Map()
 
@@ -33,8 +37,11 @@ export const componentMap = computed(() => {
 })
 
 export const currentComponent = (target: Node) => {
+  let doc = iframeDoc.value
+
   function doFind (model: Component): Component | null {
-    let element = config.iframeDoc.getElementById(model.id)
+    let element = doc.getElementById(model.id)
+    // console.log('element', doc, element)
     if (element?.contains(target)) {
       for (let child of model.children) {
         let res = doFind(child)
@@ -50,7 +57,7 @@ export const currentComponent = (target: Node) => {
   // 先搜索模态框
   let targetComponent = doFind(renderPage)
   if (targetComponent) {
-    let rect = eval(targetComponent.getElement)(targetComponent.id, config.iframeDoc)?.getBoundingClientRect()
+    let rect = eval(targetComponent.getElement)(targetComponent.id, doc)?.getBoundingClientRect()
     let location = {
       height: rect?.height,
       left: rect?.left,
@@ -63,5 +70,6 @@ export const currentComponent = (target: Node) => {
       location: location
     }
   }
+
 }
 
