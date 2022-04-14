@@ -415,7 +415,8 @@ export function useRenderPageData (pageId?: string) {
     let hScrollTop = window.scrollY
     let hScrollHeight = window.innerHeight
 
-    if (y.value <= hScrollTop + 20) {0
+    if (y.value <= hScrollTop + 20) {
+      0
       window.scrollTo({ top: hScrollTop - 1 / 2 * (hScrollTop + 20 - y.value) })
     } else if (y.value >= hScrollTop + hScrollHeight - 20) {
       window.scrollTo({ top: hScrollTop + 1 / 2 * (y.value - (hScrollTop + hScrollHeight - 20)) })
@@ -437,8 +438,8 @@ export function useRenderPageData (pageId?: string) {
   }, true)
 
   useEventListener('click', (event: Event) => {
-    event.preventDefault();
-    event.stopPropagation();
+    event.preventDefault()
+    event.stopPropagation()
     // locationState.currentClickComponent = currentComponent(<Node>event.target)
   }, true)
 
@@ -451,7 +452,7 @@ export function useRenderPageData (pageId?: string) {
   }, false)
 
   useEventListener('mousemove', (event: MouseEvent) => {
-    console.log('移动中')
+      console.log('移动中')
       controlState.x = event.clientX
       controlState.y = event.clientY
       if (controlState.isLongPress) {
@@ -595,8 +596,8 @@ export abstract class BaseComponent implements Component {
   supportDirection: Direction[] = ['top', 'bottom', 'center']
   slots = []
   visible = true
-  getElement = ((id: string) => {
-    return document.getElementById(id)
+  getElement = ((id: string, doc: Document) => {
+    return doc.getElementById(id)
   }).toString()
   abstract group: ComponentGroup
   supportGroup: ComponentGroup[] = []
@@ -640,8 +641,8 @@ export class Dialog extends BaseComponent {
   group: ComponentGroup = 'Model'
   supportGroup: ComponentGroup[] = ['Container', 'Input']
   visible = true
-  getElement = ((id: string) => {
-    return document.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
+  getElement = ((id: string, doc: Document) => {
+    return doc.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
   }).toString()
 
   constructor (name: string = '对话框') {

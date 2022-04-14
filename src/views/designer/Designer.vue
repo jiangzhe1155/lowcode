@@ -2,85 +2,58 @@
 import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
 import {
+  computed,
   createApp, createVNode,
-  h,
-  onMounted,
+  h, nextTick,
+  onMounted, reactive,
   ref,
   render,
-  resolveComponent,
+  resolveComponent, toRaw,
   VNode, watch,
   watchEffect
 } from 'vue'
-import { Card, Component, Dialog, Page, Root, useRenderPageData } from '@/views/lowCode/service'
-import { app } from '@/main'
 import { ElButton } from 'element-plus'
-import PageContainer from '@/views/lowCode/component/PageContainer.vue'
-import RootContainer from '@/views/lowCode/component/RootContainer.vue'
-import CardComponent from '@/views/lowCode/component/CardComponent.vue'
-import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
+
+import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { config, currentComponent, renderPage } from '@/views/designer/common'
 
 const store = useConfigStore()
+let iframeRef = ref<HTMLElement>()
 
-let iframeRef = ref<any>(null)
-let iframeWin: Window
-let iframeDoc: Document
+const onLoad = () => {
+  sendIframeMessage(config.iframeWin, 'render', {
+    renderPage: toRaw(renderPage)
+  })
+}
 
-document.addEventListener('mousemove', (e: MouseEvent) => {
+watchEffect(() => {
+  if (renderPage && config.iframeWin) {
+    onLoad()
+  }
 })
 
-const {
-  renderPage
-} = useRenderPageData('123213213')
-
-
-
-let componentType = new Map()
-
-function doRender (node: any): VNode | undefined {
-  const resolve = componentType.get(node.type)
-  if (node.visible) {
-    return h(resolve, {
-      element: node,
-      id: node.id
-    }, () => {
-      return node.children.map((e: any) => doRender(e)).filter((m: any) => m)
-    })
+const onIframeMouseMove = (e: MouseEvent) => {
+  console.log('鼠标移动', e.clientX, e.clientY)
+  if (e && e.target) {
+    let c = currentComponent(<Node>e.target)
+    console.log(c,e.target)
   }
+}
+
+const onIframeMouseDown = (e: Event) => {
+  console.log('鼠标按下', e)
+  config.iframeWin.addEventListener('mouseup', onIframeMouseUp)
+}
+
+const onIframeMouseUp = (e: Event) => {
+  console.log('鼠标抬起', e)
 }
 
 onMounted(() => {
-  iframeWin = iframeRef.value?.contentWindow
-  iframeDoc = iframeWin.document
-
-  // 加载所有的组件
-  componentType.set('PageContainer', resolveComponent('PageContainer'))
-  componentType.set('CardComponent', resolveComponent('CardComponent'))
-  componentType.set('RootContainer', resolveComponent('RootContainer'))
-  componentType.set('DialogComponent', resolveComponent('DialogComponent'))
-})
-
-const onLoad = () => {
-  let doc = iframeWin?.document
-  let body = doc?.body
-  if (body) {
-    const containerId = 'app'
-    let container = doc.getElementById(containerId)
-    if (!container) {
-      container = doc.createElement('div')
-      doc.body.appendChild(container)
-      container.id = containerId
-    }
-    const vnode = doRender(renderPage)
-    vnode!.appContext = app._context
-    if (vnode && container) {
-      render(vnode, container)
-    }
-  }
-}
-watchEffect(() => {
-  console.log('变化',iframeRef.value)
-
-  onLoad()
+  config.iframeWin = iframeRef.value?.contentWindow
+  config.iframeDoc = config.iframeWin.document
+  config.iframeWin.addEventListener('mousedown', onIframeMouseDown)
+  config.iframeWin.addEventListener('mousemove', onIframeMouseMove)
 
 })
 
@@ -98,14 +71,14 @@ watchEffect(() => {
           <div
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
           >
-            <div
-                class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
-              <!--              <VisualNodeHelper>-->
-              <!--              </VisualNodeHelper>-->
+            <div class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
+              <!--                    <VisualNodeHelper>-->
+              <!--                    </VisualNodeHelper>-->
             </div>
             <iframe
+                ref="iframeRef"
                 id="workbench-iframe"
-                ref="iframeRef" class="h-full w-full" name="Overview"
+                class="h-full w-full" name="Overview2"
                 @load="onLoad"
                 src="http://localhost:3000/#/lowCode/overview2"
             >
@@ -113,7 +86,7 @@ watchEffect(() => {
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1">123213</el-aside>
+      <el-aside class="border-l-1">1232213</el-aside>
     </el-container>
   </el-container>
 </template>
