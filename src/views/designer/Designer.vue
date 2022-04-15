@@ -21,6 +21,7 @@ import {
 } from '@/views/designer/common'
 import BorderClicked from '@/views/designer/tool/BorderClicked.vue'
 import DragItem from '@/views/designer/tool/DragItem.vue'
+import BorderPress from '@/views/designer/tool/BorderPress.vue'
 
 const store = useConfigStore()
 const el = ref<HTMLElement>()
@@ -38,14 +39,14 @@ const onIframeMouseDrag = (e: MouseEvent) => {
     x.value = e.clientX + 80
     y.value = e.clientY + 70
   }
-  e.stopPropagation()
-  e.preventDefault()
   // iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
 }
 
 const onIframeMouseDown = (e: MouseEvent) => {
   console.log('iframe 按下')
   startDrag.value = true
+  locationState.currentPressComponent = currentComponent(<Node>e.target)
+
   e.stopPropagation()
   e.preventDefault()
   iframeDoc().addEventListener('mousemove', onIframeMouseDrag, true)
@@ -150,7 +151,6 @@ watch([renderPage, () => iframeWin()], () => {
     </el-header>
     <el-container>
       <DragItem></DragItem>
-
       <LowCodeAside></LowCodeAside>
       <el-main class="bg-gray-200 !p-0 !select-none">
         <div class="relative h-full shadow border-solid border-1">
@@ -159,8 +159,10 @@ watch([renderPage, () => iframeWin()], () => {
           >
             <div class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
               <BorderHover></BorderHover>
-
               <BorderClicked></BorderClicked>
+              <BorderPress></BorderPress>
+
+
             </div>
             <iframe
                 ref="el"
