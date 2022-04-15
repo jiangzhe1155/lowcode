@@ -1,16 +1,15 @@
 import { Card, Component, Dialog, LocationState, Page, Root } from '@/views/lowCode/service'
-import { computed, reactive, ref } from 'vue'
-import { isInside } from '@/views/lowCode/state'
+import { computed, reactive, ref, toRaw, watch } from 'vue'
+import { v4 } from 'uuid'
 
-export const iframeRef = ref<HTMLElement>()
+export const iframeRef = ref<any>()
+
 export const iframeWin = () => {
   return iframeRef.value?.contentWindow
 }
 export const iframeDoc = () => {
   return iframeRef.value?.contentWindow.document
 }
-
-const isInside = ref(false)
 
 let page = new Page()
 let card = new Card('卡片1')
@@ -36,15 +35,15 @@ export const componentMap = computed(() => {
   doBuild(renderPage, 0)
   return map
 })
-
 export const locationState: LocationState = reactive(new LocationState())
+export const x = ref()
+export const y = ref()
 
 export const currentComponent = (target: Node) => {
   let doc = iframeDoc()
 
   function doFind (model: Component): Component | null {
     let element = doc.getElementById(model.id)
-    // console.log('element', doc, element)
     if (element?.contains(target)) {
       for (let child of model.children) {
         let res = doFind(child)
@@ -76,5 +75,54 @@ export const currentComponent = (target: Node) => {
 
 }
 
+export const fetchLocation = (componentId: string) => {
+  let component = componentMap.value.get(componentId)
+  let rect = eval(component.getElement)(component.id, iframeDoc())?.getBoundingClientRect()
+  if (rect) {
+    let location = {
+      height: rect?.height,
+      left: rect?.left,
+      top: rect?.top,
+      width: rect?.width
+    }
+    return {
+      id: component.id,
+      location: location
+    }
+  }
+}
 
+export const copy = (componentId: string) => {
+  console.log('复制', componentId)
+  let element = componentMap.value.get(componentId)
 
+  function doCopy (element: Component) {
+    let target = Object.assign({}, element)
+    target.id = v4()
+    target.children = target.children.map(e => doCopy(e))
+    return target
+  }
+
+  let res = doCopy(element)
+  res = JSON.parse(JSON.stringify(res))
+  let pElement = componentMap.value.get(element.pid)
+  let i = pElement.children.indexOf(element)
+  if (i + 1 >= pElement.children.length) {
+    pElement.children.push(res)
+  } else {
+    pElement.children.splice(i + 1, 0, res)
+  }
+  return res.id
+}
+
+export const deleteComponent = (componentId: string) => {
+  let element = componentMap.value.get(componentId)
+  if (element.level == 0) {
+    console.log('无法删除根节点')
+    return
+  }
+  let pElement = componentMap.value.get(element.pid)
+  let i = pElement.children.indexOf(element)
+  pElement.children.splice(i, 1)
+  console.log('删除dialog', renderPage)
+}

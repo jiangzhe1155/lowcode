@@ -13,9 +13,10 @@ const hoverStyle = computed(() => {
   }
 })
 </script>
+
 <template>
   <div
-      v-if="locationState.currentHoverComponent"
+      v-if="locationState.currentHoverComponent && locationState.currentHoverComponent.id !== locationState.currentClickComponent?.id"
       class="absolute"
       :style="hoverStyle"
       :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true},'pointer-events-none']">

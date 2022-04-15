@@ -13,14 +13,14 @@ const props = defineProps({
 })
 
 function onHover (state: boolean) {
-  if (state) {
-    sendIframeMessage(iframeWin.value, 'onHoverComponent', { id: props.elementId })
-  }
-  isInside.value = state
+  // if (state) {
+  //   sendIframeMessage(iframeWin.value, 'onHoverComponent', { id: props.elementId })
+  // }
+  // isInside.value = state
 }
 
 function onClick () {
-  sendIframeMessage(iframeWin.value, 'onClickComponent', { id: props.elementId })
+  // sendIframeMessage(iframeWin.value, 'onClickComponent', { id: props.elementId })
 }
 
 </script>

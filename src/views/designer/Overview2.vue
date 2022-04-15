@@ -18,17 +18,16 @@ function doRender (node: any): VNode | undefined {
   }
 }
 
-const componentRender = computed(() => {
-  console.log('componentRender',renderPage.value)
+const componentRender = () => {
   if (renderPage.value) {
     return doRender(renderPage.value)
   } else {
     return h('div')
   }
-})
+}
 
 addMessageListener('render', (payload: any) => {
-  console.log('接收到')
+  console.log('接收到变化', renderPage.value)
   renderPage.value = payload.renderPage
 })
 
@@ -39,5 +38,4 @@ addMessageListener('render', (payload: any) => {
 </template>
 
 <style scoped>
-
 </style>
