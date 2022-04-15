@@ -1,33 +1,29 @@
 <script setup lang="ts">
 
-import { computed, ref } from 'vue'
-import { x, y } from '@/views/designer/common'
+import { computed, onMounted, ref } from 'vue'
+import { isDragging, startDrag, x, y } from '@/views/designer/common'
 import { useDraggable } from '@vueuse/core'
 
 const dragStyle = computed(() => {
   return {
-    left: x.value + 'px',
-    top: y.value + 'px',
+    left: x.value - 20 + 'px',
+    top: y.value - 10 + 'px',
   }
 })
-const el = ref<HTMLElement | null>(null)
 
-// `style` will be a helper computed for `left: ?px; top: ?px;`
-const { style } = useDraggable(el, {
-  initialValue: { x: x.value, y: y.value },
+onMounted(() => {
+
 })
-
 </script>
 
 
 <template>
-  <!--      v-if="x && y"-->
-
   <div
-      ref="el"
-      :style="style"
-      class="fixed bg-gray-500 w-auto px-40px z-4000 pointer-events-auto select-none cursor-move "
-  ><p class="text-sm">名称</p>
+      v-if="isDragging"
+      id="drag-item"
+      :style="dragStyle"
+      class="fixed bg-gray-500 w-auto px-40px z-1000 pointer-events-auto select-none cursor-move"
+  ><p class="text-sm z-1000">名称</p>
   </div>
 </template>
 

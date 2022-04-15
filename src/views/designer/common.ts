@@ -39,9 +39,12 @@ export const locationState: LocationState = reactive(new LocationState())
 export const x = ref()
 export const y = ref()
 
+export const startDrag = ref(false)
+export const isDragging = ref(false)
+
+
 export const currentComponent = (target: Node) => {
   let doc = iframeDoc()
-
   function doFind (model: Component): Component | null {
     let element = doc.getElementById(model.id)
     if (element?.contains(target)) {

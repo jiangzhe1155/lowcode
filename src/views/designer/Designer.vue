@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
-import { onMounted, ref, toRaw, watch, watchEffect } from 'vue'
+import { onMounted, ref, toRaw, watch } from 'vue'
 import { ElButton } from 'element-plus'
 
-import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
 import {
   currentComponent,
-  renderPage,
-  iframeWin,
+  fetchLocation,
+  iframeDoc,
   iframeRef,
-  locationState, iframeDoc, componentMap, fetchLocation, x, y
+  iframeWin,
+  isDragging,
+  locationState,
+  renderPage,
+  startDrag,
+  x,
+  y
 } from '@/views/designer/common'
 import BorderClicked from '@/views/designer/tool/BorderClicked.vue'
 import DragItem from '@/views/designer/tool/DragItem.vue'
@@ -19,7 +25,7 @@ import DragItem from '@/views/designer/tool/DragItem.vue'
 const store = useConfigStore()
 const el = ref<HTMLElement>()
 
-const onIframeMouseMove = (e: MouseEvent) => {
+const onIframeMouseOver = (e: MouseEvent) => {
   if (e && e.target) {
     locationState.currentHoverComponent = currentComponent(<Node>e.target)
   }
@@ -27,14 +33,24 @@ const onIframeMouseMove = (e: MouseEvent) => {
 
 const onIframeMouseDrag = (e: MouseEvent) => {
   console.log('鼠标拖动', e.clientX, e.clientY)
-  x.value = e.clientX + 80
-  y.value = e.clientY + 70
+  if (startDrag.value) {
+    isDragging.value = true
+    x.value = e.clientX + 80
+    y.value = e.clientY + 70
+  }
+  e.stopPropagation()
+  e.preventDefault()
+  // iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
 }
 
-const onIframeMouseDown = (e: Event) => {
-  console.log('鼠标按下', e)
-  iframeWin().addEventListener('mouseup', onIframeMouseUp, true)
-  iframeWin().addEventListener('mousemove', onIframeMouseDrag)
+const onIframeMouseDown = (e: MouseEvent) => {
+  console.log('iframe 按下')
+  startDrag.value = true
+  e.stopPropagation()
+  e.preventDefault()
+  iframeDoc().addEventListener('mousemove', onIframeMouseDrag, true)
+  document.addEventListener('mouseup', onDocMouseUp, true)
+  document.addEventListener('mousemove', onDocMouseDragging, true)
 }
 
 const onIframeMouseUp = (e: Event) => {
@@ -46,8 +62,8 @@ const onIframeMouseUp = (e: Event) => {
   }
   x.value = undefined
   y.value = undefined
-  iframeWin().removeEventListener('mouseup', onIframeMouseUp, true)
-  iframeWin().removeEventListener('mousemove', onIframeMouseDrag)
+  startDrag.value = false
+  isDragging.value = false
 }
 
 const onIframeMouseLeave = (e: Event) => {
@@ -80,12 +96,25 @@ const onIframeResize = () => {
 }
 
 const onDocMouseDown = (e: Event) => {
-  console.log('窗口按下', e)
+  console.log('主窗口按下', e)
+}
+
+const onDocMouseUp = (e: Event) => {
+  console.log('主窗口弹起')
+  startDrag.value = false
+  isDragging.value = false
+  document.removeEventListener('mousemove', onDocMouseDragging, true)
+  iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
+}
+
+const onDocMouseDragging = (e: MouseEvent) => {
+  // console.log('主窗口，mousemove', e)
+  x.value = e.clientX
+  y.value = e.clientY
 }
 
 onMounted(() => {
   iframeRef.value = el.value
-  document.addEventListener('mousedown', onDocMouseDown,true)
 })
 
 const onLoad = () => {
@@ -96,9 +125,9 @@ const onLoad = () => {
       renderPage: toRaw(renderPage)
     })
   }
-
   doc.addEventListener('mousedown', onIframeMouseDown, true)
-  doc.addEventListener('mouseover', onIframeMouseMove, true)
+  doc.addEventListener('mouseup', onIframeMouseUp, false)
+  doc.addEventListener('mouseover', onIframeMouseOver, true)
   doc.addEventListener('mouseleave', onIframeMouseLeave, false)
   doc.addEventListener('mouseenter', onIframeMouseIn, false)
   doc.addEventListener('scroll', onIframeScroll, false)
@@ -120,6 +149,8 @@ watch([renderPage, () => iframeWin()], () => {
       <el-button></el-button>
     </el-header>
     <el-container>
+      <DragItem></DragItem>
+
       <LowCodeAside></LowCodeAside>
       <el-main class="bg-gray-200 !p-0 !select-none">
         <div class="relative h-full shadow border-solid border-1">
@@ -127,14 +158,14 @@ watch([renderPage, () => iframeWin()], () => {
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
           >
             <div class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
-              <DragItem></DragItem>
               <BorderHover></BorderHover>
+
               <BorderClicked></BorderClicked>
             </div>
             <iframe
                 ref="el"
                 id="workbench-iframe"
-                class="h-full w-full" name="Overview2"
+                class="-z-1 h-full w-full" name="Overview2"
                 @load="onLoad"
                 src="http://localhost:3000/#/lowCode/overview2"
             >
@@ -142,7 +173,7 @@ watch([renderPage, () => iframeWin()], () => {
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1">{{ locationState }} {{ x }} {{ y }}</el-aside>
+      <el-aside class="border-l-1">{{ locationState }} {{ x }} {{ y }} {{ startDrag }} {{ isDragging }}</el-aside>
     </el-container>
   </el-container>
 </template>
