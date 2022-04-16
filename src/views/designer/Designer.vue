@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import { useConfigStore } from '@/stores/constant'
-import { nextTick, onMounted, ref, toRaw, watch } from 'vue'
+import { nextTick, onMounted, ref, toRaw, toRef, unref, watch, watchEffect } from 'vue'
 import { ElButton } from 'element-plus'
 
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
@@ -23,19 +23,18 @@ import {
   fetchDirection,
   isShowInsertion,
   scrollToTopOrBottom,
-  move,
   asideComponentType,
   asideComponentGroup,
   isInside,
   isPanelOpen,
-  isAffixPanel
+  isAffixPanel,back
 } from '@/views/designer/common'
 import BorderClicked from '@/views/designer/tool/BorderClicked.vue'
 import DragItem from '@/views/designer/tool/DragItem.vue'
 import BorderPress from '@/views/designer/tool/BorderPress.vue'
 import Insertion from '@/views/designer/tool/Insertion.vue'
 import TypeDragItem from '@/views/designer/tool/TypeDragItem.vue'
-import { useMouseInElement } from '@vueuse/core'
+import { useMouseInElement, useRefHistory } from '@vueuse/core'
 import { onIframeMouseDown, onIframeMouseDrag, onIframeMouseUp } from '@/views/designer/iframeEvent'
 
 const store = useConfigStore()
@@ -92,7 +91,7 @@ const onLoad = () => {
   let win = iframeWin()
   if (win) {
     sendIframeMessage(iframeWin(), 'render', {
-      renderPage: toRaw(renderPage)
+      renderPage: toRaw(renderPage.value)
     })
   }
   doc.addEventListener('mousedown', onIframeMouseDown, true)
@@ -113,22 +112,23 @@ const onLoad = () => {
   doc.onselectstart = () => false
 }
 
-watch([renderPage, () => iframeWin()], () => {
+watch([renderPage, () => iframeWin()], (n, o) => {
   if (renderPage && iframeWin()) {
     onLoad()
   }
-})
+},{deep:true})
+
+
 </script>
 
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      <el-button></el-button>
+      <el-button @click="back()">撤销</el-button>
     </el-header>
     <el-container>
       <DragItem></DragItem>
       <TypeDragItem></TypeDragItem>
-
       <LowCodeAside></LowCodeAside>
       <el-main class="bg-gray-200 !p-0 !select-none">
         <div class="relative h-full shadow border-solid border-1">
@@ -168,6 +168,7 @@ watch([renderPage, () => iframeWin()], () => {
         isPanelOpen:{{
           isPanelOpen
         }}
+<!--        history:{{ history }}-->
       </el-aside>
     </el-container>
   </el-container>

@@ -11,6 +11,7 @@ import {
 } from '@/views/lowCode/service'
 import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
+import { useRefHistory } from '@vueuse/core'
 
 export const iframeRef = ref<any>()
 export const iframeWin = () => {
@@ -38,7 +39,12 @@ let res = new RenderPage()
 res.models = [dialog]
 res.component = root
 
-export const renderPage: RenderPage = reactive(res)
+export const renderPage = ref<RenderPage>(res)
+const { history, undo, redo } = useRefHistory(renderPage, {
+  deep: true,
+})
+
+
 export const componentMap = computed(() => {
   console.log('componentMap 更新', renderPage)
   let map = new Map()
@@ -52,7 +58,7 @@ export const componentMap = computed(() => {
     })
   }
 
-  for (let component of [...renderPage.models, renderPage.component]) {
+  for (let component of [...renderPage.value.models, renderPage.value.component]) {
     doBuild(component, 0)
   }
 
@@ -99,7 +105,7 @@ export const currentComponent = (target: Node) => {
   }
 
   // 先搜索模态框
-  for (let component of [...renderPage.models, renderPage.component]) {
+  for (let component of [...renderPage.value.models, renderPage.value.component]) {
     let targetComponent = doFind(component)
     if (targetComponent) {
       let rect = eval(targetComponent.getElement)(targetComponent.id, doc)?.getBoundingClientRect()
@@ -164,7 +170,7 @@ export function currentComponentFromArea (x: number, y: number) {
     return null
   }
 
-  for (let component of [...renderPage.models, renderPage.component]) {
+  for (let component of [...renderPage.value.models, renderPage.value.component]) {
     let targetComponent = doFind(component)
     if (targetComponent) {
       return targetComponent
@@ -315,7 +321,7 @@ export const copy = (componentId: string) => {
 
   // 如果是对话框，复制到最后
   if (element.group === 'Model') {
-    renderPage.models.push(res)
+    renderPage.value.models.push(res)
     return res.id
   }
 
@@ -348,7 +354,7 @@ export function add (pressTypeId: ComponentType, pressGroup: ComponentGroup, tar
 
   //如果是对话框默认加入到对话框的列表
   if (newInstance.group === 'Model') {
-    renderPage.models.push(newInstance)
+    renderPage.value.models.push(newInstance)
     return newInstance.id
   }
 
@@ -382,8 +388,8 @@ export const deleteComponent = (componentId: string) => {
 
   //如果是对话框默认加入到对话框的列表
   if (component.group === 'Model') {
-    let i = renderPage.models.indexOf(component)
-    renderPage.models.splice(i, 1)
+    let i = renderPage.value.models.indexOf(component)
+    renderPage.value.models.splice(i, 1)
     return
   }
 
@@ -440,7 +446,7 @@ export const isShowInsertion = computed(() => {
 
   if (pressGroup) {
     // 存在对话框的情况下，不能移动到容器中
-    for (let model of renderPage.models) {
+    for (let model of renderPage.value.models) {
       if (model.visible && getTopComponent(hoverId).id !== model.id) {
         return false
       }
@@ -481,4 +487,20 @@ export const scrollToTopOrBottom = () => {
   } else if (y.value >= hScrollTop + hScrollHeight - 20) {
     win.scrollTo({ top: hScrollTop + 1 / 2 * (y.value - (hScrollTop + hScrollHeight - 20)) })
   }
+}
+
+
+export const back = () => {
+  undo()
+  setTimeout(()=>{
+    if (locationState.currentClickComponent) {
+      locationState.currentClickComponent = fetchLocation(locationState.currentClickComponent.id)
+    }
+    if (locationState.currentHoverComponent) {
+      locationState.currentHoverComponent = fetchLocation(locationState.currentHoverComponent.id)
+    }
+    if (locationState.currentPressComponent) {
+      locationState.currentPressComponent = fetchLocation(locationState.currentPressComponent.id)
+    }
+  })
 }
