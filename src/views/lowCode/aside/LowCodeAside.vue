@@ -4,8 +4,9 @@ import { useConfigStore } from '@/stores/constant'
 import { onMounted, reactive, ref } from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
-import { controlState, emitter, iframeRef, iframeWin } from '@/views/lowCode/state'
+import { emitter} from '@/views/lowCode/state'
 import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { x, y } from '@/views/designer/common'
 
 const store = useConfigStore()
 const el = ref()
@@ -27,10 +28,6 @@ onMounted(() => {
       state.componentTabShow = true
     }
   })
-
-  document.addEventListener('mousemove', (event: MouseEvent) => {
-    console.log('主窗口移动')
-  }, true)
 })
 
 addMessageListener('onDragEnd', () => {

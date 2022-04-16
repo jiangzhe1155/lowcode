@@ -1,6 +1,7 @@
 import { Card, Component, Dialog, Direction, Location, LocationState, Page, Root } from '@/views/lowCode/service'
 import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
+import { controlState } from '@/views/lowCode/state'
 
 export const iframeRef = ref<any>()
 
@@ -43,7 +44,17 @@ export const startDrag = ref(false)
 export const isDragging = ref(false)
 export const asideComponentType = ref()
 export const asideComponentGroup = ref()
-
+export const isInside = () => {
+  let rect = document.getElementById('iframe-holder')?.getBoundingClientRect()
+  if (!rect){
+    return false
+  }
+  let {
+    left,
+    width,
+  } = rect
+  return x.value >= left && x.value <= left + width
+}
 
 export const currentComponent = (target: Node) => {
   let doc = iframeDoc()
@@ -203,7 +214,6 @@ export const fetchDirection = (x: number, y: number) => {
   return 'center'
 }
 
-
 export const fetchLocation = (componentId: string) => {
   let component = componentMap.value.get(componentId)
   let rect = eval(component.getElement)(component.id, iframeDoc())?.getBoundingClientRect()
@@ -311,20 +321,20 @@ export const isShowInsertion = computed(() => {
   let pressId = locationState.currentPressComponent?.id
   let hoverId = locationState.currentInsertionComponent?.id
   let cMap = componentMap.value
-  // let pressGroup = pressId ? cMap.get(pressId).group : controlState.value.asideComponentGroup;
+  let pressGroup = pressId ? cMap.get(pressId).group : asideComponentGroup.value
   if (!isDragging.value || !hoverId) {
     return false
   }
 
   // 如果是子元素 不允許
-  if (isSubElement(pressId, hoverId)) {
+  if (!asideComponentType.value && isSubElement(pressId, hoverId)) {
     return false
   }
 
   if (locationState.direction === 'center') {
     // 如果这个容器已经存在子元素时 或者不支持這個分類
     let e = cMap.get(hoverId)
-    if (!e || e.children.length > 0 || e.supportDirection.indexOf('center') < 0) {
+    if (!e || e.children.length > 0 || e.supportDirection.indexOf('center') < 0 || e.supportGroup.indexOf(pressGroup) < 0) {
       return false
     } else {
       return true
@@ -337,7 +347,7 @@ export const isShowInsertion = computed(() => {
     return false
   }
 
-  if (pElement.supportDirection.indexOf(<Direction>locationState.direction) < 0) {
+  if (pElement.supportDirection.indexOf(<Direction>locationState.direction) < 0 || pElement.supportGroup.indexOf(pressGroup) < 0) {
     return false
   }
 

@@ -7,7 +7,8 @@ import { ElButton } from 'element-plus'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
 import {
-  currentComponent, currentComponentFromArea,
+  currentComponent,
+  currentComponentFromArea,
   fetchLocation,
   iframeDoc,
   iframeRef,
@@ -17,12 +18,22 @@ import {
   renderPage,
   startDrag,
   x,
-  y, locationMap, fetchDirection, isShowInsertion, scrollToTopOrBottom, move, asideComponentType, asideComponentGroup
+  y,
+  locationMap,
+  fetchDirection,
+  isShowInsertion,
+  scrollToTopOrBottom,
+  move,
+  asideComponentType,
+  asideComponentGroup,
+  isInside
 } from '@/views/designer/common'
 import BorderClicked from '@/views/designer/tool/BorderClicked.vue'
 import DragItem from '@/views/designer/tool/DragItem.vue'
 import BorderPress from '@/views/designer/tool/BorderPress.vue'
 import Insertion from '@/views/designer/tool/Insertion.vue'
+import TypeDragItem from '@/views/designer/tool/TypeDragItem.vue'
+import { useMouseInElement } from '@vueuse/core'
 
 const store = useConfigStore()
 const el = ref<HTMLElement>()
@@ -133,8 +144,27 @@ const onDocMouseDragging = (e: MouseEvent) => {
   iframeDoc().dispatchEvent(event)
 }
 
+const onTypeDrag = (e: MouseEvent) => {
+  x.value = e.clientX
+  y.value = e.clientY
+  if (startDrag.value) {
+    isDragging.value = true
+  }
+  if (asideComponentType.value) {
+    const event = new MouseEvent('iframeMouseMove', {
+      clientX: e.clientX - 80,
+      clientY: e.clientY - 70
+    })
+    iframeDoc().dispatchEvent(event)
+  }
+  e.preventDefault()
+  e.stopPropagation()
+}
+
 onMounted(() => {
   iframeRef.value = el.value
+  document.addEventListener('mousemove', onTypeDrag, true)
+  document.ondragstart = () => false
 })
 
 const onLoad = () => {
@@ -151,11 +181,14 @@ const onLoad = () => {
   doc.addEventListener('mouseleave', onIframeMouseLeave, false)
   doc.addEventListener('mouseenter', onIframeMouseIn, false)
   doc.addEventListener('iframeMouseMove', (e: MouseEvent) => {
-    console.log('iframeMouseMove', e.clientX, e.clientY)
-    locationState.currentInsertionComponent = currentComponentFromArea(e.clientX, e.clientY)
-    locationState.direction = fetchDirection(e.clientX, e.clientY)
-    // console.log('direction', locationState.direction)
-    scrollToTopOrBottom()
+    if (isInside()){
+      console.log('iframeMouseMove', e.clientX, e.clientY)
+      locationState.currentInsertionComponent = currentComponentFromArea(e.clientX, e.clientY)
+      locationState.direction = fetchDirection(e.clientX, e.clientY)
+      // console.log('direction', locationState.direction)
+      scrollToTopOrBottom()
+    }
+
   }, true)
 
   doc.addEventListener('scroll', onIframeScroll, false)
@@ -169,6 +202,7 @@ watch([renderPage, () => iframeWin()], () => {
   }
 })
 
+
 </script>
 
 <template>
@@ -178,10 +212,13 @@ watch([renderPage, () => iframeWin()], () => {
     </el-header>
     <el-container>
       <DragItem></DragItem>
+      <TypeDragItem></TypeDragItem>
+
       <LowCodeAside></LowCodeAside>
       <el-main class="bg-gray-200 !p-0 !select-none">
         <div class="relative h-full shadow border-solid border-1">
           <div
+              id="iframe-holder"
               class="absolute !bg-gray-100 right-20px left-20px top-20px bottom-20px overflow-y-hidden overflow-x-hidden"
           >
             <div class="absolute left-0 top-0 z-800 w-full h-full pointer-events-none">
@@ -211,6 +248,7 @@ watch([renderPage, () => iframeWin()], () => {
         {{ locationMap }}
         {{ asideComponentType }}
         {{ asideComponentGroup }}
+        isInside:{{ isInside() }}
       </el-aside>
     </el-container>
   </el-container>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { defineProps, ref, watch } from 'vue'
 import { onLongPress, useMousePressed } from '@vueuse/core'
-import { controlState, emitter } from '@/views/lowCode/state'
+import { emitter } from '@/views/lowCode/state'
 import { ComponentGroup, ComponentType } from '@/views/lowCode/service'
-import { asideComponentType,asideComponentGroup } from '@/views/designer/common'
+import { asideComponentType, asideComponentGroup, x, y, iframeDoc, startDrag } from '@/views/designer/common'
 
 const props = defineProps<{
   type: ComponentType,
@@ -17,6 +17,7 @@ const el = ref<HTMLElement | null>(null)
 onLongPress(el, () => {
   asideComponentType.value = props.type
   asideComponentGroup.value = props.group
+  startDrag.value = true
   emitter.emit('onComponentPanelClose')
 }, { delay: 200 })
 
@@ -27,6 +28,7 @@ watch(pressed, (n) => {
   } else {
     asideComponentType.value = undefined
     asideComponentGroup.value = undefined
+    startDrag.value = false
     emitter.emit('onComponentPanelOpen')
   }
 })
