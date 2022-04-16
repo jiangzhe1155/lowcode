@@ -19,7 +19,7 @@ const dragStyle = computed(() => {
       id="drag-item"
       :style="dragStyle"
       class="fixed bg-gray-500 w-auto px-40px z-1000 pointer-events-auto select-none cursor-move"
-  ><p class="text-sm z-1000">名称</p>
+  ><p class="text-sm z-1000 cursor-move">名称</p>
   </div>
 </template>
 

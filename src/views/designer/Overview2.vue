@@ -3,8 +3,9 @@
 import { computed, h, onMounted, ref, resolveComponent, VNode } from 'vue'
 import { Component } from '@/views/lowCode/service'
 import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { RenderPage } from '@/views/designer/common'
 
-const renderPage = ref<Component>()
+const renderPage = ref<RenderPage>()
 
 function doRender (node: any): VNode | undefined {
   const resolve = resolveComponent(node.type)
@@ -20,10 +21,14 @@ function doRender (node: any): VNode | undefined {
 
 const componentRender = () => {
   if (renderPage.value) {
-    return doRender(renderPage.value)
+    return doRender(renderPage.value?.component)
   } else {
     return h('div')
   }
+}
+
+const componentModel = () => {
+  return h('div', {}, renderPage.value?.models.map(m => doRender(m)))
 }
 
 addMessageListener('render', (payload: any) => {
@@ -35,6 +40,7 @@ addMessageListener('render', (payload: any) => {
 
 <template>
   <componentRender/>
+  <componentModel/>
 </template>
 
 <style scoped>

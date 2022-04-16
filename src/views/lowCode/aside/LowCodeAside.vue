@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Operation, PieChart } from '@element-plus/icons-vue'
 import { useConfigStore } from '@/stores/constant'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watchEffect } from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
 import { emitter} from '@/views/lowCode/state'
 import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
-import { x, y } from '@/views/designer/common'
+import { isPanelOpen, x, y } from '@/views/designer/common'
 
 const store = useConfigStore()
 const el = ref()
@@ -30,8 +30,12 @@ onMounted(() => {
   })
 })
 
-addMessageListener('onDragEnd', () => {
-  emitter.emit('onComponentPanelOpen')
+watchEffect(()=>{
+  isPanelOpen.value = state.treeTabShow;
+})
+
+watchEffect(()=>{
+  isPanelOpen.value = state.componentTabShow;
 })
 
 </script>
@@ -66,8 +70,7 @@ addMessageListener('onDragEnd', () => {
       width=500
       title="组件库"
       @on-panel-close="state.componentTabShow = false"
-  >
-    <ComponentRepositoryCard>
+  ><ComponentRepositoryCard>
     </ComponentRepositoryCard>
   </LowCodePanel>
 </template>

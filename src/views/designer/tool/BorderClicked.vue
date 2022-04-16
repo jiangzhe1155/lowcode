@@ -21,6 +21,7 @@ const clickStyle = computed(() => {
     top: location?.top + 'px'
   }
 })
+
 const directionStyle = computed(() => {
   let location = locationState.currentClickComponent?.location
   if (!location || !location.top) {
@@ -30,6 +31,7 @@ const directionStyle = computed(() => {
     '-top-26px': location.top > 100
   }
 })
+
 const parentComponent = computed(() => {
   // 获取父级的组件（3）个
   let parentComponents: Component[] = []
@@ -48,7 +50,7 @@ const onCopy = () => {
   let copyId = copy(locationState.currentClickComponent!.id)
   setTimeout(() => {
     locationState.currentClickComponent = fetchLocation(copyId)
-  })
+  }, 200)
 }
 
 const onDelete = () => {

@@ -2,6 +2,7 @@
 import { useConfigStore } from '@/stores/constant'
 import { computed, defineEmits, defineProps, ref } from 'vue'
 import { onClickOutside, useWindowSize } from '@vueuse/core'
+import { isAffixPanel, isPanelOpen } from '@/views/designer/common'
 
 const store = useConfigStore()
 const { height } = useWindowSize()
@@ -40,13 +41,14 @@ const onPanelClose = () => {
 
 const onAffix = () => {
   isAffix.value = !isAffix.value
+  isAffixPanel.value = isAffix.value;
 }
 
 const target = ref(null)
 
 onClickOutside(target, () => {
   if (props.isVisible && !isAffix.value) {
-    emit('onPanelClose')
+    onPanelClose()
   }
 })
 

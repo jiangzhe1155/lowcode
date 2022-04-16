@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
-import { x, y, asideComponentType } from '@/views/designer/common'
+import { x, y, asideComponentType,isDragging } from '@/views/designer/common'
 
 const asideDragStyle = computed(() => {
   return {
@@ -14,7 +14,7 @@ const asideDragStyle = computed(() => {
 
 <template>
   <div
-      v-if="asideComponentType"
+      v-if="asideComponentType && isDragging"
       class="fixed bg-gray-500 w-auto px-40px z-1000  pointer-events-none	select-auto	cursor-move"
       :style="asideDragStyle"
   ><p class="text-sm cursor-move">{{ asideComponentType }}</p>

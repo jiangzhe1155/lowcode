@@ -4,6 +4,7 @@ import { onLongPress, useMousePressed } from '@vueuse/core'
 import { emitter } from '@/views/lowCode/state'
 import { ComponentGroup, ComponentType } from '@/views/lowCode/service'
 import { asideComponentType, asideComponentGroup, x, y, iframeDoc, startDrag } from '@/views/designer/common'
+import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/windowEvent'
 
 const props = defineProps<{
   type: ComponentType,
@@ -19,6 +20,8 @@ onLongPress(el, () => {
   asideComponentGroup.value = props.group
   startDrag.value = true
   emitter.emit('onComponentPanelClose')
+  document.addEventListener('mousemove',onDocumentMouseDrag)
+  document.addEventListener('mouseup',onDocumentMouseDragEnd)
 }, { delay: 200 })
 
 const { pressed } = useMousePressed({ target: el })
@@ -26,6 +29,7 @@ watch(pressed, (n) => {
   if (n) {
 
   } else {
+    console.log('按压结束')
     asideComponentType.value = undefined
     asideComponentGroup.value = undefined
     startDrag.value = false
