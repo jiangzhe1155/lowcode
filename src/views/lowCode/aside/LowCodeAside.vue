@@ -4,6 +4,8 @@ import { useConfigStore } from '@/stores/constant'
 import { onMounted, reactive, ref, watchEffect } from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
+import ComponentTree from '@/views/lowCode/aside/ComponentTree.vue'
+
 import { emitter} from '@/views/lowCode/state'
 import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import { isPanelOpen, x, y } from '@/views/designer/common'
@@ -62,6 +64,7 @@ watchEffect(()=>{
       title="结构树"
       @on-panel-close="state.treeTabShow = false"
   >
+    <ComponentTree></ComponentTree>
   </LowCodePanel>
 
   <LowCodePanel

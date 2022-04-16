@@ -489,18 +489,17 @@ export const scrollToTopOrBottom = () => {
   }
 }
 
+export const scrollToTarget = (location : Location) => {
+  let win = iframeWin()
+  let scrollY = win.scrollY
+  win.scrollTo({ top: scrollY  + location.top})
+}
+
+
 
 export const back = () => {
   undo()
-  setTimeout(()=>{
-    if (locationState.currentClickComponent) {
-      locationState.currentClickComponent = fetchLocation(locationState.currentClickComponent.id)
-    }
-    if (locationState.currentHoverComponent) {
-      locationState.currentHoverComponent = fetchLocation(locationState.currentHoverComponent.id)
-    }
-    if (locationState.currentPressComponent) {
-      locationState.currentPressComponent = fetchLocation(locationState.currentPressComponent.id)
-    }
-  })
+  locationState.currentClickComponent = undefined;
+  locationState.currentInsertionComponent = undefined;
+  locationState.currentHoverComponent = undefined;
 }

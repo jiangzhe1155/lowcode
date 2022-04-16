@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
+import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
+
 import { useConfigStore } from '@/stores/constant'
 import { nextTick, onMounted, ref, toRaw, toRef, unref, watch, watchEffect } from 'vue'
 import { ElButton } from 'element-plus'
@@ -154,21 +156,7 @@ watch([renderPage, () => iframeWin()], (n, o) => {
         </div>
       </el-main>
       <el-aside class="border-l-1">
-        {{ isShowInsertion }}
-        {{ locationState }}
-        {{ x }}
-        {{ y }}
-        {{ startDrag }}
-        {{ isDragging }}
-        {{ locationMap }}
-        {{ asideComponentType }}
-        {{ asideComponentGroup }}
-        isInside:{{ isInside() }}
-        isAffix:{{ isAffixPanel }}
-        isPanelOpen:{{
-          isPanelOpen
-        }}
-<!--        history:{{ history }}-->
+        <PropsPanel></PropsPanel>
       </el-aside>
     </el-container>
   </el-container>
