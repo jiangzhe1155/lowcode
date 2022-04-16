@@ -655,6 +655,8 @@ export class LocationState {
   currentHoverComponent?: { id: string, location: Location | null }
   currentClickComponent?: { id: string, location: Location | null }
   currentPressComponent?: { id: string, location: Location | null }
+  currentInsertionComponent?: { id: string, location: Location | null }
+  direction?: Direction = undefined
 }
 
 export class RenderPage {

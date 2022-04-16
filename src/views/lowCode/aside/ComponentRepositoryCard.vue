@@ -14,8 +14,7 @@ const activeNames = ref(['container', 'layout','model'])
       <el-row :gutter="0">
         <el-col :span="8">
           <ComponentCardItem
-              name="容器" img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
-                             type="RootContainer" group="Container">
+              name="容器" img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg" type="RootContainer" group="Container">
           </ComponentCardItem>
         </el-col>
         <el-col :span="8">

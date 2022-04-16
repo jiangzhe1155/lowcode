@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { defineProps, onMounted, ref, toRaw, watch } from 'vue'
-import { vElementHover } from '@vueuse/components'
+import { defineProps, ref, watch } from 'vue'
 import { onLongPress, useMousePressed } from '@vueuse/core'
-import { asideHoverType, controlState, emitter, iframeRef, iframeWin, locationState, x, y } from '@/views/lowCode/state'
-import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { controlState, emitter } from '@/views/lowCode/state'
 import { ComponentGroup, ComponentType } from '@/views/lowCode/service'
+import { asideComponentType,asideComponentGroup } from '@/views/designer/common'
 
 const props = defineProps<{
   type: ComponentType,
@@ -16,9 +15,8 @@ const props = defineProps<{
 const el = ref<HTMLElement | null>(null)
 
 onLongPress(el, () => {
-  controlState.value.isLongPress = true
-  controlState.value.asideComponentType = props.type
-  controlState.value.asideComponentGroup = props.group
+  asideComponentType.value = props.type
+  asideComponentGroup.value = props.group
   emitter.emit('onComponentPanelClose')
 }, { delay: 200 })
 
@@ -27,11 +25,8 @@ watch(pressed, (n) => {
   if (n) {
 
   } else {
-    controlState.value.isDrag = false
-    controlState.value.isLongPress = false
-    controlState.value.asideComponentGroup = undefined
-    controlState.value.asideComponentType = undefined
-    sendIframeMessage(iframeWin.value, 'onDragEnd', {})
+    asideComponentType.value = undefined
+    asideComponentGroup.value = undefined
     emitter.emit('onComponentPanelOpen')
   }
 })

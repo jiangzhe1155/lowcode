@@ -10,13 +10,12 @@ const dragStyle = computed(() => {
     top: y.value - 10 + 'px',
   }
 })
-
 </script>
 
 
 <template>
   <div
-      v-if="isDragging"
+      v-if="isDragging "
       id="drag-item"
       :style="dragStyle"
       class="fixed bg-gray-500 w-auto px-40px z-1000 pointer-events-auto select-none cursor-move"

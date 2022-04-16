@@ -6,7 +6,7 @@ import {
   componentMap,
   copy,
   fetchLocation,
-  deleteComponent
+  deleteComponent, isDragging
 } from '@/views/designer/common'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
 import { Component } from '@/views/lowCode/service'
@@ -59,10 +59,11 @@ const onDelete = () => {
 </script>
 <template>
   <div
-      v-if="locationState.currentClickComponent"
+      v-if="locationState.currentClickComponent && !isDragging"
       class="z-400 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyle"
-  ><div
+  >
+    <div
         class="absolute -right-2px !pointer-events-auto bg-white flex justify-center "
         :class="directionStyle"
     >

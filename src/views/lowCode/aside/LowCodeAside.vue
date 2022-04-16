@@ -28,24 +28,9 @@ onMounted(() => {
     }
   })
 
-  window.addEventListener('mousemove', (event: MouseEvent) => {
-    if (controlState.value.isLongPress) {
-      if (!controlState.value.isDrag) {
-        controlState.value.isDrag = true
-        sendIframeMessage(iframeWin.value, 'onStartDrag', {
-          componentType: controlState.value.asideComponentType,
-          componentGroup: controlState.value.asideComponentGroup
-        })
-      } else {
-        console.log('正在移動在')
-      }
-    }
+  document.addEventListener('mousemove', (event: MouseEvent) => {
+    console.log('主窗口移动')
   }, true)
-
-  window.addEventListener('drag', (event: MouseEvent) => {
-      console.log('正在被拖拽',event)
-  }, true)
-
 })
 
 addMessageListener('onDragEnd', () => {
