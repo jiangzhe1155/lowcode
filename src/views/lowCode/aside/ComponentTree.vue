@@ -69,7 +69,7 @@ const onDbClick = (id: string, name: string) => {
   updateComponentId.value = id
   updateName.value = name
   console.log('双击了')
-  setTimeout(()=>{
+  setTimeout(() => {
     document.getElementById('treeInput' + id)?.select()
   })
 }
@@ -105,9 +105,9 @@ const onLeave = () => {
             v-if="updateComponentId === data.id"
             class="!border-blue-500"
             v-model="updateName"
-            @change="onUpdateNameBlur"
-            size="small"
-        >
+            @blur="onUpdateNameBlur"
+            @keyup.enter.native="onUpdateNameBlur"
+            size="small">
         </el-input>
         <span class="flex flex-1 items-center justify-between w-full"
               v-on:dblclick="onDbClick(data.id,data.name)"
