@@ -69,15 +69,25 @@ const onDbClick = (id: string, name: string) => {
   updateComponentId.value = id
   updateName.value = name
   console.log('双击了')
+  setTimeout(()=>{
+    document.getElementById('treeInput' + id)?.select()
+  })
 }
 
 const onUpdateNameBlur = () => {
   console.log('失去焦点')
-  if (updateComponentId){
-    updateComponentName(updateComponentId.value,updateName.value)
+  if (updateComponentId) {
+    updateComponentName(updateComponentId.value, updateName.value)
   }
-  updateComponentId.value = undefined;
+  updateComponentId.value = undefined
   updateName.value = undefined
+}
+
+const onHover = (id: string) => {
+  locationState.currentHoverComponent = fetchLocation(id)
+}
+const onLeave = () => {
+  locationState.currentHoverComponent = undefined
 }
 
 </script>
@@ -90,12 +100,22 @@ const onUpdateNameBlur = () => {
              :expand-on-click-node="false"
              default-expand-all>
       <template #default="{ node, data }">
-      <span class="flex flex-1 items-center justify-between w-full" v-on:dblclick="onDbClick(data.id,data.name)">
-        <el-input v-if="updateComponentId === data.id" v-model="updateName" @blur="onUpdateNameBlur">
-
+        <el-input
+            :id="'treeInput' + data.id"
+            v-if="updateComponentId === data.id"
+            class="!border-blue-500"
+            v-model="updateName"
+            @change="onUpdateNameBlur"
+            size="small"
+        >
         </el-input>
-        <span class="select-none" v-if="updateComponentId !== data.id">{{ node.label }}</span>
-
+        <span class="flex flex-1 items-center justify-between w-full"
+              v-on:dblclick="onDbClick(data.id,data.name)"
+              v-if="updateComponentId !== data.id"
+              @mouseover="onHover(data.id)"
+              @mouseleave="onLeave"
+        >
+        <span class="select-none">{{ node.label }}</span>
         <span>
           <el-button-group class="mr-10px !space-x-1" size="large" type="text" v-if="data.group !== 'Root'">
             <el-button>
