@@ -53,4 +53,5 @@ const activeNames = ref(['container', 'layout','model'])
 /deep/ .el-collapse-item__content {
   padding-bottom: 0;
 }
+
 </style>

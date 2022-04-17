@@ -20,9 +20,10 @@ onLongPress(el, () => {
   asideComponentGroup.value = props.group
   startDrag.value = true
   emitter.emit('onComponentPanelClose')
-  document.addEventListener('mousemove',onDocumentMouseDrag)
-  document.addEventListener('mouseup',onDocumentMouseDragEnd)
-}, { delay: 200 })
+
+  document.addEventListener('mousemove',onDocumentMouseDrag,true)
+  document.addEventListener('mouseup',onDocumentMouseDragEnd,true)
+}, { delay: 0 })
 
 const { pressed } = useMousePressed({ target: el })
 watch(pressed, (n) => {
@@ -33,6 +34,7 @@ watch(pressed, (n) => {
     asideComponentType.value = undefined
     asideComponentGroup.value = undefined
     startDrag.value = false
+
     emitter.emit('onComponentPanelOpen')
   }
 })

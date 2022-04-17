@@ -584,7 +584,7 @@ const newInstanceByType = (type: ComponentType): Component | undefined => {
 }
 
 export type ComponentType = 'CardComponent' | 'RootContainer' | 'PageContainer' | 'DialogComponent';
-export type ComponentGroup = 'Input' | 'Container' | 'Model';
+export type ComponentGroup = 'Input' | 'Container' | 'Model' | 'Root';
 
 export abstract class BaseComponent implements Component {
   id: string = v4()
@@ -616,7 +616,7 @@ export class Card extends BaseComponent {
 
 export class Root extends BaseComponent {
   type: ComponentType = 'RootContainer'
-  group: ComponentGroup = 'Container'
+  group: ComponentGroup = 'Root'
   supportGroup: ComponentGroup[] = ['Container', 'Model']
 
   constructor (name: string = '根节点') {

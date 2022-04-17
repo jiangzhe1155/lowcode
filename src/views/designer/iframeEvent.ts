@@ -12,10 +12,11 @@ import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/wi
 
 export const onIframeMouseDrag = (e: MouseEvent) => {
   console.log('鼠标拖动', e.clientX, e.clientY)
-  if (startDrag.value) {
+  x.value = e.clientX + 80 + (isAffixPanel.value && isPanelOpen.value ? 500 : 0)
+  y.value = e.clientY + 70
+  if (startDrag.value && !isDragging.value) {
     isDragging.value = true
-    x.value = e.clientX + 80 + (isAffixPanel.value && isPanelOpen.value ? 500 : 0)
-    y.value = e.clientY + 70
+    console.log('添加事件')
     document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
     document.addEventListener('mousemove', onDocumentMouseDrag, true)
   }
@@ -41,4 +42,5 @@ export const onIframeMouseDown = (e: MouseEvent) => {
   e.stopPropagation()
   e.preventDefault()
   iframeDoc().addEventListener('mousemove', onIframeMouseDrag, true)
+
 }

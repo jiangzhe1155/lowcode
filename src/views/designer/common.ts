@@ -40,10 +40,11 @@ res.models = [dialog]
 res.component = root
 
 export const renderPage = ref<RenderPage>(res)
-const { history, undo, redo } = useRefHistory(renderPage, {
+const {
+  undo,
+} = useRefHistory(renderPage, {
   deep: true,
 })
-
 
 export const componentMap = computed(() => {
   console.log('componentMap 更新', renderPage)
@@ -308,6 +309,11 @@ export function move (pressId: string, hoverId: string, direction: Direction) {
 export const copy = (componentId: string) => {
   console.log('复制', componentId)
   let element = componentMap.value.get(componentId)
+  if (element.group === 'Root') {
+    // 根节点不允许添加
+    console.log('根节点不允许复制')
+    return element.id
+  }
 
   function doCopy (element: Component) {
     let target = Object.assign({}, element)
@@ -335,6 +341,20 @@ export const copy = (componentId: string) => {
   return res.id
 }
 
+export const hide = (componentId: string) => {
+  let component: Component = componentMap.value.get(componentId)
+  if (component) {
+    component.visible = false
+  }
+}
+
+export const show = (componentId: string) => {
+  let component: Component = componentMap.value.get(componentId)
+  if (component) {
+    component.visible = true
+  }
+}
+
 const newInstanceByType = (type: ComponentType): Component | undefined => {
   if (type === 'CardComponent') {
     return new Card()
@@ -355,6 +375,12 @@ export function add (pressTypeId: ComponentType, pressGroup: ComponentGroup, tar
   //如果是对话框默认加入到对话框的列表
   if (newInstance.group === 'Model') {
     renderPage.value.models.push(newInstance)
+    return newInstance.id
+  }
+
+  if (newInstance.group === 'Root') {
+    // 根节点不允许添加
+    console.log('根节点不允许添加')
     return newInstance.id
   }
 
@@ -393,10 +419,11 @@ export const deleteComponent = (componentId: string) => {
     return
   }
 
-  if (component.level == 0) {
+  if (component.group === 'Root') {
     console.log('无法删除根节点')
     return
   }
+
   let pElement = componentMap.value.get(component.pid)
   let i = pElement.children.indexOf(component)
   pElement.children.splice(i, 1)
@@ -489,17 +516,18 @@ export const scrollToTopOrBottom = () => {
   }
 }
 
-export const scrollToTarget = (location : Location) => {
+export const scrollToTarget = (location: Location) => {
+  if (!location) {
+    return
+  }
   let win = iframeWin()
   let scrollY = win.scrollY
-  win.scrollTo({ top: scrollY  + location.top})
+  win.scrollTo({ top: scrollY + location.top })
 }
-
-
 
 export const back = () => {
   undo()
-  locationState.currentClickComponent = undefined;
-  locationState.currentInsertionComponent = undefined;
-  locationState.currentHoverComponent = undefined;
+  locationState.currentClickComponent = undefined
+  locationState.currentInsertionComponent = undefined
+  locationState.currentHoverComponent = undefined
 }

@@ -1,16 +1,16 @@
 <script setup lang="ts">
 
-import { computed, nextTick, toRaw, watchEffect } from 'vue'
+import { computed } from 'vue'
 import {
   locationState,
   componentMap,
   copy,
   fetchLocation,
-  deleteComponent, isDragging
+  deleteComponent, isDragging, hide
 } from '@/views/designer/common'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
 import { Component } from '@/views/lowCode/service'
-import { CopyDocument, Delete, Lock } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, Lock, Hide } from '@element-plus/icons-vue'
 
 const clickStyle = computed(() => {
   let location = locationState.currentClickComponent?.location
@@ -53,6 +53,11 @@ const onCopy = () => {
   }, 200)
 }
 
+const onHide = () => {
+  hide(locationState.currentClickComponent!.id)
+  locationState.currentClickComponent = undefined
+}
+
 const onDelete = () => {
   deleteComponent(locationState.currentClickComponent!.id)
   locationState.currentClickComponent = undefined
@@ -81,7 +86,7 @@ const onDelete = () => {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-button-group type="primary" size="small">
+      <el-button-group type="primary" size="small" v-if="componentMap.get(locationState.currentClickComponent?.id)?.group !== 'Root'">
         <el-tooltip
             effect="dark"
             content="锁定"
@@ -101,6 +106,17 @@ const onDelete = () => {
           <el-button @click="onCopy">
             <el-icon :size="16">
               <copy-document/>
+            </el-icon>
+          </el-button>
+        </el-tooltip>
+        <el-tooltip
+            effect="dark"
+            content="隐藏"
+            :offset="5"
+            placement="top">
+          <el-button @click="onHide">
+            <el-icon :size="16">
+              <Hide/>
             </el-icon>
           </el-button>
         </el-tooltip>

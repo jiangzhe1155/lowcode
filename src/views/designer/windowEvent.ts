@@ -29,7 +29,7 @@ export const onDocumentMouseDrag = (e: MouseEvent) => {
   e.stopPropagation()
 }
 
-export const onDocumentMouseDragEnd = () => {
+export const onDocumentMouseDragEnd = (e: MouseEvent ) => {
   console.log('主窗口抬起')
   if (isShowInsertion.value && locationState.currentInsertionComponent && locationState.direction) {
     let clickId: string
@@ -50,6 +50,8 @@ export const onDocumentMouseDragEnd = () => {
   locationState.currentInsertionComponent = undefined;
   locationState.currentHoverComponent = undefined;
 
+  e.preventDefault()
+  e.stopPropagation()
   document.removeEventListener('mousemove', onDocumentMouseDrag, true)
   document.removeEventListener('mouseup', onDocumentMouseDragEnd, true)
   iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
