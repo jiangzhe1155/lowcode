@@ -126,7 +126,7 @@ watch([renderPage, () => iframeWin()], (n, o) => {
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      <el-button @click="back()">撤销</el-button>
+      <el-button @click="back($event)">撤销</el-button>
     </el-header>
     <el-container>
       <DragItem></DragItem>

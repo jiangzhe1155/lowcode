@@ -348,6 +348,13 @@ export const hide = (componentId: string) => {
   }
 }
 
+export const updateComponentName = (componentId: string, name: string) => {
+  let component: Component = componentMap.value.get(componentId)
+  if (component) {
+    component.name = name
+  }
+}
+
 export const show = (componentId: string) => {
   let component: Component = componentMap.value.get(componentId)
   if (component) {
@@ -525,7 +532,7 @@ export const scrollToTarget = (location: Location) => {
   win.scrollTo({ top: scrollY + location.top })
 }
 
-export const back = () => {
+export const back = (e: MouseEvent) => {
   undo()
   locationState.currentClickComponent = undefined
   locationState.currentInsertionComponent = undefined

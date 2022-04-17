@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import {
   copy, deleteComponent,
   fetchLocation,
@@ -7,10 +7,11 @@ import {
   iframeWin,
   locationState,
   renderPage,
-  scrollToTarget, show
+  scrollToTarget, show, updateComponentName
 } from '@/views/designer/common'
 import { Component } from '@/views/lowCode/service'
 import { CopyDocument, Delete, Lock, Hide, View } from '@element-plus/icons-vue'
+import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
 
 const defaultProps = {
   children: 'children',
@@ -62,19 +63,39 @@ const onDelete = (component: Component, e: Event) => {
   e.stopPropagation()
 }
 
+const updateComponentId = ref()
+const updateName = ref()
+const onDbClick = (id: string, name: string) => {
+  updateComponentId.value = id
+  updateName.value = name
+  console.log('双击了')
+}
+
+const onUpdateNameBlur = () => {
+  console.log('失去焦点')
+  if (updateComponentId){
+    updateComponentName(updateComponentId.value,updateName.value)
+  }
+  updateComponentId.value = undefined;
+  updateName.value = undefined
+}
+
 </script>
 
 <template>
   <div class="container">
-      <el-tree :data="renderTree"
-               :props="defaultProps"
-               @node-click="handleNodeClick"
-               :expand-on-click-node="false"
-               default-expand-all>
-        <template #default="{ node, data }">
-      <span
-          class="flex flex-1 items-center justify-between"
-      ><span>{{ node.label }}</span>
+    <el-tree :data="renderTree"
+             :props="defaultProps"
+             @node-click="handleNodeClick"
+             :expand-on-click-node="false"
+             default-expand-all>
+      <template #default="{ node, data }">
+      <span class="flex flex-1 items-center justify-between w-full" v-on:dblclick="onDbClick(data.id,data.name)">
+        <el-input v-if="updateComponentId === data.id" v-model="updateName" @blur="onUpdateNameBlur">
+
+        </el-input>
+        <span class="select-none" v-if="updateComponentId !== data.id">{{ node.label }}</span>
+
         <span>
           <el-button-group class="mr-10px !space-x-1" size="large" type="text" v-if="data.group !== 'Root'">
             <el-button>
@@ -105,10 +126,9 @@ const onDelete = (component: Component, e: Event) => {
           </el-button-group>
         </span>
       </span>
-        </template>
-      </el-tree>
+      </template>
+    </el-tree>
   </div>
-
 </template>
 
 <style scoped>
