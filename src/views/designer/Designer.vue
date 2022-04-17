@@ -37,7 +37,7 @@ import BorderPress from '@/views/designer/tool/BorderPress.vue'
 import Insertion from '@/views/designer/tool/Insertion.vue'
 import TypeDragItem from '@/views/designer/tool/TypeDragItem.vue'
 import { useMouseInElement, useRefHistory } from '@vueuse/core'
-import { onIframeMouseDown, onIframeMouseDrag, onIframeMouseUp } from '@/views/designer/iframeEvent'
+import { onIframeMouseClick, onIframeMouseDown, onIframeMouseDrag, onIframeMouseUp } from '@/views/designer/iframeEvent'
 
 const store = useConfigStore()
 const el = ref<HTMLElement>()
@@ -108,6 +108,7 @@ const onLoad = () => {
       scrollToTopOrBottom()
     }
   }, true)
+  doc.addEventListener('click', onIframeMouseClick, true)
 
   doc.addEventListener('scroll', onIframeScroll, false)
   win.addEventListener('resize', onIframeResize, true)

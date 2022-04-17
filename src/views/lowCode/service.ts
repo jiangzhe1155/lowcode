@@ -568,7 +568,9 @@ export interface Component {
   visible: boolean,
   getElement: string,
   group: ComponentGroup,
-  supportGroup: ComponentGroup[]
+  supportGroup: ComponentGroup[],
+  props: {},
+  config: {}
 }
 
 const newInstanceByType = (type: ComponentType): Component | undefined => {
@@ -601,13 +603,20 @@ export abstract class BaseComponent implements Component {
   }).toString()
   abstract group: ComponentGroup
   supportGroup: ComponentGroup[] = []
+  props = {}
+  config = {}
 }
 
 export class Card extends BaseComponent {
   type: ComponentType = 'CardComponent'
   group: ComponentGroup = 'Container'
   supportGroup: ComponentGroup[] = ['Input', 'Container']
+  props = {
+    openHeader: false
+  }
+  config = {
 
+  }
   constructor (name: string = '卡片') {
     super()
     this.name = name

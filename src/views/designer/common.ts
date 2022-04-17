@@ -532,7 +532,7 @@ export const scrollToTarget = (location: Location) => {
   win.scrollTo({ top: scrollY + location.top })
 }
 
-export const back = (e: MouseEvent) => {
+export const back = () => {
   undo()
   locationState.currentClickComponent = undefined
   locationState.currentInsertionComponent = undefined

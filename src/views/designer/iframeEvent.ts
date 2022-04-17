@@ -44,3 +44,9 @@ export const onIframeMouseDown = (e: MouseEvent) => {
   iframeDoc().addEventListener('mousemove', onIframeMouseDrag, true)
 
 }
+
+export const onIframeMouseClick = (e: MouseEvent) => {
+  console.log('点击事件')
+  e.stopPropagation()
+  e.preventDefault()
+}
