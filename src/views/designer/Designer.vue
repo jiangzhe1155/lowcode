@@ -9,34 +9,17 @@ import { ElButton } from 'element-plus'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
 import {
-  currentComponent,
-  currentComponentFromArea,
-  fetchLocation,
   iframeDoc,
   iframeRef,
   iframeWin,
-  isDragging,
-  locationState,
   renderPage,
-  startDrag,
-  x,
-  y,
-  locationMap,
-  fetchDirection,
-  isShowInsertion,
-  scrollToTopOrBottom,
-  asideComponentType,
-  asideComponentGroup,
-  isInside,
-  isPanelOpen,
-  isAffixPanel, back
+  back, updateLocationState
 } from '@/views/designer/common'
 import BorderClicked from '@/views/designer/tool/BorderClicked.vue'
 import DragItem from '@/views/designer/tool/DragItem.vue'
 import BorderPress from '@/views/designer/tool/BorderPress.vue'
 import Insertion from '@/views/designer/tool/Insertion.vue'
 import TypeDragItem from '@/views/designer/tool/TypeDragItem.vue'
-import { useMouseInElement, useRefHistory } from '@vueuse/core'
 import {
   onIframeMouseClick,
   onIframeMouseDown,
@@ -68,7 +51,7 @@ const onLoad = () => {
   doc.addEventListener('mouseenter', onIframeMouseIn, false)
   doc.addEventListener('iframeMouseMove', onIframeMouseMove, true)
   doc.addEventListener('click', onIframeMouseClick, true)
-  doc.addEventListener('scroll', onIframeScroll, false)
+  doc.addEventListener('scroll', onIframeScroll, true)
   win.addEventListener('resize', onIframeResize, true)
   doc.onselectstart = () => false
 }
@@ -77,6 +60,9 @@ watch([renderPage, () => iframeWin()], (n, o) => {
   if (renderPage && iframeWin()) {
     onLoad()
   }
+  setTimeout(() => {
+    updateLocationState()
+  })
 }, { deep: true })
 
 </script>

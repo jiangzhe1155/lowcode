@@ -607,16 +607,24 @@ export abstract class BaseComponent implements Component {
   config = {}
 }
 
+export type ValueType = 'boolean' | 'string';
+
 export class Card extends BaseComponent {
   type: ComponentType = 'CardComponent'
   group: ComponentGroup = 'Container'
   supportGroup: ComponentGroup[] = ['Input', 'Container']
   props = {
-    openHeader: false
+    openHeader: {
+      type: 'boolean' as ValueType,
+      value: true
+    },
+    headerTitle: {
+      type: 'string' as ValueType,
+      value: '主标题'
+    }
   }
-  config = {
+  config = {}
 
-  }
   constructor (name: string = '卡片') {
     super()
     this.name = name
@@ -666,11 +674,6 @@ export class LocationState {
   currentPressComponent?: { id: string, location: Location | null }
   currentInsertionComponent?: { id: string, location: Location | null }
   direction?: Direction = undefined
-}
-
-export class RenderPage {
-  components: Component[] = []
-  models: Component[] = []
 }
 
 export class ControlState {

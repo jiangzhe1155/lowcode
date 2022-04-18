@@ -11,7 +11,7 @@ import {
 } from '@/views/lowCode/service'
 import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
-import { useRefHistory } from '@vueuse/core'
+import { useRefHistory, useThrottledRefHistory } from '@vueuse/core'
 
 export const iframeRef = ref<any>()
 export const iframeWin = () => {
@@ -40,10 +40,12 @@ res.models = [dialog]
 res.component = root
 
 export const renderPage = ref<RenderPage>(res)
+
 const {
   undo,
-} = useRefHistory(renderPage, {
+} = useThrottledRefHistory(renderPage, {
   deep: true,
+  throttle: 1000
 })
 
 export const componentMap = computed(() => {
@@ -535,6 +537,7 @@ export const scrollToTarget = (location: Location) => {
 
 export const back = () => {
   undo()
+  resetLocationState()
 }
 
 export const onComponentDragEnd = () => {
