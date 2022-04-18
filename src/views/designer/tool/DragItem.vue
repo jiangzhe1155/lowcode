@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed, onMounted, ref } from 'vue'
-import { isDragging, startDrag, x, y } from '@/views/designer/common'
+import { isDragging, startDrag, x, y, locationState, componentMap } from '@/views/designer/common'
 
 const dragStyle = computed(() => {
   return {
@@ -18,7 +18,7 @@ const dragStyle = computed(() => {
       id="drag-item"
       :style="dragStyle"
       class="fixed bg-gray-500 w-auto px-40px z-1000 pointer-events-auto select-none cursor-move"
-  ><p class="text-sm z-1000 cursor-move">名称</p>
+  ><p class="text-sm z-1000 cursor-move">{{ componentMap.get(locationState.currentPressComponent?.id)?.name }}</p>
   </div>
 </template>
 <style scoped>
