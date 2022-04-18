@@ -6,7 +6,7 @@ import {
   iframeDoc, isAffixPanel,
   isDragging, isPanelOpen,
   isShowInsertion,
-  locationState, move,
+  locationState, move, onComponentDragEnd, resetLocationState,
   startDrag,
   x,
   y
@@ -29,7 +29,7 @@ export const onDocumentMouseDrag = (e: MouseEvent) => {
   e.stopPropagation()
 }
 
-export const onDocumentMouseDragEnd = (e: MouseEvent ) => {
+export const onDocumentMouseDragEnd = (e: MouseEvent) => {
   console.log('主窗口抬起')
   if (isShowInsertion.value && locationState.currentInsertionComponent && locationState.direction) {
     let clickId: string
@@ -39,17 +39,11 @@ export const onDocumentMouseDragEnd = (e: MouseEvent ) => {
       clickId = add(asideComponentType.value, asideComponentGroup.value, locationState.currentInsertionComponent?.id, locationState.direction)
     }
     setTimeout(() => {
-      locationState.currentHoverComponent = undefined
       locationState.currentClickComponent = fetchLocation(clickId)
     })
   }
-
-  startDrag.value = false
-  isDragging.value = false
-  locationState.currentPressComponent = undefined;
-  locationState.currentInsertionComponent = undefined;
-  locationState.currentHoverComponent = undefined;
-
+  onComponentDragEnd()
+  resetLocationState()
   e.preventDefault()
   e.stopPropagation()
   document.removeEventListener('mousemove', onDocumentMouseDrag, true)

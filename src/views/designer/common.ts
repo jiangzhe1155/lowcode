@@ -338,6 +338,7 @@ export const copy = (componentId: string) => {
   } else {
     pElement.children.splice(i + 1, 0, res)
   }
+  resetLocationState()
   return res.id
 }
 
@@ -346,6 +347,7 @@ export const hide = (componentId: string) => {
   if (component) {
     component.visible = false
   }
+  resetLocationState()
 }
 
 export const updateComponentName = (componentId: string, name: string) => {
@@ -514,9 +516,8 @@ export const scrollToTopOrBottom = () => {
   let win = iframeWin()
   let hScrollTop = win.scrollY
   let hScrollHeight = win.innerHeight
-  // console.log('hScrollTop', hScrollTop, 'hScrollHeight', hScrollHeight)
+  // console.log('hScrollTop', hScrollTop, '', hScrollHeight)
   if (y.value <= hScrollTop + 20) {
-    0
     win.scrollTo({ top: hScrollTop - 1 / 2 * (hScrollTop + 20 - y.value) })
   } else if (y.value >= hScrollTop + hScrollHeight - 20) {
     win.scrollTo({ top: hScrollTop + 1 / 2 * (y.value - (hScrollTop + hScrollHeight - 20)) })
@@ -534,7 +535,34 @@ export const scrollToTarget = (location: Location) => {
 
 export const back = () => {
   undo()
-  locationState.currentClickComponent = undefined
+}
+
+export const onComponentDragEnd = () => {
+  startDrag.value = false
+  isDragging.value = false
+  asideComponentGroup.value = undefined
+  asideComponentType.value = undefined
+  locationState.currentPressComponent = undefined
+}
+
+export const resetLocationState = () => {
   locationState.currentInsertionComponent = undefined
   locationState.currentHoverComponent = undefined
+  locationState.currentPressComponent = undefined
+  locationState.currentClickComponent = undefined
+}
+
+export const updateLocationState = () => {
+  if (locationState.currentClickComponent) {
+    locationState.currentClickComponent = fetchLocation(locationState.currentClickComponent.id)
+  }
+  if (locationState.currentHoverComponent) {
+    locationState.currentHoverComponent = fetchLocation(locationState.currentHoverComponent.id)
+  }
+  if (locationState.currentPressComponent) {
+    locationState.currentPressComponent = fetchLocation(locationState.currentPressComponent.id)
+  }
+  if (locationState.currentInsertionComponent) {
+    locationState.currentInsertionComponent = fetchLocation(locationState.currentInsertionComponent.id)
+  }
 }

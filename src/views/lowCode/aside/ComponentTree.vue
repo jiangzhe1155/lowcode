@@ -6,7 +6,7 @@ import {
   hide,
   iframeWin,
   locationState,
-  renderPage,
+  renderPage, resetLocationState,
   scrollToTarget, show, updateComponentName
 } from '@/views/designer/common'
 import { Component } from '@/views/lowCode/service'
@@ -43,14 +43,12 @@ const onCopy = (component: Component, e: Event) => {
 
 const onHide = (component: Component, e: Event) => {
   hide(component.id)
-  locationState.currentClickComponent = undefined
   e.preventDefault()
   e.stopPropagation()
 }
 
 const onShow = (component: Component, e: Event) => {
   show(component.id)
-  locationState.currentClickComponent = undefined
   e.preventDefault()
   e.stopPropagation()
 }
@@ -58,7 +56,7 @@ const onShow = (component: Component, e: Event) => {
 const onDelete = (component: Component, e: Event) => {
   console.log('删除', component, e)
   deleteComponent(component.id)
-  locationState.currentClickComponent = undefined
+  resetLocationState()
   e.preventDefault()
   e.stopPropagation()
 }
@@ -68,7 +66,6 @@ const updateName = ref()
 const onDbClick = (id: string, name: string) => {
   updateComponentId.value = id
   updateName.value = name
-  console.log('双击了')
   setTimeout(() => {
     document.getElementById('treeInput' + id)?.select()
   })

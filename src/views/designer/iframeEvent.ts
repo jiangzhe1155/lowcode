@@ -1,10 +1,9 @@
 import {
-  currentComponent,
-  iframeDoc,
+  currentComponent, currentComponentFromArea, fetchDirection, iframeDoc,
   isAffixPanel,
-  isDragging, isPanelOpen,
-  locationState,
-  startDrag,
+  isDragging, isInside, isPanelOpen,
+  locationState, onComponentDragEnd, scrollToTopOrBottom,
+  startDrag, updateLocationState,
   x,
   y
 } from '@/views/designer/common'
@@ -16,7 +15,6 @@ export const onIframeMouseDrag = (e: MouseEvent) => {
   y.value = e.clientY + 70
   if (startDrag.value && !isDragging.value) {
     isDragging.value = true
-    console.log('添加事件')
     document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
     document.addEventListener('mousemove', onDocumentMouseDrag, true)
   }
@@ -24,14 +22,12 @@ export const onIframeMouseDrag = (e: MouseEvent) => {
 
 export const onIframeMouseUp = (e: Event) => {
   console.log('鼠标抬起', e)
-  // 应该当做是一个点击事件
   let componentLocation = currentComponent(<Node>e.target)
   if (componentLocation) {
     locationState.currentClickComponent = componentLocation
   }
-  startDrag.value = false
-  isDragging.value = false
-  locationState.currentPressComponent = undefined
+
+  onComponentDragEnd()
   iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
 }
 
@@ -39,14 +35,45 @@ export const onIframeMouseDown = (e: MouseEvent) => {
   console.log('iframe 按下')
   startDrag.value = true
   locationState.currentPressComponent = currentComponent(<Node>e.target)
+  iframeDoc().addEventListener('mousemove', onIframeMouseDrag, true)
   e.stopPropagation()
   e.preventDefault()
-  iframeDoc().addEventListener('mousemove', onIframeMouseDrag, true)
-
 }
 
 export const onIframeMouseClick = (e: MouseEvent) => {
   console.log('点击事件')
   e.stopPropagation()
   e.preventDefault()
+}
+
+export const onIframeMouseMove = (e: MouseEvent) => {
+  if (isInside()) {
+    locationState.currentInsertionComponent = currentComponentFromArea(e.clientX, e.clientY)
+    locationState.direction = fetchDirection(e.clientX, e.clientY)
+    scrollToTopOrBottom()
+  }
+}
+
+export const onIframeMouseOver = (e: MouseEvent) => {
+  if (e && e.target) {
+    locationState.currentHoverComponent = currentComponent(<Node>e.target)
+  }
+}
+
+export const onIframeMouseLeave = (e: Event) => {
+  console.log('鼠标移出', e)
+  locationState.currentHoverComponent = undefined
+}
+
+export const onIframeMouseIn = (e: Event) => {
+  console.log('鼠标移入', e)
+}
+
+export const onIframeResize = () => {
+  updateLocationState()
+}
+
+export const onIframeScroll = (e: Event) => {
+  console.log('屏幕滚动', e)
+  updateLocationState()
 }

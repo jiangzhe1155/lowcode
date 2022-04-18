@@ -29,7 +29,7 @@ import {
   asideComponentGroup,
   isInside,
   isPanelOpen,
-  isAffixPanel,back
+  isAffixPanel, back
 } from '@/views/designer/common'
 import BorderClicked from '@/views/designer/tool/BorderClicked.vue'
 import DragItem from '@/views/designer/tool/DragItem.vue'
@@ -37,51 +37,16 @@ import BorderPress from '@/views/designer/tool/BorderPress.vue'
 import Insertion from '@/views/designer/tool/Insertion.vue'
 import TypeDragItem from '@/views/designer/tool/TypeDragItem.vue'
 import { useMouseInElement, useRefHistory } from '@vueuse/core'
-import { onIframeMouseClick, onIframeMouseDown, onIframeMouseDrag, onIframeMouseUp } from '@/views/designer/iframeEvent'
+import {
+  onIframeMouseClick,
+  onIframeMouseDown,
+  onIframeMouseIn, onIframeMouseLeave,
+  onIframeMouseMove, onIframeMouseOver,
+  onIframeMouseUp, onIframeResize, onIframeScroll
+} from '@/views/designer/iframeEvent'
 
 const store = useConfigStore()
 const el = ref<HTMLElement>()
-
-const onIframeMouseOver = (e: MouseEvent) => {
-  if (e && e.target) {
-    locationState.currentHoverComponent = currentComponent(<Node>e.target)
-  }
-}
-
-const onIframeMouseLeave = (e: Event) => {
-  console.log('鼠标移出', e)
-  locationState.currentHoverComponent = undefined
-}
-
-const onIframeMouseIn = (e: Event) => {
-  console.log('鼠标移入', e)
-}
-
-const onIframeScroll = (e: Event) => {
-  console.log('屏幕滚动', e)
-  if (locationState.currentClickComponent) {
-    locationState.currentClickComponent = fetchLocation(locationState.currentClickComponent.id)
-  }
-  if (locationState.currentHoverComponent) {
-    locationState.currentHoverComponent = fetchLocation(locationState.currentHoverComponent.id)
-  }
-  if (locationState.currentPressComponent) {
-    locationState.currentPressComponent = fetchLocation(locationState.currentPressComponent.id)
-  }
-}
-
-const onIframeResize = () => {
-  console.log('屏幕缩放')
-  if (locationState.currentClickComponent) {
-    locationState.currentClickComponent = fetchLocation(locationState.currentClickComponent.id)
-  }
-  if (locationState.currentHoverComponent) {
-    locationState.currentHoverComponent = fetchLocation(locationState.currentHoverComponent.id)
-  }
-  if (locationState.currentPressComponent) {
-    locationState.currentPressComponent = fetchLocation(locationState.currentPressComponent.id)
-  }
-}
 
 onMounted(() => {
   iframeRef.value = el.value
@@ -101,15 +66,8 @@ const onLoad = () => {
   doc.addEventListener('mouseover', onIframeMouseOver, true)
   doc.addEventListener('mouseleave', onIframeMouseLeave, false)
   doc.addEventListener('mouseenter', onIframeMouseIn, false)
-  doc.addEventListener('iframeMouseMove', (e: MouseEvent) => {
-    if (isInside()) {
-      locationState.currentInsertionComponent = currentComponentFromArea(e.clientX, e.clientY)
-      locationState.direction = fetchDirection(e.clientX, e.clientY)
-      scrollToTopOrBottom()
-    }
-  }, true)
+  doc.addEventListener('iframeMouseMove', onIframeMouseMove, true)
   doc.addEventListener('click', onIframeMouseClick, true)
-
   doc.addEventListener('scroll', onIframeScroll, false)
   win.addEventListener('resize', onIframeResize, true)
   doc.onselectstart = () => false
@@ -119,8 +77,7 @@ watch([renderPage, () => iframeWin()], (n, o) => {
   if (renderPage && iframeWin()) {
     onLoad()
   }
-},{deep:true})
-
+}, { deep: true })
 
 </script>
 

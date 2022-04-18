@@ -6,7 +6,7 @@ import {
   componentMap,
   copy,
   fetchLocation,
-  deleteComponent, isDragging, hide
+  deleteComponent, isDragging, hide, resetLocationState
 } from '@/views/designer/common'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
 import { Component } from '@/views/lowCode/service'
@@ -36,7 +36,10 @@ const parentComponent = computed(() => {
   // 获取父级的组件（3）个
   let parentComponents: Component[] = []
   let i = 0
-  let componentId = componentMap.value.get(locationState.currentClickComponent?.id).pid
+  let componentId = componentMap.value.get(locationState.currentClickComponent?.id)?.pid
+  if (!componentId) {
+    return parentComponents
+  }
   while (i < 3 && componentId.length > 0) {
     let pE = componentMap.value.get(componentMap.value.get(componentId).id)
     parentComponents.push(pE)
@@ -55,12 +58,11 @@ const onCopy = () => {
 
 const onHide = () => {
   hide(locationState.currentClickComponent!.id)
-  locationState.currentClickComponent = undefined
 }
 
 const onDelete = () => {
   deleteComponent(locationState.currentClickComponent!.id)
-  locationState.currentClickComponent = undefined
+  resetLocationState()
 }
 
 </script>
@@ -86,7 +88,8 @@ const onDelete = () => {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-button-group type="primary" size="small" v-if="componentMap.get(locationState.currentClickComponent?.id)?.group !== 'Root'">
+      <el-button-group type="primary" size="small"
+                       v-if="componentMap.get(locationState.currentClickComponent?.id)?.group !== 'Root'">
         <el-tooltip
             effect="dark"
             content="锁定"

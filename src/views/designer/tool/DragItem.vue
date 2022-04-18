@@ -2,7 +2,6 @@
 
 import { computed, onMounted, ref } from 'vue'
 import { isDragging, startDrag, x, y } from '@/views/designer/common'
-import { useDraggable } from '@vueuse/core'
 
 const dragStyle = computed(() => {
   return {
@@ -22,7 +21,6 @@ const dragStyle = computed(() => {
   ><p class="text-sm z-1000 cursor-move">名称</p>
   </div>
 </template>
-
 <style scoped>
 
 </style>
