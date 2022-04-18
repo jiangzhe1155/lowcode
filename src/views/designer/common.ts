@@ -537,7 +537,9 @@ export const scrollToTarget = (location: Location) => {
 
 export const back = () => {
   undo()
-  resetLocationState()
+  setTimeout(() => {
+    updateLocationState()
+  })
 }
 
 export const onComponentDragEnd = () => {

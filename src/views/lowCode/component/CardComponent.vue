@@ -40,7 +40,7 @@ const title = computed(() => {
 <template>
   <el-card>
     <template #header v-if="showHeader">
-      <div class="flex"><span>{{ title }}</span></div>
+      <div class="flex"><span class="font-semibold">{{ title }}</span></div>
     </template>
     <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
   </el-card>
