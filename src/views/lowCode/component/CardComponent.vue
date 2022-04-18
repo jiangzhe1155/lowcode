@@ -2,9 +2,8 @@
 
 import {
   computed,
-  defineProps, ref,
+  defineProps
 } from 'vue'
-import { Props } from 'element-plus'
 
 const props = defineProps({
   element: {
