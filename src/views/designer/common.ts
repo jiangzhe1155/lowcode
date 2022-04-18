@@ -33,6 +33,9 @@ root.children.push(page, new Card('卡片7'))
 export class RenderPage {
   component: Component = new Root()
   models: Component[] = []
+  state = (() => {
+    return { title: '一个标题22' }
+  }).toString()
 }
 
 let res = new RenderPage()

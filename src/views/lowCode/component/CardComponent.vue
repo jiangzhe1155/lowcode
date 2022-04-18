@@ -4,14 +4,12 @@ import {
   computed,
   defineProps
 } from 'vue'
+import { Component } from '@/views/lowCode/service'
 
-const props = defineProps({
-  element: {
-    type: Object,
-    require: true,
-    default: null
-  }
-})
+const props = defineProps<{
+  element: Component,
+  state:{}
+}>()
 
 const showHeader = computed(() => {
   let openHeader = props.element.props.openHeader
@@ -39,7 +37,7 @@ const title = computed(() => {
 <template>
   <el-card>
     <template #header v-if="showHeader">
-      <div class="flex"><span class="font-semibold">{{ title }}</span></div>
+      <div class="flex"><span class="font-semibold">{{ title }}</span>-<span>{{state.value.title}}</span></div>
     </template>
     <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
   </el-card>

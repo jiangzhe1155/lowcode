@@ -4,10 +4,11 @@ import { useConfigStore } from '@/stores/constant'
 import { onMounted, reactive, ref, watchEffect } from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
+import ComponentRepositoryCode from '@/views/lowCode/aside/ComponentRepositoryCode.vue'
+
 import ComponentTree from '@/views/lowCode/aside/ComponentTree.vue'
 
 import { emitter} from '@/views/lowCode/state'
-import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import { isPanelOpen, x, y } from '@/views/designer/common'
 
 const store = useConfigStore()
@@ -15,7 +16,9 @@ const el = ref()
 const state = reactive({
   treeTabShow: false,
   componentTabShow: false,
-  componentIsAffix: false
+  componentIsAffix: false,
+  componentCodeShow: false,
+
 })
 
 onMounted(() => {
@@ -55,6 +58,11 @@ watchEffect(()=>{
           <PieChart/>
         </el-icon>
       </el-menu-item>
+      <el-menu-item index="3" @click="state.componentCodeShow = !state.componentCodeShow">
+        <el-icon>
+          <PieChart/>
+        </el-icon>
+      </el-menu-item>
     </el-menu>
   </el-aside>
 
@@ -66,7 +74,6 @@ watchEffect(()=>{
   >
     <ComponentTree></ComponentTree>
   </LowCodePanel>
-
   <LowCodePanel
       ref="el"
       v-model:is-visible="state.componentTabShow"
@@ -76,6 +83,14 @@ watchEffect(()=>{
   ><ComponentRepositoryCard>
     </ComponentRepositoryCard>
   </LowCodePanel>
+
+  <LowCodePanel
+    v-model:is-visible="state.componentCodeShow"
+    width=500
+    title="源码"
+    @on-panel-close="state.componentCodeShow = false"
+  ><ComponentRepositoryCode></ComponentRepositoryCode>
+    </LowCodePanel>
 </template>
 <style>
 </style>

@@ -569,7 +569,7 @@ export interface Component {
   getElement: string,
   group: ComponentGroup,
   supportGroup: ComponentGroup[],
-  props: {},
+  props: any,
   config: {}
 }
 

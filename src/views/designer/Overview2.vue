@@ -1,16 +1,17 @@
 <script setup lang="ts">
 
-import { computed, h, onMounted, ref, resolveComponent, VNode } from 'vue'
-import { Component } from '@/views/lowCode/service'
-import { addMessageListener, sendIframeMessage } from '@/views/lowCode/iframeUtil'
+import { h, ref, resolveComponent, VNode } from 'vue'
+import { addMessageListener } from '@/views/lowCode/iframeUtil'
 import { RenderPage } from '@/views/designer/common'
 
 const renderPage = ref<RenderPage>()
+const state = ref()
 
 function doRender (node: any): VNode | undefined {
   const resolve = resolveComponent(node.type)
   if (node.visible) {
     return h(resolve, {
+      state: state,
       element: node,
       id: node.id
     }, () => {
@@ -20,7 +21,7 @@ function doRender (node: any): VNode | undefined {
 }
 
 const componentRender = () => {
-  if (renderPage.value) {
+  if (renderPage.value && state.value) {
     return doRender(renderPage.value?.component)
   } else {
     return h('div')
@@ -32,8 +33,8 @@ const componentModel = () => {
 }
 
 addMessageListener('render', (payload: any) => {
-  console.log('接收到变化', renderPage.value)
   renderPage.value = payload.renderPage
+  state.value = eval(renderPage.value?.state!)()
 })
 
 </script>

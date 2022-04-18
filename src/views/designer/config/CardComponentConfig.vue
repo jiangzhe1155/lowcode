@@ -15,7 +15,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>{{ component.name }} {{ component.props }}</div>
+  <div>{{ component.name }}</div>
   <el-row align="middle" :gutter="4" class="!mx-12px">
     <el-col :span="6">
       <div class="text-sm text-left">开启头部</div>

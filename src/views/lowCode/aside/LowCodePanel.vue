@@ -63,7 +63,7 @@ defineExpose({
       ref="target"
       class="h-full z-900 bg-white border-1"
       :class="[isAffix ? 'relative' : 'absolute']"
-      v-show="isVisible"
+      v-if="isVisible"
       :style="{left:(isAffix?0:store.asideWidth)+'px',height:getHeight,top:store.headerHeight,width:width+'px'}">
     <div class="flex justify-between p-20px">
       <p class="text-xl ">{{ title }}</p>
@@ -77,7 +77,7 @@ defineExpose({
         </el-button>
       </el-button-group>
     </div>
-    <div class="absolute top-72px left-0 bottom-0 right-0  !overflow-y-auto border-t-1">
+    <div class="absolute top-72px left-0 bottom-0 right-0 !overflow-y-auto border-t-1">
       <slot></slot>
     </div>
 
