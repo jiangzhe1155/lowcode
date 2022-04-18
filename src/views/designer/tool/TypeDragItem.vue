@@ -15,9 +15,9 @@ const asideDragStyle = computed(() => {
 <template>
   <div
       v-if="asideComponentType && isDragging"
-      class="fixed bg-gray-500 w-auto px-40px z-1000  pointer-events-none	select-auto	cursor-move"
+      class="fixed bg-gray-500 w-auto px-40px z-1000 pointer-events-auto	select-none	cursor-move"
       :style="asideDragStyle"
-  ><p class="text-sm cursor-move">{{ asideComponentType }}</p>
+  ><p class="text-sm">{{ asideComponentType }}</p>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed, onMounted, ref } from 'vue'
-import { isDragging, startDrag, x, y, locationState, componentMap } from '@/views/designer/common'
+import { isDragging, x, y, locationState, componentMap } from '@/views/designer/common'
 
 const dragStyle = computed(() => {
   return {
@@ -14,7 +14,7 @@ const dragStyle = computed(() => {
 
 <template>
   <div
-      v-if="isDragging "
+      v-if="isDragging && locationState.currentPressComponent"
       id="drag-item"
       :style="dragStyle"
       class="fixed bg-gray-500 w-auto px-40px z-1000 pointer-events-auto select-none cursor-move"
