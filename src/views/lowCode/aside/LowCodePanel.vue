@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useConfigStore } from '@/stores/constant'
-import { computed, defineEmits, defineProps, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { isAffixPanel, isPanelOpen } from '@/views/designer/common'
 

@@ -11,7 +11,7 @@ import {
 } from '@/views/lowCode/service'
 import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
-import { useRefHistory, useThrottledRefHistory } from '@vueuse/core'
+import { useThrottledRefHistory } from '@vueuse/core'
 
 export const iframeRef = ref<any>()
 export const iframeWin = () => {

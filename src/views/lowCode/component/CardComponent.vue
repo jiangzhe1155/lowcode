@@ -1,8 +1,7 @@
 <script setup lang="ts">
 
 import {
-  computed,
-  defineProps
+  computed
 } from 'vue'
 import { Component } from '@/views/lowCode/service'
 

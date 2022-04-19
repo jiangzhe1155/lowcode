@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-import { defineProps } from 'vue'
 import { vElementHover } from '@vueuse/components'
 import { currentComponentFromArea, fetchLocation, locationState, x, y } from '@/views/designer/common'
 

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import ComponentCardItem from '@/views/lowCode/aside/ComponentCardItem.vue'
-const activeNames = ref(['container', 'layout','model'])
+
+const activeNames = ref(['container', 'layout', 'model'])
 
 </script>
 
@@ -14,11 +15,14 @@ const activeNames = ref(['container', 'layout','model'])
       <el-row :gutter="0">
         <el-col :span="8">
           <ComponentCardItem
-              name="容器" img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg" type="RootContainer" group="Container">
+              name="容器"
+              img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
+              type="RootContainer" group="Container">
           </ComponentCardItem>
         </el-col>
         <el-col :span="8">
-          <ComponentCardItem name="页面" img-url="https://tianshu.alicdn.com/429f9a1d-3856-4e5c-8a9c-3013860c9708.png" type="PageContainer" group="Container"></ComponentCardItem>
+          <ComponentCardItem name="页面" img-url="https://tianshu.alicdn.com/429f9a1d-3856-4e5c-8a9c-3013860c9708.png"
+                             type="PageContainer" group="Container"></ComponentCardItem>
         </el-col>
         <el-col :span="8"></el-col>
       </el-row>
@@ -28,9 +32,11 @@ const activeNames = ref(['container', 'layout','model'])
       <template #title>
         <p class="pl-20px">基础组件</p>
       </template>
-      <el-row >
+      <el-row>
         <el-col :span="8">
-          <ComponentCardItem name="卡片" img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg" type="CardComponent" group="Container"></ComponentCardItem>
+          <ComponentCardItem name="卡片"
+                             img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
+                             type="CardComponent" group="Container"></ComponentCardItem>
         </el-col>
       </el-row>
     </el-collapse-item>
@@ -39,9 +45,11 @@ const activeNames = ref(['container', 'layout','model'])
       <template #title>
         <p class="pl-20px">模态框</p>
       </template>
-      <el-row >
+      <el-row>
         <el-col :span="8">
-          <ComponentCardItem name="对话框" img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg" type="DialogComponent" group="Model"></ComponentCardItem>
+          <ComponentCardItem name="对话框"
+                             img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
+                             type="DialogComponent" group="Model"></ComponentCardItem>
         </el-col>
       </el-row>
     </el-collapse-item>
@@ -50,7 +58,7 @@ const activeNames = ref(['container', 'layout','model'])
 </template>
 
 <style scoped>
-/deep/ .el-collapse-item__content {
+:deep(.el-collapse-item__content) {
   padding-bottom: 0;
 }
 
