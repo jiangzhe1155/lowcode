@@ -43,10 +43,18 @@ abstract class BaseComponent<T extends ComponentProps> implements Component {
   abstract props: T
 }
 
+interface ComponentValue {
+  valueType: ValueType,
+  value: any
+}
+
 class CardProp implements ComponentProps {
   enableHeader = {
     idx: 0,
-    options: [{}]
+    options: [{
+      valueType: 'boolean',
+      value: true
+    }] as ComponentValue[]
   }
 }
 

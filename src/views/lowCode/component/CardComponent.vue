@@ -4,46 +4,31 @@ import {
   computed
 } from 'vue'
 import { ValueType } from '@/views/lowCode/service'
-import { Component } from '@/views/designer/interface/component'
+import { Card } from '@/views/designer/interface/component'
 
 const props = defineProps<{
-  element: Component,
+  element: Card,
   state: any
 }>()
 
 const showHeader = computed(() => {
-  let openHeader = props.element.props.openHeader
-  if (!openHeader || !openHeader.type) {
-    return false
+  let enableHeader = props.element.props.enableHeader
+  if (!enableHeader) {
+    return
   }
-
-  if (openHeader.type === 'boolean') {
-    return openHeader.value
+  let componentValue = enableHeader.options[enableHeader.idx]
+  if (!componentValue) {
+    return
   }
+  return componentValue.value
 })
 
 const title = computed(() => {
-  let headerTitle = props.element.props.headerTitle
-  if (!headerTitle || !headerTitle.type) {
-    return ''
-  }
 
-  if (headerTitle.type === 'string') {
-    return headerTitle.value
-  }
 })
 
 const subTitle = computed(() => {
-  let subTitle = props.element.props?.subTitle
-  if (!subTitle) {
-    return
-  }
-  let type = subTitle.type as ValueType
-  if (type === 'string') {
-    return subTitle.value
-  } else if (type === 'variable') {
-    return props.state?.value[subTitle.value]
-  }
+
 })
 </script>
 
