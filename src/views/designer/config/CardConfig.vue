@@ -1,14 +1,12 @@
 <script setup lang="ts">
 
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { Card } from '@/views/designer/interface/component'
 
 const props = defineProps<{
   component: Card
 }>()
-
 const component = ref(props.component)
-
 </script>
 
 <template>
