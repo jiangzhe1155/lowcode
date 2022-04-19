@@ -5,7 +5,7 @@ import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
 import { useConfigStore } from '@/stores/constant'
 import { nextTick, onMounted, ref, toRaw, toRef, unref, watch, watchEffect } from 'vue'
 import { ElButton } from 'element-plus'
-
+import { Component, Card } from '@/views/designer/interface/component'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
 import {
@@ -99,9 +99,9 @@ const {
             <iframe
                 ref="el"
                 id="workbench-iframe"
-                class="-z-1 h-full w-full" name="Overview2"
+                class="-z-1 h-full w-full" name="Overview"
                 @load="onLoad"
-                src="http://localhost:3000/#/lowCode/overview2"
+                src="http://localhost:3000/#/lowCode/overview"
             >
             </iframe>
           </div>

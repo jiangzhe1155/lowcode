@@ -1,8 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Workbench from '../views/lowCode/Workbench.vue'
-import Overview from '../views/lowCode/main/Overview.vue'
 import Designer from '../views/designer/Designer.vue'
-import Overview2 from '../views/designer/Overview2.vue'
+import Overview from '../views/designer/Overview.vue'
 
 const routes = [
   {
@@ -14,9 +12,9 @@ const routes = [
     name: 'Designer',
     component: Designer
   },{
-    path: '/lowCode/overview2',
-    name: 'Overview2',
-    component: Overview2
+    path: '/lowCode/overview',
+    name: 'Overview',
+    component: Overview
   }
 ]
 

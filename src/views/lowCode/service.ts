@@ -15,8 +15,7 @@ export interface Component {
   getElement: string,
   group: ComponentGroup,
   supportGroup: ComponentGroup[],
-  props: any,
-  config: {}
+  props: any
 }
 
 export type ComponentType = 'CardComponent' | 'RootContainer' | 'PageContainer' | 'DialogComponent';
@@ -39,7 +38,6 @@ export abstract class BaseComponent implements Component {
   abstract group: ComponentGroup
   supportGroup: ComponentGroup[] = []
   props = {}
-  config = {}
 }
 
 export type ValueType = 'boolean' | 'string' | 'variable';
@@ -62,13 +60,15 @@ export class Card extends BaseComponent {
       value: 'subTitle'
     }
   }
-  config = {}
 
   constructor (name: string = '卡片') {
     super()
     this.name = name
   }
 }
+
+let card = new Card()
+console.log(card)
 
 export class Root extends BaseComponent {
   type: ComponentType = 'RootContainer'
