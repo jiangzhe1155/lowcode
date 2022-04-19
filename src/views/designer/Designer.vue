@@ -27,6 +27,7 @@ import {
   onIframeMouseMove, onIframeMouseOver,
   onIframeMouseUp, onIframeResize, onIframeScroll
 } from '@/views/designer/iframeEvent'
+import { useClipboard } from '@vueuse/core'
 
 const store = useConfigStore()
 const el = ref<HTMLElement>()
@@ -64,13 +65,20 @@ watch([renderPage, () => iframeWin()], (n, o) => {
     updateLocationState()
   })
 }, { deep: true })
-
+const {
+  text,
+  copy
+} = useClipboard(), exportJson = () => {
+  let json = renderPage.value
+  copy(JSON.stringify(json))
+}
 </script>
 
 <template>
   <el-container class="h-screen">
     <el-header class="!border-b-2" :height="store.headerHeight+'px'">
-      <el-button @click="back($event)">撤销</el-button>
+      <el-button @click="back">撤销</el-button>
+      <el-button @click="exportJson">导出json</el-button>
     </el-header>
     <el-container>
       <DragItem></DragItem>

@@ -44,13 +44,12 @@ const subTitle = computed(() => {
     return props.state?.value[subTitle.value]
   }
 })
-
 </script>
 
 <template>
   <el-card>
     <template #header v-if="showHeader">
-      <div class="flex"><span class="font-semibold">{{ title }}</span>-<span>{{ subTitle }}</span></div>
+      <div class="flex"><span class="font-semibold">{{ title }}</span><span v-if="subTitle">-{{ subTitle }}</span></div>
     </template>
     <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
   </el-card>
