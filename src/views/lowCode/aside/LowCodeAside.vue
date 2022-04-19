@@ -8,8 +8,7 @@ import ComponentRepositoryCode from '@/views/lowCode/aside/ComponentRepositoryCo
 
 import ComponentTree from '@/views/lowCode/aside/ComponentTree.vue'
 
-import { emitter} from '@/views/lowCode/state'
-import { isPanelOpen, x, y } from '@/views/designer/common'
+import { emitter, isPanelOpen, x, y } from '@/views/designer/common'
 
 const store = useConfigStore()
 const el = ref()

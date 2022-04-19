@@ -12,6 +12,7 @@ import {
 import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
 import { useThrottledRefHistory } from '@vueuse/core'
+import mitt from 'mitt'
 
 export const iframeRef = ref<any>()
 export const iframeWin = () => {
@@ -80,6 +81,7 @@ export const asideComponentType = ref()
 export const asideComponentGroup = ref()
 export const isAffixPanel = ref(false)
 export const isPanelOpen = ref(false)
+export const emitter = mitt()
 
 export const isInside = () => {
   let rect = document.getElementById('iframe-holder')?.getBoundingClientRect()

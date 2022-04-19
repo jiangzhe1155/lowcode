@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { onLongPress, useMousePressed } from '@vueuse/core'
-import { emitter } from '@/views/lowCode/state'
 import { ComponentGroup, ComponentType } from '@/views/lowCode/service'
-import { asideComponentType, asideComponentGroup, x, y, iframeDoc, startDrag } from '@/views/designer/common'
+import { asideComponentType, asideComponentGroup, x, y, iframeDoc, startDrag, emitter } from '@/views/designer/common'
 import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/windowEvent'
 
 const props = defineProps<{
@@ -20,9 +19,8 @@ onLongPress(el, () => {
   asideComponentGroup.value = props.group
   startDrag.value = true
   emitter.emit('onComponentPanelClose')
-  document.addEventListener('mousemove',onDocumentMouseDrag,true)
-  document.addEventListener('mouseup',onDocumentMouseDragEnd,true)
-
+  document.addEventListener('mousemove', onDocumentMouseDrag, true)
+  document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
 }, { delay: 0 })
 
 const { pressed } = useMousePressed({ target: el })

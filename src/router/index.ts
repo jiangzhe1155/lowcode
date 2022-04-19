@@ -17,15 +17,6 @@ const routes = [
     path: '/lowCode/overview2',
     name: 'Overview2',
     component: Overview2
-  },
-  {
-    path: '/lowCode/workbench',
-    name: 'lc-workbench',
-    component: Workbench
-  }, {
-    path: '/lowCode/overview',
-    name: 'Overview',
-    component: Overview
   }
 ]
 

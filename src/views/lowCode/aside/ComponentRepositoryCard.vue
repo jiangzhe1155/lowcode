@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import ComponentCardItem from '@/views/lowCode/aside/ComponentCardItem.vue'
 
 const activeNames = ref(['container', 'layout', 'model'])
-
 </script>
 
 <template>
@@ -53,7 +52,6 @@ const activeNames = ref(['container', 'layout', 'model'])
         </el-col>
       </el-row>
     </el-collapse-item>
-
   </el-collapse>
 </template>
 
