@@ -1,6 +1,5 @@
 import { v4 } from 'uuid'
 
-
 export type Direction = 'top' | 'bottom' | 'center' | 'left' | 'right';
 
 export interface Component {
@@ -109,17 +108,6 @@ export class LocationState {
   currentPressComponent?: { id: string, location: Location | null }
   currentInsertionComponent?: { id: string, location: Location | null }
   direction?: Direction = undefined
-}
-
-export class ControlState {
-  isLongPress: boolean = false
-  isDrag: boolean = false
-  x: number = 0
-  y: number = 0
-  scroll: number = 0
-  direction?: Direction
-  asideComponentType: ComponentType | undefined
-  asideComponentGroup: ComponentGroup | undefined
 }
 
 export class Location {
