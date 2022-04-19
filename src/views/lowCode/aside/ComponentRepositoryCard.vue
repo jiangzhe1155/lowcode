@@ -16,12 +16,12 @@ const activeNames = ref(['container', 'layout', 'model'])
           <ComponentCardItem
               name="容器"
               img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
-              type="RootContainer" group="Container">
+              type="Root" group="Container">
           </ComponentCardItem>
         </el-col>
         <el-col :span="8">
           <ComponentCardItem name="页面" img-url="https://tianshu.alicdn.com/429f9a1d-3856-4e5c-8a9c-3013860c9708.png"
-                             type="PageContainer" group="Container"></ComponentCardItem>
+                             type="Page" group="Container"></ComponentCardItem>
         </el-col>
         <el-col :span="8"></el-col>
       </el-row>
@@ -35,7 +35,7 @@ const activeNames = ref(['container', 'layout', 'model'])
         <el-col :span="8">
           <ComponentCardItem name="卡片"
                              img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
-                             type="CardComponent" group="Container"></ComponentCardItem>
+                             type="Card" group="Container"></ComponentCardItem>
         </el-col>
       </el-row>
     </el-collapse-item>
@@ -48,7 +48,7 @@ const activeNames = ref(['container', 'layout', 'model'])
         <el-col :span="8">
           <ComponentCardItem name="对话框"
                              img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
-                             type="DialogComponent" group="Model"></ComponentCardItem>
+                             type="Dialog" group="Model"></ComponentCardItem>
         </el-col>
       </el-row>
     </el-collapse-item>

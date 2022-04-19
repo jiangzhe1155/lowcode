@@ -1,18 +1,9 @@
-import {
-  Card,
-  Component, ComponentGroup,
-  ComponentType,
-  Dialog,
-  Direction,
-  Location,
-  LocationState,
-  Page,
-  Root
-} from '@/views/lowCode/service'
 import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
 import { useThrottledRefHistory } from '@vueuse/core'
 import mitt from 'mitt'
+import { Card, Page, Root, Dialog, Direction, Component } from '@/views/designer/interface/component'
+import { ComponentGroup, ComponentType, LocationState, Location } from '@/views/lowCode/service'
 
 export const iframeRef = ref<any>()
 export const iframeWin = () => {
@@ -71,6 +62,7 @@ export const componentMap = computed(() => {
 
   return map
 })
+
 export const locationState: LocationState = reactive(new LocationState())
 export const x = ref()
 export const y = ref()
@@ -116,7 +108,8 @@ export const currentComponent = (target: Node) => {
   for (let component of [...renderPage.value.models, renderPage.value.component]) {
     let targetComponent = doFind(component)
     if (targetComponent) {
-      let rect = eval(targetComponent.getElement)(targetComponent.id, doc)?.getBoundingClientRect()
+      let controlConfig = eval(targetComponent.constructor.name).controlConfig
+      let rect = controlConfig.getElement(targetComponent.id, iframeDoc()).getBoundingClientRect()
       let location = {
         height: rect?.height,
         left: rect?.left,
@@ -137,14 +130,14 @@ export function currentComponentFromArea (x: number, y: number) {
     if (locationMap.has(e.id)) {
       location = locationMap.get(e)
     } else {
-      let rect = eval(e.getElement)(e.id, iframeDoc())?.getBoundingClientRect()
+      let controlConfig = eval(e.constructor.name).controlConfig
+      let rect = controlConfig.getElement(e.id, iframeDoc())?.getBoundingClientRect()
       location = {
         height: rect?.height,
         left: rect?.left,
         top: rect?.top,
         width: rect?.width
       }
-      // locationMap.set(e.id, location)
     }
 
     if (!location) {
@@ -257,7 +250,8 @@ export const fetchDirection = (x: number, y: number) => {
 
 export const fetchLocation = (componentId: string) => {
   let component = componentMap.value.get(componentId)
-  let rect = eval(component.getElement)(component.id, iframeDoc())?.getBoundingClientRect()
+  console.log('component', component)
+  let rect = eval(component.constructor.name).controlConfig.getElement(component.id, iframeDoc()).getBoundingClientRect()
   if (rect) {
     let location = {
       height: rect?.height,
@@ -372,13 +366,13 @@ export const show = (componentId: string) => {
 }
 
 const newInstanceByType = (type: ComponentType): Component | undefined => {
-  if (type === 'CardComponent') {
+  if (type === 'Card') {
     return new Card()
-  } else if (type === 'RootContainer') {
+  } else if (type === 'Root') {
     return new Root()
-  } else if (type === 'PageContainer') {
+  } else if (type === 'Page') {
     return new Page()
-  } else if (type === 'DialogComponent') {
+  } else if (type === 'Dialog') {
     return new Dialog()
   }
 }
@@ -471,8 +465,8 @@ function getTopComponent (pressId: string | undefined): Component {
 export const isShowInsertion = computed(() => {
   let pressId = locationState.currentPressComponent?.id
   let hoverId = locationState.currentInsertionComponent?.id
-  let cMap = componentMap.value
-  let pressGroup = pressId ? cMap.get(pressId).group : asideComponentGroup.value
+  let cMap: Map<string|undefined, Component> = componentMap.value
+  let pressGroup = pressId ? cMap.get(pressId)?.group : asideComponentGroup.value
   if (!isDragging.value || !hoverId) {
     return false
   }
@@ -496,10 +490,11 @@ export const isShowInsertion = computed(() => {
     }
   }
 
+  let controlConfig = asideComponentType.value ? eval(asideComponentType.value).controlConfig:eval(cMap.get(pressId)!.constructor.name).controlConfig
   if (locationState.direction === 'center') {
     // 如果这个容器已经存在子元素时 或者不支持這個分類
     let e = cMap.get(hoverId)
-    if (!e || e.children.length > 0 || e.supportDirection.indexOf('center') < 0 || e.supportGroup.indexOf(pressGroup) < 0) {
+    if (!e || e.children.length > 0 || controlConfig.supportDirection.indexOf('center') < 0 || controlConfig.supportGroup.indexOf(pressGroup) < 0) {
       return false
     } else {
       return true
@@ -512,10 +507,10 @@ export const isShowInsertion = computed(() => {
     return false
   }
 
-  if (pElement.supportDirection.indexOf(<Direction>locationState.direction) < 0 || pElement.supportGroup.indexOf(pressGroup) < 0) {
+  let pControlConfig = eval(pElement.constructor.name).controlConfig
+  if (pControlConfig.supportDirection.indexOf(<Direction>locationState.direction) < 0 || pControlConfig.supportGroup.indexOf(pressGroup) < 0) {
     return false
   }
-
   return true
 })
 

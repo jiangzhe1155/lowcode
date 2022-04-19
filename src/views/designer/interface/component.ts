@@ -1,7 +1,10 @@
 import { v4 } from 'uuid'
+import { ComponentType } from '@/views/lowCode/service'
 
 export interface Component {
   id: string,
+  pid: string
+  type: ComponentType
   group: ComponentGroup,
   name: string
   level?: number,
@@ -13,9 +16,10 @@ export interface Component {
 
 class ControlConfig {
   supportDirection: Direction[] = ['top', 'bottom', 'center']
-  getBoundingRect: (id: string, doc: Document) => HTMLElement | null = (id: string, doc: Document) => {
+  getElement: (id: string, doc: Document) => any = (id: string, doc: Document) => {
     return doc.getElementById(id)
   }
+  supportGroup: ComponentGroup[] = ['Container', 'Input']
 }
 
 interface ComponentProps {
@@ -28,11 +32,13 @@ export type Direction = 'top' | 'bottom' | 'center' | 'left' | 'right';
 
 abstract class BaseComponent<T extends ComponentProps> implements Component {
   id: string = v4()
+  pid: string = ''
+  abstract type: ComponentType
   abstract group: ComponentGroup
   abstract name: string
   children: Component[] = []
   level: number = 0
-  visible: boolean = false
+  visible: boolean = true
   lock: boolean = false
   abstract props: T
 }
@@ -45,13 +51,89 @@ class CardProp implements ComponentProps {
 }
 
 class CardControlConfig extends ControlConfig {
+
 }
 
 export class Card extends BaseComponent<CardProp> {
   name: string = '卡片'
   group: ComponentGroup = 'Container'
+  type: ComponentType = 'Card'
   props: CardProp = new CardProp()
   public static controlConfig: ControlConfig = new CardControlConfig()
+
+  constructor (name: string = '卡片') {
+    super()
+    this.name = name
+  }
+
 }
 
-console.log('controlConfig', Card.controlConfig)
+class DialogProp implements ComponentProps {
+
+}
+
+class DialogControlConfig extends ControlConfig {
+  getElement: (id: string, doc: Document) => any = (id: string, doc: Document) => {
+    return doc.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
+  }
+}
+
+export class Dialog extends BaseComponent<DialogProp> {
+  name: string = '对话框'
+  type: ComponentType = 'Dialog'
+  group: ComponentGroup = 'Model'
+  props: DialogProp = new DialogProp()
+  public static controlConfig: DialogControlConfig = new DialogControlConfig()
+
+  constructor (name: string = '对话框') {
+    super()
+    this.name = name
+  }
+}
+
+class RootProp implements ComponentProps {
+
+}
+
+class RootControlConfig extends ControlConfig {
+
+}
+
+export class Root extends BaseComponent<RootProp> {
+  name: string = '根节点'
+  type: ComponentType = 'Root'
+  group: ComponentGroup = 'Root'
+  props: RootProp = new RootProp()
+  supportGroup: ComponentGroup[] = ['Container', 'Model']
+
+  public static controlConfig: RootControlConfig = new RootControlConfig()
+
+  constructor (name: string = '根节点') {
+    super()
+    this.name = name
+  }
+}
+
+class PageProp implements ComponentProps {
+
+}
+
+class PageControlConfig extends ControlConfig {
+
+}
+
+export class Page extends BaseComponent<PageProp> {
+  name: string = '页面'
+  type: ComponentType = 'Page'
+  group: ComponentGroup = 'Container'
+  props: PageProp = new PageProp()
+  public static controlConfig: PageControlConfig = new PageControlConfig()
+
+  constructor (name: string = '页面') {
+    super()
+    this.name = name
+  }
+}
+
+let dialog = new Dialog()
+console.log('ddasdasd', dialog)

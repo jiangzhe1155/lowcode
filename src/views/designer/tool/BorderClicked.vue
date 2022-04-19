@@ -9,8 +9,8 @@ import {
   deleteComponent, isDragging, hide, resetLocationState
 } from '@/views/designer/common'
 import HoverItem from '@/views/lowCode/component/HoverItem.vue'
-import { Component } from '@/views/lowCode/service'
 import { CopyDocument, Delete, Lock, Hide } from '@element-plus/icons-vue'
+import { Component } from '@/views/designer/interface/component'
 
 const clickStyle = computed(() => {
   let location = locationState.currentClickComponent?.location

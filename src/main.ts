@@ -10,7 +10,7 @@ import CardComponent from '@/views/lowCode/component/CardComponent.vue'
 import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
 import CardComponentConfig from '@/views/designer/config/CardComponentConfig.vue'
 import mitt from 'mitt'
-import { GlobalCmComponent } from "codemirror-editor-vue3";
+import { GlobalCmComponent } from 'codemirror-editor-vue3'
 
 export const app = createApp(App)
 app.use(router)
@@ -20,8 +20,8 @@ app.use(GlobalCmComponent)
 app.mount('#app')
 
 app.config.globalProperties.mittBus = mitt()
-app.component('RootContainer', RootContainer) // 注册组件
-app.component('PageContainer', PageContainer) // 注册组件
-app.component('CardComponent', CardComponent)
-app.component('DialogComponent', DialogComponent)
-app.component('CardComponentConfig', CardComponentConfig)
+app.component('Root', RootContainer)
+app.component('Page', PageContainer)
+app.component('Card', CardComponent)
+app.component('Dialog', DialogComponent)
+app.component('CardConfig', CardComponentConfig)

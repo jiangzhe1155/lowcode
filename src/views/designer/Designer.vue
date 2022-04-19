@@ -5,7 +5,6 @@ import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
 import { useConfigStore } from '@/stores/constant'
 import { nextTick, onMounted, ref, toRaw, toRef, unref, watch, watchEffect } from 'vue'
 import { ElButton } from 'element-plus'
-import { Component, Card } from '@/views/designer/interface/component'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
 import {

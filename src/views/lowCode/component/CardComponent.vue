@@ -3,7 +3,8 @@
 import {
   computed
 } from 'vue'
-import { Component, ValueType } from '@/views/lowCode/service'
+import { ValueType } from '@/views/lowCode/service'
+import { Component } from '@/views/designer/interface/component'
 
 const props = defineProps<{
   element: Component,

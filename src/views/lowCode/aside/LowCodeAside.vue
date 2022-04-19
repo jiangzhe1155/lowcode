@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { Operation, PieChart } from '@element-plus/icons-vue'
 import { useConfigStore } from '@/stores/constant'
-import { onMounted, reactive, ref, watchEffect } from 'vue'
+import { onMounted, reactive, ref} from 'vue'
 import LowCodePanel from '@/views/lowCode/aside/LowCodePanel.vue'
 import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
 import ComponentRepositoryCode from '@/views/lowCode/aside/ComponentRepositoryCode.vue'
 
 import ComponentTree from '@/views/lowCode/aside/ComponentTree.vue'
 
-import { emitter, isPanelOpen, x, y } from '@/views/designer/common'
+import { emitter} from '@/views/designer/common'
 
 const store = useConfigStore()
 const el = ref()

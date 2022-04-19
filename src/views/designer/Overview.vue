@@ -1,13 +1,14 @@
 <script setup lang="ts">
 
-import { h, ref, resolveComponent, VNode } from 'vue'
+import { h, ref, resolveComponent, toRaw, VNode } from 'vue'
 import { addMessageListener } from '@/views/lowCode/iframeUtil'
 import { RenderPage } from '@/views/designer/common'
+import { Component } from '@/views/designer/interface/component'
 
 const renderPage = ref<RenderPage>()
 const state = ref()
 
-function doRender (node: any): VNode | undefined {
+function doRender (node: Component): VNode | undefined {
   const resolve = resolveComponent(node.type)
   if (node.visible) {
     return h(resolve, {
