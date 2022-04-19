@@ -1,5 +1,5 @@
 import { v4 } from 'uuid'
-import { ComponentType } from '@/views/lowCode/service'
+import { ComponentType, ValueType } from '@/views/lowCode/service'
 
 export interface Component {
   id: string,
@@ -44,9 +44,9 @@ abstract class BaseComponent<T extends ComponentProps> implements Component {
 }
 
 class CardProp implements ComponentProps {
-  title = {
-    selectType: '',
-    options: []
+  enableHeader = {
+    idx: 0,
+    options: [{}]
   }
 }
 

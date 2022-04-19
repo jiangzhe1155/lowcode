@@ -8,7 +8,7 @@ import PageContainer from '@/views/lowCode/component/PageContainer.vue'
 import RootContainer from '@/views/lowCode/component/RootContainer.vue'
 import CardComponent from '@/views/lowCode/component/CardComponent.vue'
 import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
-import CardComponentConfig from '@/views/designer/config/CardComponentConfig.vue'
+import CardConfig from '@/views/designer/config/CardConfig.vue'
 import mitt from 'mitt'
 import { GlobalCmComponent } from 'codemirror-editor-vue3'
 
@@ -24,4 +24,4 @@ app.component('Root', RootContainer)
 app.component('Page', PageContainer)
 app.component('Card', CardComponent)
 app.component('Dialog', DialogComponent)
-app.component('CardConfig', CardComponentConfig)
+app.component('CardConfig', CardConfig)
