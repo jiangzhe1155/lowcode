@@ -32,7 +32,7 @@ watch(pressed, (n) => {
     asideComponentType.value = undefined
     asideComponentGroup.value = undefined
     startDrag.value = false
-
+    
     emitter.emit('onComponentPanelOpen')
   }
 })

@@ -17,7 +17,6 @@ const state = reactive({
   componentTabShow: false,
   componentIsAffix: false,
   componentCodeShow: false,
-
 })
 
 onMounted(() => {
@@ -34,13 +33,6 @@ onMounted(() => {
   })
 })
 
-watchEffect(()=>{
-  isPanelOpen.value = state.treeTabShow;
-})
-
-watchEffect(()=>{
-  isPanelOpen.value = state.componentTabShow;
-})
 
 </script>
 
@@ -79,17 +71,19 @@ watchEffect(()=>{
       width=500
       title="组件库"
       @on-panel-close="state.componentTabShow = false"
-  ><ComponentRepositoryCard>
+  >
+    <ComponentRepositoryCard>
     </ComponentRepositoryCard>
   </LowCodePanel>
 
   <LowCodePanel
-    v-model:is-visible="state.componentCodeShow"
-    width=500
-    title="源码"
-    @on-panel-close="state.componentCodeShow = false"
-  ><ComponentRepositoryCode></ComponentRepositoryCode>
-    </LowCodePanel>
+      v-model:is-visible="state.componentCodeShow"
+      width=500
+      title="源码"
+      @on-panel-close="state.componentCodeShow = false"
+  >
+    <ComponentRepositoryCode></ComponentRepositoryCode>
+  </LowCodePanel>
 </template>
 <style>
 </style>

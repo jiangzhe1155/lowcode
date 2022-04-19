@@ -20,6 +20,7 @@ export interface Component {
 }
 
 export type ComponentType = 'CardComponent' | 'RootContainer' | 'PageContainer' | 'DialogComponent';
+
 export type ComponentGroup = 'Input' | 'Container' | 'Model' | 'Root';
 
 export abstract class BaseComponent implements Component {
@@ -41,7 +42,7 @@ export abstract class BaseComponent implements Component {
   config = {}
 }
 
-export type ValueType = 'boolean' | 'string';
+export type ValueType = 'boolean' | 'string' | 'variable';
 
 export class Card extends BaseComponent {
   type: ComponentType = 'CardComponent'
@@ -55,6 +56,10 @@ export class Card extends BaseComponent {
     headerTitle: {
       type: 'string' as ValueType,
       value: '主标题'
+    },
+    subTitle: {
+      type: 'variable' as ValueType,
+      value: 'subTitle'
     }
   }
   config = {}

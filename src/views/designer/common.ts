@@ -35,7 +35,7 @@ export class RenderPage {
   component: Component = new Root()
   models: Component[] = []
   state = (() => {
-    return { title: '一个标题22' }
+    return { subTitle: `一个副标题22` }
   }).toString()
 }
 

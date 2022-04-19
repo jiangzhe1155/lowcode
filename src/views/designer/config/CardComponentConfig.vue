@@ -29,6 +29,12 @@ onMounted(() => {
     <el-col :span="18">
       <el-input v-model="component.props.headerTitle.value"></el-input>
     </el-col>
+    <el-col :span="6">
+      <div class="text-sm text-left">副标题</div>
+    </el-col>
+    <el-col :span="18">
+      <el-input v-model="component.props.subTitle.value"></el-input>
+    </el-col>
   </el-row>
 </template>
 

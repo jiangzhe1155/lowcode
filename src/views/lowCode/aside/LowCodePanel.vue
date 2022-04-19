@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useConfigStore } from '@/stores/constant'
-import { computed, ref } from 'vue'
+import { computed, ref, watchEffect } from 'vue'
 import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { isAffixPanel, isPanelOpen } from '@/views/designer/common'
 
@@ -56,6 +56,10 @@ defineExpose({
   isAffix
 })
 
+watchEffect(() => {
+  isPanelOpen.value = props.isVisible
+})
+
 </script>
 
 <template>
@@ -80,7 +84,6 @@ defineExpose({
     <div class="absolute top-72px left-0 bottom-0 right-0 !overflow-y-auto border-t-1">
       <slot></slot>
     </div>
-
   </div>
 
 
