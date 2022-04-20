@@ -3,7 +3,7 @@ import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
 
 import { useConfigStore } from '@/stores/constant'
-import { onMounted, ref, toRaw, watch} from 'vue'
+import { onMounted, ref, toRaw, watch, watchEffect } from 'vue'
 import { ElButton } from 'element-plus'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
@@ -12,7 +12,7 @@ import {
   iframeRef,
   iframeWin,
   renderPage,
-  back, updateLocationState
+  back, updateLocationState, locationState, deleteComponent
 } from '@/views/designer/common'
 import BorderClicked from '@/views/designer/tool/BorderClicked.vue'
 import DragItem from '@/views/designer/tool/DragItem.vue'
@@ -26,7 +26,7 @@ import {
   onIframeMouseMove, onIframeMouseOver,
   onIframeMouseUp, onIframeResize, onIframeScroll
 } from '@/views/designer/iframeEvent'
-import { useClipboard } from '@vueuse/core'
+import { onKeyStroke, useClipboard, useEventListener, useMagicKeys } from '@vueuse/core'
 
 const store = useConfigStore()
 const el = ref<HTMLElement>()
@@ -74,6 +74,23 @@ const {
   console.log('json',json,JSON.stringify(json))
   copy(JSON.stringify(json))
 }
+
+// 撤销事件
+const {Ctrl_Z, Backspace}   = useMagicKeys()
+watch(Ctrl_Z,(v)=>{
+  if (v){
+    back()
+  }
+})
+
+watch(Backspace,(v)=>{
+  if (v){
+    if (locationState.currentClickComponent){
+      deleteComponent(locationState.currentClickComponent.id)
+    }
+  }
+})
+
 </script>
 
 <template>

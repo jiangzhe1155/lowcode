@@ -1,6 +1,6 @@
 import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
-import { useThrottledRefHistory } from '@vueuse/core'
+import { useDebouncedRefHistory, useThrottledRefHistory } from '@vueuse/core'
 import mitt from 'mitt'
 import { Card, Page, Root, Dialog, Direction, Component } from '@/views/designer/interface/component'
 import { ComponentGroup, ComponentType, LocationState, Location } from '@/views/lowCode/service'
@@ -39,10 +39,10 @@ res.component = root
 export const renderPage = ref<RenderPage>(res)
 
 const {
-  undo,
-} = useThrottledRefHistory(renderPage, {
+  undo,history
+} = useDebouncedRefHistory(renderPage, {
   deep: true,
-  throttle: 1000
+  debounce: 1000
 })
 
 export const componentMap = computed(() => {
@@ -253,7 +253,7 @@ export const fetchDirection = (x: number, y: number) => {
 export const fetchLocation = (componentId: string) => {
   let component = componentMap.value.get(componentId)
   console.log('component', component)
-  let rect = eval(component.type).controlConfig.getElement(component.id, iframeDoc())?.getBoundingClientRect()
+  let rect = eval(component?.type)?.controlConfig.getElement(component.id, iframeDoc())?.getBoundingClientRect()
   if (rect) {
     let location = {
       height: rect?.height,
@@ -538,10 +538,13 @@ export const scrollToTarget = (location: Location) => {
 }
 
 export const back = () => {
-  undo()
-  setTimeout(() => {
-    updateLocationState()
-  })
+  if (history.value?.length>1){
+    console.log('撤销了')
+    undo()
+    setTimeout(() => {
+      updateLocationState()
+    })
+  }
 }
 
 export const onComponentDragEnd = () => {

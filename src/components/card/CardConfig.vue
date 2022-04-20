@@ -28,7 +28,7 @@ watch(props.component,()=>{
   let prop : CardProp = props.component.value.props;
   for (const [key , val] of Object.entries(config.value)) {
     if (Reflect.has(prop,key)){
-      let p = prop[key];
+      let p = prop[key]
       val.idx = p.idx
       for (const [pK , pV]  of Object.entries(p.options)) {
         if (Reflect.has(val.options,pK)){
