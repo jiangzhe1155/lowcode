@@ -15,6 +15,7 @@ export const iframeDoc = () => {
 
 let page = new Page()
 let card = new Card('卡片1')
+
 card.children.push(new Card('卡片2'))
 page.children.push(new Card('卡片3'), card, new Card('卡片4'))
 let dialog = new Dialog()

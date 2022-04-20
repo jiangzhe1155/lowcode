@@ -57,6 +57,7 @@ const onLoad = () => {
 }
 
 watch([renderPage, () => iframeWin()], (n, o) => {
+  console.log('renderPage变化了', renderPage)
   if (renderPage && iframeWin()) {
     onLoad()
   }
@@ -64,11 +65,13 @@ watch([renderPage, () => iframeWin()], (n, o) => {
     updateLocationState()
   })
 }, { deep: true })
+
 const {
   text,
   copy
 } = useClipboard(), exportJson = () => {
   let json = renderPage.value
+  console.log('json',json,JSON.stringify(json))
   copy(JSON.stringify(json))
 }
 </script>

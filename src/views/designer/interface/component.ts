@@ -43,18 +43,24 @@ abstract class BaseComponent<T extends ComponentProps> implements Component {
   abstract props: T
 }
 
-interface ComponentValue {
+export interface ComponentValue {
   valueType: ValueType,
   value: any
 }
 
-class CardProp implements ComponentProps {
+export class CardProp implements ComponentProps {
   enableHeader = {
-    idx: 0,
-    options: [{
-      valueType: 'boolean',
-      value: true
-    }] as ComponentValue[]
+    idx: 'boolean' as ValueType,
+    options: {
+      'boolean': false
+    }
+  }
+
+  title = {
+    idx: 'string' as ValueType,
+    options: {
+      'string': '主标题'
+    }
   }
 }
 
@@ -73,7 +79,6 @@ export class Card extends BaseComponent<CardProp> {
     super()
     this.name = name
   }
-
 }
 
 class DialogProp implements ComponentProps {
@@ -143,5 +148,4 @@ export class Page extends BaseComponent<PageProp> {
   }
 }
 
-let dialog = new Dialog()
-console.log('ddasdasd', dialog)
+let c: Map<ValueType, any> = new Map<ValueType, any>([['boolean', false]])

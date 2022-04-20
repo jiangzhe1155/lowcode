@@ -1,9 +1,8 @@
 <script setup lang="ts">
 
 import {
-  computed
+  computed, ref
 } from 'vue'
-import { ValueType } from '@/views/lowCode/service'
 import { Card } from '@/views/designer/interface/component'
 
 const props = defineProps<{
@@ -17,19 +16,22 @@ const showHeader = computed(() => {
     return
   }
   let componentValue = enableHeader.options[enableHeader.idx]
-  if (!componentValue) {
-    return
-  }
-  return componentValue.value
+  return componentValue
 })
 
 const title = computed(() => {
-
+  let title = props.element.props.title
+  if (!title) {
+    return
+  }
+  let componentValue = title.options[title.idx]
+  return componentValue
 })
 
 const subTitle = computed(() => {
 
 })
+
 </script>
 
 <template>
