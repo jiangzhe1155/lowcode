@@ -15,11 +15,12 @@ export const iframeDoc = () => {
 
 let page = new Page()
 let card = new Card('卡片1')
+card.props.enableHeader.options['boolean'] = true
 
-// card.children.push(new Card('卡片2'))
-// page.children.push(new Card('卡片3'), card, new Card('卡片4'))
-// let dialog = new Dialog()
-// dialog.children.push(new Card('卡片6'))
+card.children.push(new Card('卡片2'))
+page.children.push(new Card('卡片3'), card, new Card('卡片4'))
+let dialog = new Dialog()
+dialog.children.push(new Card('卡片6'))
 let root = new Root()
 root.children.push(page, new Card('卡片7'))
 
@@ -109,8 +110,8 @@ export const currentComponent = (target: Node) => {
   for (let component of [...renderPage.value.models, renderPage.value.component]) {
     let targetComponent = doFind(component)
     if (targetComponent) {
-      let controlConfig = eval(targetComponent.constructor.name).controlConfig
-      let rect = controlConfig.getElement(targetComponent.id, iframeDoc()).getBoundingClientRect()
+      let controlConfig = eval(targetComponent.type).controlConfig
+      let rect = controlConfig.getElement(targetComponent.id, iframeDoc())?.getBoundingClientRect()
       let location = {
         height: rect?.height,
         left: rect?.left,
@@ -131,7 +132,7 @@ export function currentComponentFromArea (x: number, y: number) {
     if (locationMap.has(e.id)) {
       location = locationMap.get(e)
     } else {
-      let controlConfig = eval(e.constructor.name).controlConfig
+      let controlConfig = eval(e.type).controlConfig
       let rect = controlConfig.getElement(e.id, iframeDoc())?.getBoundingClientRect()
       location = {
         height: rect?.height,
@@ -252,7 +253,7 @@ export const fetchDirection = (x: number, y: number) => {
 export const fetchLocation = (componentId: string) => {
   let component = componentMap.value.get(componentId)
   console.log('component', component)
-  let rect = eval(component.constructor.name).controlConfig.getElement(component.id, iframeDoc()).getBoundingClientRect()
+  let rect = eval(component.type).controlConfig.getElement(component.id, iframeDoc())?.getBoundingClientRect()
   if (rect) {
     let location = {
       height: rect?.height,
@@ -491,7 +492,7 @@ export const isShowInsertion = computed(() => {
     }
   }
 
-  let controlConfig = asideComponentType.value ? eval(asideComponentType.value).controlConfig:eval(cMap.get(pressId)!.constructor.name).controlConfig
+  let controlConfig = asideComponentType.value ? eval(asideComponentType.value).controlConfig:eval(cMap.get(pressId)!.type).controlConfig
   if (locationState.direction === 'center') {
     // 如果这个容器已经存在子元素时 或者不支持這個分類
     let e = cMap.get(hoverId)
@@ -508,7 +509,7 @@ export const isShowInsertion = computed(() => {
     return false
   }
 
-  let pControlConfig = eval(pElement.constructor.name).controlConfig
+  let pControlConfig = eval(pElement.type).controlConfig
   if (pControlConfig.supportDirection.indexOf(<Direction>locationState.direction) < 0 || pControlConfig.supportGroup.indexOf(pressGroup) < 0) {
     return false
   }

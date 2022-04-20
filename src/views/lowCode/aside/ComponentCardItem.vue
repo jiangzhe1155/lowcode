@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { onLongPress, useMousePressed } from '@vueuse/core'
 import { emitter } from '@/views/designer/common'
 import { ComponentGroup, ComponentType } from '@/views/lowCode/service'

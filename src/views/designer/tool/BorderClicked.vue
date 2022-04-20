@@ -8,7 +8,7 @@ import {
   fetchLocation,
   deleteComponent, isDragging, hide, resetLocationState
 } from '@/views/designer/common'
-import HoverItem from '@/views/lowCode/component/HoverItem.vue'
+import HoverItem from '@/views/lowCode/aside/HoverItem.vue'
 import { CopyDocument, Delete, Lock, Hide } from '@element-plus/icons-vue'
 import { Component } from '@/views/designer/interface/component'
 

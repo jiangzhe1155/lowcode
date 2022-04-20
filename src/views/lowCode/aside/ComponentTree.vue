@@ -10,7 +10,7 @@ import {
   scrollToTarget, show, updateComponentName
 } from '@/views/designer/common'
 import { CopyDocument, Delete, Lock, Hide, View } from '@element-plus/icons-vue'
-import DialogComponent from '@/views/lowCode/component/DialogComponent.vue'
+import DialogComponent from '@/components/dialog/Dialog.vue'
 import { Component } from '@/views/designer/interface/component'
 
 const defaultProps = {

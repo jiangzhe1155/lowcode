@@ -48,7 +48,7 @@ export interface ComponentValue {
   value: any
 }
 
-interface Indexable  {
+export interface Indexable  {
   [index: string]: any
 }
 

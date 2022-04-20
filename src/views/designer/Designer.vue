@@ -3,7 +3,7 @@ import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
 
 import { useConfigStore } from '@/stores/constant'
-import { nextTick, onMounted, ref, toRaw, toRef, unref, watch, watchEffect } from 'vue'
+import { onMounted, ref, toRaw, watch} from 'vue'
 import { ElButton } from 'element-plus'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
@@ -109,7 +109,7 @@ const {
           </div>
         </div>
       </el-main>
-      <el-aside class="border-l-1">
+      <el-aside class="border-l-1" width="400px">
         <PropsPanel></PropsPanel>
       </el-aside>
     </el-container>
