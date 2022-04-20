@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { h, ref, resolveComponent, toRaw, VNode } from 'vue'
+import { h, ref, resolveComponent, VNode } from 'vue'
 import { addMessageListener } from '@/views/lowCode/iframeUtil'
 import { RenderPage } from '@/views/designer/common'
 import { Component } from '@/views/designer/interface/component'
