@@ -16,10 +16,10 @@ export const iframeDoc = () => {
 let page = new Page()
 let card = new Card('卡片1')
 
-card.children.push(new Card('卡片2'))
-page.children.push(new Card('卡片3'), card, new Card('卡片4'))
-let dialog = new Dialog()
-dialog.children.push(new Card('卡片6'))
+// card.children.push(new Card('卡片2'))
+// page.children.push(new Card('卡片3'), card, new Card('卡片4'))
+// let dialog = new Dialog()
+// dialog.children.push(new Card('卡片6'))
 let root = new Root()
 root.children.push(page, new Card('卡片7'))
 
@@ -32,7 +32,7 @@ export class RenderPage {
 }
 
 let res = new RenderPage()
-res.models = [dialog]
+res.models = []
 res.component = root
 
 export const renderPage = ref<RenderPage>(res)

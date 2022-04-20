@@ -32,6 +32,7 @@ watch(config, () => {
                  v-model="config.enableHeader.options[config.enableHeader.idx]"/>
     </el-col>
   </el-row>
+
   <el-row align="middle" :gutter="4" class="!mx-12px" v-if="config.enableHeader.options[config.enableHeader.idx]">
     <el-col :span="6">
       <div class="text-sm text-left">标题</div>

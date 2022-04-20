@@ -12,6 +12,7 @@ const props = defineProps({
 
 <template>
   <el-container class="space-y-6 min-h-100vh !bg-transparent !flex-col p-20px">
-    <slot></slot>
+    <slot>
+    </slot>
   </el-container>
 </template>

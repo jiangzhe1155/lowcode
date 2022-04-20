@@ -24,7 +24,7 @@ const onClose = () => {
     <el-dialog
         v-model="dialogVisible" title="Tips" width="30%" destroy-on-close :modal="true" @closed="onClose">
       <span>It's a draggable Dialog</span>
-      <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
+      <slot></slot>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">Cancel</el-button>

@@ -39,7 +39,7 @@ const subTitle = computed(() => {
     <template #header v-if="showHeader">
       <div class="flex"><span class="font-semibold">{{ title }}</span><span v-if="subTitle">-{{ subTitle }}</span></div>
     </template>
-    <slot><p class="bg-gray-200 p-10px select-none">拖拽组件或模板到这里</p></slot>
+    <slot></slot>
   </el-card>
 </template>
 

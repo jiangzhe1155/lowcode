@@ -9,15 +9,23 @@ const renderPage = ref<RenderPage>()
 const state = ref()
 
 function doRender (node: Component): VNode | undefined {
-  const resolve = resolveComponent(node.type)
+  let resolve = resolveComponent(node.type)
   if (node.visible) {
-    return h(resolve, {
-      state: state,
-      element: node,
-      id: node.id
-    }, () => {
-      return node.children.map((e: any) => doRender(e)).filter((m: any) => m)
-    })
+    if (node.children.length > 0) {
+      return h(resolve, {
+        state: state,
+        element: node,
+        id: node.id,
+      }, () => {
+        return node.children.map((e: any) => doRender(e)).filter((m: any) => m)
+      })
+    } else {
+      return h(resolve as any, {
+        state: state,
+        element: node,
+        id: node.id,
+      }, { default: () => h('div', { class: 'bg-gray-200 p-10px select-none' }, '拖拽组件或模板到这里') })
+    }
   }
 }
 

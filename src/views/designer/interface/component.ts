@@ -48,19 +48,23 @@ export interface ComponentValue {
   value: any
 }
 
+interface Indexable  {
+  [index: string]: any
+}
+
 export class CardProp implements ComponentProps {
   enableHeader = {
     idx: 'boolean' as ValueType,
     options: {
       'boolean': false
-    }
+    } as Indexable
   }
 
   title = {
     idx: 'string' as ValueType,
     options: {
       'string': '主标题'
-    }
+    } as Indexable
   }
 }
 
