@@ -177,13 +177,31 @@ export class TableProp implements ComponentProps {
       'array': [
         {
           title: '姓名',
-          key: 'name'
+          key: 'name',
+          type:'input'
         }, {
           title: '性别',
-          key: 'sex'
+          key: 'sex',
+          type:'input'
         }
-      ],
+      ]
     }
-  }
+  }as Indexable
+
+
+  rowData = {
+   idx:'array' as ValueType,
+   options:{
+     'array':[{
+        name: '张三',
+        sex: '女'
+      },
+      {
+       name: '李四',
+       sex: '男'
+      }
+     ]
+   }
+  } as Indexable
 
 }
