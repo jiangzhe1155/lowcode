@@ -1,4 +1,3 @@
-
 export type Direction = 'top' | 'bottom' | 'center' | 'left' | 'right';
 
 // export interface Component {
@@ -17,11 +16,11 @@ export type Direction = 'top' | 'bottom' | 'center' | 'left' | 'right';
 //   props: any
 // }
 
-export type ComponentType = 'Card' | 'Root' | 'Page' | 'Dialog';
+export type ComponentType = 'Card' | 'Root' | 'Page' | 'Dialog' | 'Table';
 
 export type ComponentGroup = 'Input' | 'Container' | 'Model' | 'Root';
 
-export type ValueType = 'boolean' | 'string' | 'variable';
+export type ValueType = 'boolean' | 'string' | 'variable' | 'array';
 
 export class LocationState {
   currentHoverComponent?: { id: string, location: Location | null }

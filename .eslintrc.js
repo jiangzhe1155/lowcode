@@ -11,7 +11,7 @@ module.exports = {
   plugins: ['@typescript-eslint'],
   rules: {
     "vue/multi-word-component-names": ["error", {
-      "ignores": ['Root','Page','Card','Dialog']
+      "ignores": ['Root','Page','Card','Dialog','Table']
     }]
   }
 };

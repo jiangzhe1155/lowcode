@@ -2,7 +2,7 @@ import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
 import { useDebouncedRefHistory, useThrottledRefHistory } from '@vueuse/core'
 import mitt from 'mitt'
-import { Card, Page, Root, Dialog, Direction, Component } from '@/views/designer/interface/component'
+import { Card, Page, Root, Dialog, Direction, Component, Table } from '@/views/designer/interface/component'
 import { ComponentGroup, ComponentType, LocationState, Location } from '@/views/lowCode/service'
 
 export const iframeRef = ref<any>()
@@ -14,15 +14,16 @@ export const iframeDoc = () => {
 }
 
 let page = new Page()
-let card = new Card('卡片1')
-card.props.enableHeader.options['boolean'] = true
+page.children.push(new Table())
+// let card = new Card('卡片1')
+// card.props.enableHeader.options['boolean'] = true
 
-card.children.push(new Card('卡片2'))
-page.children.push(new Card('卡片3'), card, new Card('卡片4'))
-let dialog = new Dialog()
-dialog.children.push(new Card('卡片6'))
+// card.children.push(new Card('卡片2'))
+// page.children.push(new Card('卡片3'), card, new Card('卡片4'))
+// let dialog = new Dialog()
+// dialog.children.push(new Card('卡片6'))
 let root = new Root()
-root.children.push(page, new Card('卡片7'))
+root.children.push(page)
 
 export class RenderPage {
   component: Component = new Root()
@@ -39,7 +40,8 @@ res.component = root
 export const renderPage = ref<RenderPage>(res)
 
 const {
-  undo,history
+  undo,
+  history
 } = useDebouncedRefHistory(renderPage, {
   deep: true,
   debounce: 1000
@@ -376,6 +378,8 @@ const newInstanceByType = (type: ComponentType): Component | undefined => {
     return new Page()
   } else if (type === 'Dialog') {
     return new Dialog()
+  } else if (type === 'Table') {
+    return new Table()
   }
 }
 
@@ -467,7 +471,7 @@ function getTopComponent (pressId: string | undefined): Component {
 export const isShowInsertion = computed(() => {
   let pressId = locationState.currentPressComponent?.id
   let hoverId = locationState.currentInsertionComponent?.id
-  let cMap: Map<string|undefined, Component> = componentMap.value
+  let cMap: Map<string | undefined, Component> = componentMap.value
   let pressGroup = pressId ? cMap.get(pressId)?.group : asideComponentGroup.value
   if (!isDragging.value || !hoverId) {
     return false
@@ -492,10 +496,10 @@ export const isShowInsertion = computed(() => {
     }
   }
 
-  let controlConfig = asideComponentType.value ? eval(asideComponentType.value).controlConfig:eval(cMap.get(pressId)!.type).controlConfig
   if (locationState.direction === 'center') {
     // 如果这个容器已经存在子元素时 或者不支持這個分類
     let e = cMap.get(hoverId)
+    let controlConfig = eval(e!.type).controlConfig
     if (!e || e.children.length > 0 || controlConfig.supportDirection.indexOf('center') < 0 || controlConfig.supportGroup.indexOf(pressGroup) < 0) {
       return false
     } else {
@@ -538,7 +542,7 @@ export const scrollToTarget = (location: Location) => {
 }
 
 export const back = () => {
-  if (history.value?.length>1){
+  if (history.value?.length > 1) {
     console.log('撤销了')
     undo()
     setTimeout(() => {

@@ -9,6 +9,7 @@ specifiers:
   '@vue/cli-plugin-typescript': ^5.0.4
   '@vue/eslint-config-standard': ^6.1.0
   '@vue/eslint-config-typescript': ^9.1.0
+  '@vue/reactivity': ^3.2.33
   '@vueuse/components': ^8.2.0
   '@vueuse/core': ^8.1.2
   codemirror: ^5.65.2
@@ -32,6 +33,7 @@ specifiers:
 
 dependencies:
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/1.1.4_vue@3.2.31
+  '@vue/reactivity': registry.npmmirror.com/@vue/reactivity/3.2.33
   '@vueuse/components': registry.npmmirror.com/@vueuse/components/8.2.0_vue@3.2.31
   '@vueuse/core': registry.npmmirror.com/@vueuse/core/8.1.2_vue@3.2.31
   codemirror: registry.npmmirror.com/codemirror/5.65.2
@@ -775,7 +777,7 @@ packages:
       '@volar/source-map': registry.npmmirror.com/@volar/source-map/0.29.8
       '@vue/compiler-core': registry.npmmirror.com/@vue/compiler-core/3.2.31
       '@vue/compiler-dom': registry.npmmirror.com/@vue/compiler-dom/3.2.31
-      '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.31
+      '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.33
       upath: registry.npmmirror.com/upath/2.0.1
     dev: true
 
@@ -966,6 +968,14 @@ packages:
     version: 3.2.31
     dependencies:
       '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.31
+    dev: false
+
+  registry.npmmirror.com/@vue/reactivity/3.2.33:
+    resolution: {integrity: sha512-62Sq0mp9/0bLmDuxuLD5CIaMG2susFAGARLuZ/5jkU1FCf9EDbwUuF+BO8Ub3Rbodx0ziIecM/NsmyjardBxfQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/reactivity/-/reactivity-3.2.33.tgz}
+    name: '@vue/reactivity'
+    version: 3.2.33
+    dependencies:
+      '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.33
 
   registry.npmmirror.com/@vue/runtime-core/3.2.31:
     resolution: {integrity: sha512-Kcog5XmSY7VHFEMuk4+Gap8gUssYMZ2+w+cmGI6OpZWYOEIcbE0TPzzPHi+8XTzAgx1w/ZxDFcXhZeXN5eKWsA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/runtime-core/-/runtime-core-3.2.31.tgz}
@@ -1003,6 +1013,11 @@ packages:
     resolution: {integrity: sha512-ymN2pj6zEjiKJZbrf98UM2pfDd6F2H7ksKw7NDt/ZZ1fh5Ei39X5tABugtT03ZRlWd9imccoK0hE8hpjpU7irQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/shared/-/shared-3.2.31.tgz}
     name: '@vue/shared'
     version: 3.2.31
+
+  registry.npmmirror.com/@vue/shared/3.2.33:
+    resolution: {integrity: sha512-UBc1Pg1T3yZ97vsA2ueER0F6GbJebLHYlEi4ou1H5YL4KWvMOOWwpYo9/QpWq93wxKG6Wo13IY74Hcn/f7c7Bg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/shared/-/shared-3.2.33.tgz}
+    name: '@vue/shared'
+    version: 3.2.33
 
   registry.npmmirror.com/@vueuse/components/8.2.0_vue@3.2.31:
     resolution: {integrity: sha512-zchb7HV3wQFjxkggrye5zTNNMQgtarQlTQmVBcWFNWyLyCI6mVK9DRhX36azkLvEGYk2aFGH6fIJGrE+2Dsi8g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vueuse/components/-/components-8.2.0.tgz}
@@ -4705,8 +4720,8 @@ packages:
       '@volar/transforms': registry.npmmirror.com/@volar/transforms/0.29.8
       '@volar/vue-code-gen': registry.npmmirror.com/@volar/vue-code-gen/0.29.8
       '@vscode/emmet-helper': registry.npmmirror.com/@vscode/emmet-helper/2.8.4
-      '@vue/reactivity': registry.npmmirror.com/@vue/reactivity/3.2.31
-      '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.31
+      '@vue/reactivity': registry.npmmirror.com/@vue/reactivity/3.2.33
+      '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.33
       request-light: registry.npmmirror.com/request-light/0.5.7
       upath: registry.npmmirror.com/upath/2.0.1
       vscode-css-languageservice: registry.npmmirror.com/vscode-css-languageservice/5.3.0

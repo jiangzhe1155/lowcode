@@ -1,5 +1,5 @@
 import { v4 } from 'uuid'
-import { ComponentType, ValueType } from '@/views/lowCode/service'
+import { ComponentType, ValueType } from '../../lowCode/service'
 
 export interface Component {
   id: string,
@@ -16,13 +16,13 @@ export interface Component {
 
 class ControlConfig {
   supportDirection: Direction[] = ['top', 'bottom', 'center']
-  getElement: (id: string, doc: Document) => any = (id: string, doc: Document) => {
+  getElement = (id: string, doc: Document):any => {
     return doc.getElementById(id)
   }
   supportGroup: ComponentGroup[] = ['Container', 'Input']
 }
 
-interface ComponentProps {
+export interface ComponentProps {
 
 }
 
@@ -43,13 +43,13 @@ abstract class BaseComponent<T extends ComponentProps> implements Component {
   abstract props: T
 }
 
-export interface ComponentValue {
-  valueType: ValueType,
-  value: any
+interface OptionIndex {
+  [index: string]: any
 }
 
-export interface Indexable  {
-  [index: string]: any
+export interface Indexable {
+  idx: ValueType,
+  options: OptionIndex
 }
 
 export class CardProp implements ComponentProps {
@@ -57,15 +57,15 @@ export class CardProp implements ComponentProps {
     idx: 'boolean' as ValueType,
     options: {
       'boolean': false
-    } as Indexable
-  }
+    }
+  } as Indexable
 
   title = {
     idx: 'string' as ValueType,
     options: {
       'string': '主标题'
-    } as Indexable
-  }
+    }
+  } as Indexable
 }
 
 class CardControlConfig extends ControlConfig {
@@ -90,7 +90,7 @@ class DialogProp implements ComponentProps {
 }
 
 class DialogControlConfig extends ControlConfig {
-  getElement: (id: string, doc: Document) => any = (id: string, doc: Document) => {
+  getElement = (id: string, doc: Document):any => {
     return doc.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
   }
 }
@@ -152,4 +152,38 @@ export class Page extends BaseComponent<PageProp> {
   }
 }
 
-let c: Map<ValueType, any> = new Map<ValueType, any>([['boolean', false]])
+class TableControlConfig extends ControlConfig {
+  supportDirection: Direction[] = []
+  supportGroup: ComponentGroup[] = []
+}
+
+export class Table extends BaseComponent<TableProp> {
+  name: string = '表格'
+  group: ComponentGroup = 'Input'
+  type: ComponentType = 'Table'
+  props: TableProp = new TableProp()
+  public static controlConfig: ControlConfig = new TableControlConfig()
+
+  constructor (name: string = '表格') {
+    super()
+    this.name = name
+  }
+}
+
+export class TableProp implements ComponentProps {
+  columns = {
+    idx: 'array' as ValueType,
+    options: {
+      'array': [
+        {
+          title: '姓名',
+          key: 'name'
+        }, {
+          title: '性别',
+          key: 'sex'
+        }
+      ],
+    }
+  }
+
+}

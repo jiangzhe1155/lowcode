@@ -37,6 +37,11 @@ const activeNames = ref(['container', 'layout', 'model'])
                              img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
                              type="Card" group="Container"></ComponentCardItem>
         </el-col>
+        <el-col :span="8">
+          <ComponentCardItem name="表格"
+                             img-url="https://img.alicdn.com/imgextra/i2/O1CN01B1NMW926IFrFxjqQT_!!6000000007638-55-tps-56-56.svg"
+                             type="Table" group="Input"></ComponentCardItem>
+        </el-col>
       </el-row>
     </el-collapse-item>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 const props = defineProps({
-  element: {
+  component: {
     type: Object,
     require: true,
     default: null

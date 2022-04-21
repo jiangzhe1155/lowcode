@@ -6,12 +6,12 @@ import {
 import { Card } from '@/views/designer/interface/component'
 
 const props = defineProps<{
-  element: Card,
+  component: Card,
   state: any
 }>()
 
 const showHeader = computed(() => {
-  let enableHeader = props.element.props.enableHeader
+  let enableHeader = props.component.props.enableHeader
   if (!enableHeader) {
     return
   }
@@ -20,7 +20,7 @@ const showHeader = computed(() => {
 })
 
 const title = computed(() => {
-  let title = props.element.props.title
+  let title = props.component.props.title
   if (!title) {
     return
   }

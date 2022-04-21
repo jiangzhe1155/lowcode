@@ -14,7 +14,7 @@ function doRender (node: Component): VNode | undefined {
     if (node.children.length > 0) {
       return h(resolve, {
         state: state,
-        element: node,
+        component: node,
         id: node.id,
       }, () => {
         return node.children.map((e: any) => doRender(e)).filter((m: any) => m)
@@ -22,7 +22,7 @@ function doRender (node: Component): VNode | undefined {
     } else {
       return h(resolve as any, {
         state: state,
-        element: node,
+        component: node,
         id: node.id,
       }, { default: () => h('div', { class: 'bg-gray-200 p-10px select-none' }, '拖拽组件或模板到这里') })
     }

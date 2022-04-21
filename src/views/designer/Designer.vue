@@ -71,21 +71,24 @@ const {
   copy
 } = useClipboard(), exportJson = () => {
   let json = renderPage.value
-  console.log('json',json,JSON.stringify(json))
+  console.log('json', json, JSON.stringify(json))
   copy(JSON.stringify(json))
 }
 
 // 撤销事件
-const {Ctrl_Z, Backspace}   = useMagicKeys()
-watch(Ctrl_Z,(v)=>{
-  if (v){
+const {
+  Ctrl_Z,
+  Backspace
+} = useMagicKeys()
+watch(Ctrl_Z, (v) => {
+  if (v) {
     back()
   }
 })
 
-watch(Backspace,(v)=>{
-  if (v){
-    if (locationState.currentClickComponent){
+watch(Backspace, (v) => {
+  if (v) {
+    if (locationState.currentClickComponent && locationState.currentHoverComponent && locationState.currentClickComponent.id === locationState.currentHoverComponent.id) {
       deleteComponent(locationState.currentClickComponent.id)
     }
   }

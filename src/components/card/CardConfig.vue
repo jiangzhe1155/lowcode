@@ -4,40 +4,14 @@ import { onMounted, Ref, ref, watch } from 'vue'
 import {
   Card, CardProp
 } from '@/views/designer/interface/component'
+import { usePropsWatcher } from '@/views/designer/propsWatcher'
 
 const props = defineProps<{
   component: Ref<Card>
 }>()
 
 const config = ref(new CardProp())
-
-onMounted(() => {
-  console.log('config', config.value, props.component.value)
-  let componentConfig = config.value
-})
-
-watch(config, () => {
-  // 深拷贝
-  props.component.value.props = JSON.parse(JSON.stringify(config.value))
-}, { deep: true })
-
-watch(props.component,()=>{
-  if (!props.component || !props.component.value){
-    return
-  }
-  let prop : CardProp = props.component.value.props;
-  for (const [key , val] of Object.entries(config.value)) {
-    if (Reflect.has(prop,key)){
-      let p = prop[key]
-      val.idx = p.idx
-      for (const [pK , pV]  of Object.entries(p.options)) {
-        if (Reflect.has(val.options,pK)){
-          val.options[pK] = pV
-        }
-      }
-    }
-  }
-},{immediate:true,deep:true})
+usePropsWatcher(config, props.component)
 
 </script>
 

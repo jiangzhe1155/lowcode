@@ -5,7 +5,7 @@ import {
 } from 'vue'
 
 const props = defineProps({
-  element: {
+  component: {
     type: Object,
     require: true,
     default: null
