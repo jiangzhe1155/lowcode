@@ -9,7 +9,6 @@ specifiers:
   '@vue/cli-plugin-typescript': ^5.0.4
   '@vue/eslint-config-standard': ^6.1.0
   '@vue/eslint-config-typescript': ^9.1.0
-  '@vue/reactivity': ^3.2.33
   '@vueuse/components': ^8.2.0
   '@vueuse/core': ^8.1.2
   codemirror: ^5.65.2
@@ -24,16 +23,16 @@ specifiers:
   sass-loader: ^12.6.0
   typescript: ^4.6.2
   uuid: ^8.3.2
-  vite: ^2.7.2
+  vite: ^2.9.1
   vite-plugin-windicss: ^1.6.1
-  vue: ^3.2.25
+  vue: ^3.2.31
   vue-router: ^4.0.12
   vue-tsc: ^0.29.8
+  vuedraggable: ^4.1.0
   windicss: ^3.4.2
 
 dependencies:
   '@element-plus/icons-vue': registry.npmmirror.com/@element-plus/icons-vue/1.1.4_vue@3.2.31
-  '@vue/reactivity': registry.npmmirror.com/@vue/reactivity/3.2.33
   '@vueuse/components': registry.npmmirror.com/@vueuse/components/8.2.0_vue@3.2.31
   '@vueuse/core': registry.npmmirror.com/@vueuse/core/8.1.2_vue@3.2.31
   codemirror: registry.npmmirror.com/codemirror/5.65.2
@@ -45,12 +44,13 @@ dependencies:
   uuid: registry.npmmirror.com/uuid/8.3.2
   vue: registry.npmmirror.com/vue/3.2.31
   vue-router: registry.npmmirror.com/vue-router/4.0.14_vue@3.2.31
+  vuedraggable: registry.npmmirror.com/vuedraggable/4.1.0_vue@3.2.31
 
 devDependencies:
   '@types/node': registry.npmmirror.com/@types/node/17.0.23
   '@typescript-eslint/eslint-plugin': registry.npmmirror.com/@typescript-eslint/eslint-plugin/5.16.0_3fed250b11519414a4c7d52468dd6bf5
   '@typescript-eslint/parser': registry.npmmirror.com/@typescript-eslint/parser/5.16.0_eslint@8.11.0+typescript@4.6.2
-  '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/2.2.4_vite@2.8.6+vue@3.2.31
+  '@vitejs/plugin-vue': registry.npmmirror.com/@vitejs/plugin-vue/2.2.4_vite@2.9.5+vue@3.2.31
   '@vue/cli-plugin-typescript': registry.npmmirror.com/@vue/cli-plugin-typescript/5.0.4_81ab37ea67c8ada648516f44a1399b8e
   '@vue/eslint-config-standard': registry.npmmirror.com/@vue/eslint-config-standard/6.1.0_f881db847fbb3e5d4c735ead27ea5910
   '@vue/eslint-config-typescript': registry.npmmirror.com/@vue/eslint-config-typescript/9.1.0_abc2363544a9ada1fcfd3c8f6cda57a4
@@ -59,8 +59,8 @@ devDependencies:
   eslint-plugin-vue: registry.npmmirror.com/eslint-plugin-vue/8.5.0_eslint@8.11.0
   prettier: registry.npmmirror.com/prettier/2.5.1
   typescript: registry.npmmirror.com/typescript/4.6.2
-  vite: registry.npmmirror.com/vite/2.8.6
-  vite-plugin-windicss: registry.npmmirror.com/vite-plugin-windicss/1.8.3_vite@2.8.6
+  vite: registry.npmmirror.com/vite/2.9.5
+  vite-plugin-windicss: registry.npmmirror.com/vite-plugin-windicss/1.8.3_vite@2.9.5
   vue-tsc: registry.npmmirror.com/vue-tsc/0.29.8_typescript@4.6.2
   windicss: registry.npmmirror.com/windicss/3.5.1
 
@@ -706,7 +706,7 @@ packages:
       eslint-visitor-keys: registry.npmmirror.com/eslint-visitor-keys/3.3.0
     dev: true
 
-  registry.npmmirror.com/@vitejs/plugin-vue/2.2.4_vite@2.8.6+vue@3.2.31:
+  registry.npmmirror.com/@vitejs/plugin-vue/2.2.4_vite@2.9.5+vue@3.2.31:
     resolution: {integrity: sha512-ev9AOlp0ljCaDkFZF3JwC/pD2N4Hh+r5srl5JHM6BKg5+99jiiK0rE/XaRs3pVm1wzyKkjUy/StBSoXX5fFzcw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vitejs/plugin-vue/-/plugin-vue-2.2.4.tgz}
     id: registry.npmmirror.com/@vitejs/plugin-vue/2.2.4
     name: '@vitejs/plugin-vue'
@@ -716,7 +716,7 @@ packages:
       vite: ^2.5.10
       vue: ^3.2.25
     dependencies:
-      vite: registry.npmmirror.com/vite/2.8.6
+      vite: registry.npmmirror.com/vite/2.9.5
       vue: registry.npmmirror.com/vue/3.2.31
     dev: true
 
@@ -976,6 +976,7 @@ packages:
     version: 3.2.33
     dependencies:
       '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.33
+    dev: true
 
   registry.npmmirror.com/@vue/runtime-core/3.2.31:
     resolution: {integrity: sha512-Kcog5XmSY7VHFEMuk4+Gap8gUssYMZ2+w+cmGI6OpZWYOEIcbE0TPzzPHi+8XTzAgx1w/ZxDFcXhZeXN5eKWsA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/runtime-core/-/runtime-core-3.2.31.tgz}
@@ -1018,6 +1019,7 @@ packages:
     resolution: {integrity: sha512-UBc1Pg1T3yZ97vsA2ueER0F6GbJebLHYlEi4ou1H5YL4KWvMOOWwpYo9/QpWq93wxKG6Wo13IY74Hcn/f7c7Bg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vue/shared/-/shared-3.2.33.tgz}
     name: '@vue/shared'
     version: 3.2.33
+    dev: true
 
   registry.npmmirror.com/@vueuse/components/8.2.0_vue@3.2.31:
     resolution: {integrity: sha512-zchb7HV3wQFjxkggrye5zTNNMQgtarQlTQmVBcWFNWyLyCI6mVK9DRhX36azkLvEGYk2aFGH6fIJGrE+2Dsi8g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@vueuse/components/-/components-8.2.0.tgz}
@@ -4162,6 +4164,12 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
+  registry.npmmirror.com/sortablejs/1.14.0:
+    resolution: {integrity: sha512-pBXvQCs5/33fdN1/39pPL0NZF20LeRbLQ5jtnheIPN9JQAaufGjKdWduZn4U7wCtVuzKhmRkI0DFYHYRbB2H1w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/sortablejs/-/sortablejs-1.14.0.tgz}
+    name: sortablejs
+    version: 1.14.0
+    dev: false
+
   registry.npmmirror.com/source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz}
     name: source-map-js
@@ -4534,7 +4542,7 @@ packages:
       spdx-expression-parse: registry.npmmirror.com/spdx-expression-parse/3.0.1
     dev: true
 
-  registry.npmmirror.com/vite-plugin-windicss/1.8.3_vite@2.8.6:
+  registry.npmmirror.com/vite-plugin-windicss/1.8.3_vite@2.9.5:
     resolution: {integrity: sha512-RIw2GD6H6cKNE8wZXVOBs4L1uTicVS0FaAkeqXvy1oyuXLC4SXmvnzEuoK0+qFuWJjW0ECNwE8eU+ZZhzNQKUg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite-plugin-windicss/-/vite-plugin-windicss-1.8.3.tgz}
     id: registry.npmmirror.com/vite-plugin-windicss/1.8.3
     name: vite-plugin-windicss
@@ -4545,16 +4553,16 @@ packages:
       '@windicss/plugin-utils': registry.npmmirror.com/@windicss/plugin-utils/1.8.3
       debug: registry.npmmirror.com/debug/4.3.4
       kolorist: registry.npmmirror.com/kolorist/1.5.1
-      vite: registry.npmmirror.com/vite/2.8.6
+      vite: registry.npmmirror.com/vite/2.9.5
       windicss: registry.npmmirror.com/windicss/3.5.1
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  registry.npmmirror.com/vite/2.8.6:
-    resolution: {integrity: sha512-e4H0QpludOVKkmOsRyqQ7LTcMUDF3mcgyNU4lmi0B5JUbe0ZxeBBl8VoZ8Y6Rfn9eFKYtdXNPcYK97ZwH+K2ug==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-2.8.6.tgz}
+  registry.npmmirror.com/vite/2.9.5:
+    resolution: {integrity: sha512-dvMN64X2YEQgSXF1lYabKXw3BbN6e+BL67+P3Vy4MacnY+UzT1AfkHiioFSi9+uiDUiaDy7Ax/LQqivk6orilg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vite/-/vite-2.9.5.tgz}
     name: vite
-    version: 2.8.6
+    version: 2.9.5
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -4808,6 +4816,18 @@ packages:
       '@vue/runtime-dom': registry.npmmirror.com/@vue/runtime-dom/3.2.31
       '@vue/server-renderer': registry.npmmirror.com/@vue/server-renderer/3.2.31_vue@3.2.31
       '@vue/shared': registry.npmmirror.com/@vue/shared/3.2.31
+    dev: false
+
+  registry.npmmirror.com/vuedraggable/4.1.0_vue@3.2.31:
+    resolution: {integrity: sha512-FU5HCWBmsf20GpP3eudURW3WdWTKIbEIQxh9/8GE806hydR9qZqRRxRE3RjqX7PkuLuMQG/A7n3cfj9rCEchww==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/vuedraggable/-/vuedraggable-4.1.0.tgz}
+    id: registry.npmmirror.com/vuedraggable/4.1.0
+    name: vuedraggable
+    version: 4.1.0
+    peerDependencies:
+      vue: ^3.0.1
+    dependencies:
+      sortablejs: registry.npmmirror.com/sortablejs/1.14.0
+      vue: registry.npmmirror.com/vue/3.2.31
     dev: false
 
   registry.npmmirror.com/watchpack/2.3.1:

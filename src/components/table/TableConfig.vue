@@ -1,11 +1,10 @@
 <script setup lang="ts">
-
 import { computed, Ref, ref } from 'vue'
 import {
   Table, TableProp
 } from '@/views/designer/interface/component'
 import { usePropsWatcher } from '@/views/designer/propsWatcher'
-import { Delete, EditPen } from '@element-plus/icons-vue'
+import { Delete, EditPen,Operation } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   component: Ref<Table>
@@ -47,49 +46,76 @@ const columns = computed(()=>{
       <div class="w-16px"></div>
     </div>
 
-    <div class="flex gap-x-1 items-center" v-for="(column,idx) in columns" :key="idx">
-      <el-popover
-          placement="left"
-          :width="360"
-          trigger="click"
-      ><template #reference>
+    <draggable :list="columns"
+               tag="transition-group"
+               handle=".handle"
+               item-key="index">
+      <template #item="{element,index}">
+        <div class="flex gap-x-1 items-center">
+          <el-popover
+              placement="left"
+              :width="360"
+              trigger="click"
+          ><template #reference>
+            <el-button type="text">
+              <el-icon :size="16">
+                <edit-pen/>
+              </el-icon>
+            </el-button>
+          </template>
+            <div class="container p-20px">
+              <div class="flex flex-col gap-y-2">
+                <div class="flex items-center gap-x-2">
+                  <span class="w-70px">标题</span>
+                  <div class="flex-grow"><el-input v-model="columns[index].title"></el-input></div>
+                </div>
+                <div class="flex items-center gap-x-2">
+                  <span class="w-70px">类型</span>
+                  <div class="flex-grow"><el-select class="w-full" v-model="columns[index].type"></el-select></div>
+                </div>
+                <div class="flex items-center gap-x-2">
+                  <span class="w-70px">字段key</span>
+                  <div class="flex-grow"><el-input v-model="columns[index].key"></el-input></div>
+                </div>
+              </div>
+            </div>
+          </el-popover>
+          <el-input size="small" v-model="columns[index].title"></el-input>
+          <el-input size="small" v-model="columns[index].type"></el-input>
           <el-button type="text">
             <el-icon :size="16">
-              <edit-pen/>
+              <Delete/>
             </el-icon>
           </el-button>
-        </template>
-        <div class="container p-20px">
-          <div class="flex flex-col gap-y-2">
-            <div class="flex items-center gap-x-2">
-              <span class="w-70px">标题</span>
-              <div class="flex-grow"><el-input v-model="columns[idx].title"></el-input></div>
-            </div>
-            <div class="flex items-center gap-x-2">
-              <span class="w-70px">类型</span>
-              <div class="flex-grow"><el-select class="w-full" v-model="columns[idx].type"></el-select></div>
-            </div>
-            <div class="flex items-center gap-x-2">
-              <span class="w-70px">字段key</span>
-              <div class="flex-grow"><el-input v-model="columns[idx].key"></el-input></div>
-            </div>
-          </div>
+          <el-button type="text" class="!ml-0 handle" >
+            <el-icon :size="16">
+              <Operation/>
+            </el-icon>
+          </el-button>
         </div>
-      </el-popover>
-      <el-input size="small" v-model="columns[idx].title"></el-input>
-      <el-input size="small" v-model="columns[idx].type"></el-input>
-      <el-button type="text">
-        <el-icon :size="16">
-          <Delete/>
-        </el-icon>
-      </el-button>
+      </template>
+    </draggable>
 
-    </div>
+<!--    <draggable v-model="columns">-->
+<!--      <transition-group>-->
 
+<!--      </transition-group>-->
+<!--    </draggable>-->
   </div>
 
 
 </template>
+
+<script lang="ts">
+import draggable from 'vuedraggable'
+
+export default {
+  name:'TableConfig',
+  components:{
+    draggable
+  }
+}
+</script>
 
 <style scoped>
 </style>

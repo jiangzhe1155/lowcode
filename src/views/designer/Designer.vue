@@ -33,7 +33,7 @@ const el = ref<HTMLElement>()
 
 onMounted(() => {
   iframeRef.value = el.value
-  document.ondragstart = () => false
+  // document.ondragstart = () => false
 })
 
 const onLoad = () => {
