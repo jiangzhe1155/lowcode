@@ -29,6 +29,10 @@ const columns = computed(() => {
   return columns.options[columns.idx]
 })
 
+const onRowDelete = (rows: [], idx: number) => {
+  rows.splice(idx, 1)
+}
+
 </script>
 
 <template>
@@ -91,7 +95,7 @@ const columns = computed(() => {
           </el-popover>
           <el-input size="small" v-model="columns[index].title"></el-input>
           <el-input size="small" v-model="columns[index].type"></el-input>
-          <el-button type="text">
+          <el-button type="text" @click="onRowDelete(columns,index)">
             <el-icon :size="16">
               <Delete/>
             </el-icon>
@@ -121,7 +125,6 @@ const columns = computed(() => {
     </div>
 
     <draggable :list="rowData"
-               tag="transition-group"
                handle=".handle"
                ghost-class="ghost"
                item-key="index">
@@ -152,7 +155,7 @@ const columns = computed(() => {
             </div>
           </el-popover>
           <el-input size="small" v-for="(column) in columns" v-model="rowData[index][column.key]"></el-input>
-          <el-button type="text">
+          <el-button type="text" @click="onRowDelete(rowData,index)">
             <el-icon :size="16">
               <Delete/>
             </el-icon>

@@ -11,12 +11,12 @@ export interface Component {
   children: Component[],
   visible: boolean,
   lock: boolean,
-  props: {}
+  props: any
 }
 
 class ControlConfig {
   supportDirection: Direction[] = ['top', 'bottom', 'center']
-  getElement = (id: string, doc: Document):any => {
+  getElement = (id: string, doc: Document): any => {
     return doc.getElementById(id)
   }
   supportGroup: ComponentGroup[] = ['Container', 'Input']
@@ -90,7 +90,7 @@ class DialogProp implements ComponentProps {
 }
 
 class DialogControlConfig extends ControlConfig {
-  getElement = (id: string, doc: Document):any => {
+  getElement = (id: string, doc: Document): any => {
     return doc.getElementById(id)?.firstElementChild?.firstElementChild?.firstElementChild
   }
 }
@@ -178,30 +178,29 @@ export class TableProp implements ComponentProps {
         {
           title: '姓名',
           key: 'name',
-          type:'input'
+          type: 'input'
         }, {
           title: '性别',
           key: 'sex',
-          type:'input'
+          type: 'input'
         }
       ]
     }
-  }as Indexable
-
+  } as Indexable
 
   rowData = {
-   idx:'array' as ValueType,
-   options:{
-     'array':[{
+    idx: 'array' as ValueType,
+    options: {
+      'array': [{
         name: '张三',
         sex: '女'
       },
-      {
-       name: '李四',
-       sex: '男'
-      }
-     ]
-   }
+        {
+          name: '李四',
+          sex: '男'
+        }
+      ]
+    }
   } as Indexable
 
 }

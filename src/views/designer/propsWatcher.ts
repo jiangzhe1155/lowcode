@@ -7,7 +7,7 @@ export const usePropsWatcher = (config: Ref<ComponentProps>, componentProps: Ref
     componentProps.value.props = JSON.parse(JSON.stringify(config.value))
   }, { deep: true })
 
-  watch(() => componentProps, () => {
+  watch(componentProps, () => {
     if (!componentProps || !componentProps.value) {
       return
     }
