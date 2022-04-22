@@ -2,7 +2,7 @@
 import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
 
-import { useConfigStore } from '@/stores/constant'
+import { designerConfig } from '@/stores/constant'
 import { onMounted, ref, toRaw, watch, watchEffect } from 'vue'
 import { ElButton } from 'element-plus'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
@@ -26,11 +26,9 @@ import {
   onIframeMouseMove, onIframeMouseOver,
   onIframeMouseUp, onIframeResize, onIframeScroll
 } from '@/views/designer/iframeEvent'
-import { onKeyStroke, useClipboard, useEventListener, useMagicKeys } from '@vueuse/core'
+import { useClipboard, useMagicKeys } from '@vueuse/core'
 
-const store = useConfigStore()
 const el = ref<HTMLElement>()
-
 onMounted(() => {
   iframeRef.value = el.value
   // document.ondragstart = () => false
@@ -52,8 +50,8 @@ const onLoad = () => {
   doc.addEventListener('iframeMouseMove', onIframeMouseMove, true)
   doc.addEventListener('click', onIframeMouseClick, true)
   doc.addEventListener('scroll', onIframeScroll, true)
-  win.addEventListener('resize', onIframeResize, true)
   doc.onselectstart = () => false
+  win.addEventListener('resize', onIframeResize, true)
 }
 
 watch([renderPage, () => iframeWin()], (n, o) => {
@@ -65,7 +63,6 @@ watch([renderPage, () => iframeWin()], (n, o) => {
     updateLocationState()
   })
 }, { deep: true })
-
 
 const {
   text,
@@ -100,7 +97,7 @@ watch(Backspace, (v) => {
 
 <template>
   <el-container class="h-screen">
-    <el-header class="!border-b-2" :height="store.headerHeight+'px'">
+    <el-header class="!border-b-2" :height="designerConfig.headerHeight+'px'">
       <el-button @click="back">撤销</el-button>
       <el-button @click="exportJson">导出json</el-button>
     </el-header>

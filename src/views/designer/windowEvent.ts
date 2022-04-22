@@ -12,17 +12,25 @@ import {
   y
 } from '@/views/designer/common'
 import { onIframeMouseDrag } from '@/views/designer/iframeEvent'
+import { designerConfig } from '@/stores/constant'
 
 export const onDocumentMouseDrag = (e: MouseEvent) => {
-  console.log('主窗口移動')
   if (startDrag.value && !isDragging.value) {
     isDragging.value = true
   }
   x.value = e.clientX
   y.value = e.clientY
+
+  let {
+    asideWidth,
+    headerHeight,
+    canvasPadding,
+    dragPanelWidth
+  } = designerConfig
+
   const event = new MouseEvent('iframeMouseMove', {
-    clientX: e.clientX - 80 - (isAffixPanel.value && isPanelOpen.value ? 500 : 0),
-    clientY: e.clientY - 70
+    clientX: e.clientX - asideWidth - canvasPadding - (isAffixPanel.value && isPanelOpen.value ? dragPanelWidth : 0),
+    clientY: e.clientY - headerHeight - canvasPadding
   })
   iframeDoc().dispatchEvent(event)
   e.preventDefault()
@@ -40,7 +48,7 @@ export const onDocumentMouseDragEnd = (e: MouseEvent) => {
     }
     setTimeout(() => {
       locationState.currentClickComponent = fetchLocation(clickId)
-    },200)
+    }, 200)
   }
   onComponentDragEnd()
   resetLocationState()

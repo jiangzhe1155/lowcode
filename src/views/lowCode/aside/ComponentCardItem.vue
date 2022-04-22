@@ -13,15 +13,15 @@ const props = defineProps<{
   imgUrl: string,
 }>()
 
-const el = ref<HTMLElement | null>(null)
+const el = ref<HTMLElement | null>()
 
 onLongPress(el, () => {
   asideComponentType.value = props.type
   asideComponentGroup.value = props.group
   startDrag.value = true
   emitter.emit('onComponentPanelClose')
-  document.addEventListener('mousemove',onDocumentMouseDrag,true)
-  document.addEventListener('mouseup',onDocumentMouseDragEnd,true)
+  document.addEventListener('mousemove', onDocumentMouseDrag, true)
+  document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
 
 }, { delay: 0 })
 

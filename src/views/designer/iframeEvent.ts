@@ -8,11 +8,19 @@ import {
   y
 } from '@/views/designer/common'
 import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/windowEvent'
+import { designerConfig } from '@/stores/constant'
 
 export const onIframeMouseDrag = (e: MouseEvent) => {
   console.log('鼠标拖动', e.clientX, e.clientY)
-  x.value = e.clientX + 80 + (isAffixPanel.value && isPanelOpen.value ? 500 : 0)
-  y.value = e.clientY + 70
+  let {
+    asideWidth,
+    headerHeight,
+    canvasPadding,
+    dragPanelWidth
+  } = designerConfig
+
+  x.value = e.clientX + asideWidth + canvasPadding + (isAffixPanel.value && isPanelOpen.value ? dragPanelWidth : 0)
+  y.value = e.clientY + +headerHeight + canvasPadding
   if (startDrag.value && !isDragging.value) {
     isDragging.value = true
     document.addEventListener('mouseup', onDocumentMouseDragEnd, true)

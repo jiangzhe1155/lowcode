@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
-import { x, y, asideComponentType,isDragging } from '@/views/designer/common'
+import { x, y, asideComponentType, isDragging } from '@/views/designer/common'
 
 const asideDragStyle = computed(() => {
   return {
