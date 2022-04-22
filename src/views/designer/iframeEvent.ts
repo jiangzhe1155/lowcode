@@ -9,9 +9,10 @@ import {
 } from '@/views/designer/common'
 import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/windowEvent'
 import { designerConfig } from '@/stores/constant'
+import { ref } from 'vue'
 
 export const onIframeMouseDrag = (e: MouseEvent) => {
-  console.log('鼠标拖动', e.clientX, e.clientY)
+  console.log('iframe 鼠标拖动', e.clientX, e.clientY)
   let {
     asideWidth,
     headerHeight,
@@ -26,6 +27,8 @@ export const onIframeMouseDrag = (e: MouseEvent) => {
     document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
     document.addEventListener('mousemove', onDocumentMouseDrag, true)
   }
+  e.preventDefault()
+  e.stopPropagation()
 }
 
 export const onIframeMouseUp = (e: Event) => {
@@ -36,10 +39,18 @@ export const onIframeMouseUp = (e: Event) => {
   }
 
   onComponentDragEnd()
+  clearTimeout(timeout.value)
+  timeout.value = null
   iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
 }
 
+export let timeout = ref()
+
+
 export const onIframeMouseDown = (e: MouseEvent) => {
+  if (!timeout.value){
+    return
+  }
   console.log('iframe 按下')
   startDrag.value = true
   locationState.currentPressComponent = currentComponent(<Node>e.target)

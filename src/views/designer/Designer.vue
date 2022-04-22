@@ -21,17 +21,20 @@ import Insertion from '@/views/designer/tool/Insertion.vue'
 import TypeDragItem from '@/views/designer/tool/TypeDragItem.vue'
 import {
   onIframeMouseClick,
-  onIframeMouseDown,
+  onIframeMouseDown, onIframeMouseDrag,
   onIframeMouseIn, onIframeMouseLeave,
   onIframeMouseMove, onIframeMouseOver,
-  onIframeMouseUp, onIframeResize, onIframeScroll
+  onIframeMouseUp, onIframeResize, onIframeScroll, timeout
 } from '@/views/designer/iframeEvent'
-import { useClipboard, useMagicKeys } from '@vueuse/core'
+import { onLongPress, useClipboard, useMagicKeys } from '@vueuse/core'
 
 const el = ref<HTMLElement>()
 onMounted(() => {
   iframeRef.value = el.value
 })
+
+
+
 
 const onLoad = () => {
   let doc = iframeDoc()
@@ -41,7 +44,19 @@ const onLoad = () => {
       renderPage: toRaw(renderPage.value)
     })
   }
-  doc.addEventListener('mousedown', onIframeMouseDown, true)
+
+
+  doc.addEventListener('mousedown', (e:MouseEvent)=>{
+    timeout.value = setTimeout(
+          () => onIframeMouseDown(e),
+          200,
+      ) as unknown as number
+    e.preventDefault()
+    e.stopPropagation()
+    }, true)
+
+  // doc.addEventListener('mousedown', onIframeMouseDown,true)
+
   doc.addEventListener('mouseup', onIframeMouseUp, false)
   doc.addEventListener('mouseover', onIframeMouseOver, true)
   doc.addEventListener('mouseleave', onIframeMouseLeave, false)

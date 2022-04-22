@@ -17,7 +17,6 @@ let page = new Page()
 page.children.push(new Table())
 // let card = new Card('卡片1')
 // card.props.enableHeader.options['boolean'] = true
-
 page.children.push(new Card('卡片2'))
 // page.children.push(new Card('卡片3'), card, new Card('卡片4'))
 // let dialog = new Dialog()

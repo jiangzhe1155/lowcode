@@ -11,7 +11,7 @@ import {
   x,
   y
 } from '@/views/designer/common'
-import { onIframeMouseDrag } from '@/views/designer/iframeEvent'
+import { onIframeMouseDrag, timeout } from '@/views/designer/iframeEvent'
 import { designerConfig } from '@/stores/constant'
 
 export const onDocumentMouseDrag = (e: MouseEvent) => {
@@ -52,6 +52,8 @@ export const onDocumentMouseDragEnd = (e: MouseEvent) => {
   }
   onComponentDragEnd()
   resetLocationState()
+  clearTimeout(timeout.value)
+  timeout.value = null
   e.preventDefault()
   e.stopPropagation()
   document.removeEventListener('mousemove', onDocumentMouseDrag, true)
