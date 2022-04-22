@@ -22,7 +22,7 @@ onLongPress(el, () => {
   emitter.emit('onComponentPanelClose')
   document.addEventListener('mousemove', onDocumentMouseDrag, true)
   document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
-}, { delay: 0 })
+}, { delay: 200 })
 
 const { pressed } = useMousePressed({ target: el })
 watch(pressed, (n) => {
