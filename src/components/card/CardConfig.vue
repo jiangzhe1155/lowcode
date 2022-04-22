@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, Ref } from 'vue'
+import { Ref } from 'vue'
 import {
   Card, CardProp
 } from '@/views/designer/interface/component'
@@ -61,6 +61,4 @@ const onMenuItemSelect = (idx: ValueType) => {
 </template>
 
 <style scoped>
-
-
 </style>

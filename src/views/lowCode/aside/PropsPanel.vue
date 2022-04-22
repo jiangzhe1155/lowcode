@@ -18,7 +18,7 @@ const renderFunc = () => {
   <div v-if="!targetComponent">
     请在左侧选中组件
   </div>
-  <div v-else>
+  <div v-else class="py-20px">
     <renderFunc/>
   </div>
 </template>

@@ -7,7 +7,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <el-input size="small" v-if="prop.idx === 'string'" class="float-left" v-model="prop.options[prop.idx]"/>
+  <el-input v-if="prop.idx === 'string'" class="float-left" v-model="prop.options[prop.idx]"/>
 </template>
 
 <style scoped>
