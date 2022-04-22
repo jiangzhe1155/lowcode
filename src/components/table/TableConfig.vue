@@ -41,7 +41,8 @@ const onRowDelete = (rows: [], idx: number) => {
       <div class="text-sm text-left">行配置</div>
     </el-col>
   </el-row>
-  <div class="flex flex-col !mx-12px">
+
+  <div class="flex flex-col !mx-12px select-none">
     <div class="flex gap-x-1">
       <div class="w-16px"></div>
       <div class="flex-grow text-left">标题</div>
@@ -115,7 +116,6 @@ const onRowDelete = (rows: [], idx: number) => {
       <div class="text-sm text-left">行数据配置</div>
     </el-col>
   </el-row>
-
   <div class="flex flex-col !mx-12px">
     <div class="flex gap-x-1">
       <div class="w-16px"></div>
@@ -169,7 +169,6 @@ const onRowDelete = (rows: [], idx: number) => {
       </template>
     </draggable>
   </div>
-
 </template>
 
 <script lang="ts">

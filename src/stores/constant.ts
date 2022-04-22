@@ -6,6 +6,3 @@ export const designerConfig = reactive({
   canvasPadding: 20, // 画布的内边距
   dragPanelWidth: 500, //拖拽面板的宽度
 })
-
-
-

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
-import { locationState, isDragging,isShowInsertion } from '@/views/designer/common'
+import { locationState, isDragging, isShowInsertion } from '@/views/designer/common'
 
 const dragInsertionStyle = computed(() => {
   let {
@@ -9,7 +9,7 @@ const dragInsertionStyle = computed(() => {
     width,
     height,
     left
-  } = locationState.currentInsertionComponent?.location
+  } = locationState.currentInsertionComponent?.location!
   let direction = locationState.direction
 
   left = direction === 'right' ? left + width - 4 : left
