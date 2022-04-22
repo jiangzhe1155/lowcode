@@ -4,7 +4,7 @@ import {
   Table, TableProp
 } from '@/views/designer/interface/component'
 import { usePropsWatcher } from '@/views/designer/propsWatcher'
-import { Delete, EditPen,Operation } from '@element-plus/icons-vue'
+import { Delete, EditPen, Operation } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   component: Ref<Table>
@@ -13,7 +13,7 @@ const props = defineProps<{
 const config = ref(new TableProp())
 usePropsWatcher(config, props.component)
 
-const rowData = computed(()=>{
+const rowData = computed(() => {
   let rowData = config.value.rowData
   if (!rowData) {
     return
@@ -21,9 +21,8 @@ const rowData = computed(()=>{
   return rowData.options[rowData.idx]
 })
 
-
-const columns = computed(()=>{
-  let columns =  config.value.columns
+const columns = computed(() => {
+  let columns = config.value.columns
   if (!columns) {
     return
   }
@@ -49,33 +48,42 @@ const columns = computed(()=>{
     <draggable :list="columns"
                tag="transition-group"
                handle=".handle"
+               ghost-class="ghost"
                item-key="index">
       <template #item="{element,index}">
         <div class="flex gap-x-1 items-center">
           <el-popover
               placement="left"
               :width="360"
+              :title="`第${index}项`"
               trigger="click"
-          ><template #reference>
-            <el-button type="text">
-              <el-icon :size="16">
-                <edit-pen/>
-              </el-icon>
-            </el-button>
-          </template>
+          >
+            <template #reference>
+              <el-button type="text">
+                <el-icon :size="16">
+                  <edit-pen/>
+                </el-icon>
+              </el-button>
+            </template>
             <div class="container p-20px">
               <div class="flex flex-col gap-y-2">
                 <div class="flex items-center gap-x-2">
                   <span class="w-70px">标题</span>
-                  <div class="flex-grow"><el-input v-model="columns[index].title"></el-input></div>
+                  <div class="flex-grow">
+                    <el-input v-model="columns[index].title"></el-input>
+                  </div>
                 </div>
                 <div class="flex items-center gap-x-2">
                   <span class="w-70px">类型</span>
-                  <div class="flex-grow"><el-select class="w-full" v-model="columns[index].type"></el-select></div>
+                  <div class="flex-grow">
+                    <el-select class="w-full" v-model="columns[index].type"></el-select>
+                  </div>
                 </div>
                 <div class="flex items-center gap-x-2">
                   <span class="w-70px">字段key</span>
-                  <div class="flex-grow"><el-input v-model="columns[index].key"></el-input></div>
+                  <div class="flex-grow">
+                    <el-input v-model="columns[index].key"></el-input>
+                  </div>
                 </div>
               </div>
             </div>
@@ -87,7 +95,7 @@ const columns = computed(()=>{
               <Delete/>
             </el-icon>
           </el-button>
-          <el-button type="text" class="!ml-0 handle" >
+          <el-button type="text" class="!ml-0 handle !cursor-move">
             <el-icon :size="16">
               <Operation/>
             </el-icon>
@@ -96,11 +104,11 @@ const columns = computed(()=>{
       </template>
     </draggable>
 
-<!--    <draggable v-model="columns">-->
-<!--      <transition-group>-->
+    <!--    <draggable v-model="columns">-->
+    <!--      <transition-group>-->
 
-<!--      </transition-group>-->
-<!--    </draggable>-->
+    <!--      </transition-group>-->
+    <!--    </draggable>-->
   </div>
 
 
@@ -110,12 +118,15 @@ const columns = computed(()=>{
 import draggable from 'vuedraggable'
 
 export default {
-  name:'TableConfig',
-  components:{
+  name: 'TableConfig',
+  components: {
     draggable
   }
 }
 </script>
 
 <style scoped>
+.ghost {
+  background: #c8ebfb;
+}
 </style>
