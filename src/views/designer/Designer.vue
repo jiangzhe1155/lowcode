@@ -3,7 +3,7 @@ import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
 
 import { designerConfig } from '@/stores/constant'
-import { onMounted, ref, toRaw, watch, watchEffect } from 'vue'
+import { onMounted, ref, toRaw, watch } from 'vue'
 import { ElButton } from 'element-plus'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
 import BorderHover from '@/views/designer/tool/BorderHover.vue'
@@ -31,7 +31,6 @@ import { useClipboard, useMagicKeys } from '@vueuse/core'
 const el = ref<HTMLElement>()
 onMounted(() => {
   iframeRef.value = el.value
-  // document.ondragstart = () => false
 })
 
 const onLoad = () => {

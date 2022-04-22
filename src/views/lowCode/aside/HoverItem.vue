@@ -1,7 +1,6 @@
 <script setup lang="ts">
-
 import { vElementHover } from '@vueuse/components'
-import { currentComponentFromArea, fetchLocation, locationState, x, y } from '@/views/designer/common'
+import { fetchLocation, locationState, x, y } from '@/views/designer/common'
 
 const props = defineProps({
   elementId: {
@@ -11,7 +10,6 @@ const props = defineProps({
 })
 
 function onHover (state: boolean) {
-  console.log(x.value, y.value)
   locationState.currentHoverComponent = fetchLocation(props.elementId!)
 }
 

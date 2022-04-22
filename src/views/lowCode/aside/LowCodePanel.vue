@@ -18,9 +18,9 @@ const props = defineProps({
     default: true
   },
   width: {
-    type: String,
+    type: Number,
     required: false,
-    default: '300'
+    default: 300
   },
   title: {
     type: String,

@@ -1,7 +1,8 @@
-import { Component, ComponentProps, Indexable } from './interface/component'
-import { Ref, watch } from 'vue'
+import { Component, ComponentProps, Indexable} from './interface/component'
+import { ref, Ref, watch } from 'vue'
 
-export const usePropsWatcher = (config: Ref<ComponentProps>, componentProps: Ref<Component>) => {
+export const usePropsWatcher = <T extends ComponentProps>(configFunc: () => T, componentProps: Ref<Component>) => {
+  const config = ref(configFunc())
   watch(config, () => {
     // 深拷贝
     componentProps.value.props = JSON.parse(JSON.stringify(config.value))
@@ -30,4 +31,17 @@ export const usePropsWatcher = (config: Ref<ComponentProps>, componentProps: Ref
   }, {
     immediate: true
   })
+
+
+  return {
+    config
+  }
 }
+
+export const getProp = (prop: any) => {
+  if (!prop) {
+    return
+  }
+  return prop.options[prop.idx]
+}
+

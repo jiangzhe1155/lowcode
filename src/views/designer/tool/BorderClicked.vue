@@ -33,7 +33,6 @@ const directionStyle = computed(() => {
 })
 
 const parentComponent = computed(() => {
-  // 获取父级的组件（3）个
   let parentComponents: Component[] = []
   let i = 0
   let componentId = componentMap.value.get(locationState.currentClickComponent?.id)?.pid

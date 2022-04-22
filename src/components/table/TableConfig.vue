@@ -1,32 +1,23 @@
 <script setup lang="ts">
-import { computed, Ref, ref } from 'vue'
+import { computed, Ref} from 'vue'
 import {
   Table, TableProp
 } from '@/views/designer/interface/component'
-import { usePropsWatcher } from '@/views/designer/propsWatcher'
+import { getProp, usePropsWatcher } from '@/views/designer/propsWatcher'
 import { Delete, EditPen, Operation } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   component: Ref<Table>
 }>()
 
-const config = ref(new TableProp())
-usePropsWatcher(config, props.component)
+const { config } = usePropsWatcher(() => new TableProp(), props.component)
 
 const rowData = computed(() => {
-  let rowData = config.value.rowData
-  if (!rowData) {
-    return
-  }
-  return rowData.options[rowData.idx]
+  return getProp(config.value.rowData)
 })
 
 const columns = computed(() => {
-  let columns = config.value.columns
-  if (!columns) {
-    return
-  }
-  return columns.options[columns.idx]
+  return getProp(config.value.columns)
 })
 
 const onRowDelete = (rows: [], idx: number) => {

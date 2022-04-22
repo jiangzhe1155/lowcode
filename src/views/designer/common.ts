@@ -18,7 +18,7 @@ page.children.push(new Table())
 // let card = new Card('卡片1')
 // card.props.enableHeader.options['boolean'] = true
 
-// card.children.push(new Card('卡片2'))
+page.children.push(new Card('卡片2'))
 // page.children.push(new Card('卡片3'), card, new Card('卡片4'))
 // let dialog = new Dialog()
 // dialog.children.push(new Card('卡片6'))
@@ -29,7 +29,7 @@ export class RenderPage {
   component: Component = new Root()
   models: Component[] = []
   state = (() => {
-    return { subTitle: `一个副标题22` }
+    return { title: `一个标题22222` }
   }).toString()
 }
 

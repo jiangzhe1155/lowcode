@@ -57,7 +57,7 @@ onMounted(() => {
 
   <LowCodePanel
       v-model:is-visible="state.treeTabShow"
-      width=500
+      :width=500
       title="结构树"
       @on-panel-close="state.treeTabShow = false"
   >
@@ -68,15 +68,14 @@ onMounted(() => {
       v-model:is-visible="state.componentTabShow"
       :width=designerConfig.dragPanelWidth
       title="组件库"
-      @on-panel-close="state.componentTabShow = false"
-  >
+      @on-panel-close="state.componentTabShow = false">
     <ComponentRepositoryCard>
     </ComponentRepositoryCard>
   </LowCodePanel>
 
   <LowCodePanel
       v-model:is-visible="state.componentCodeShow"
-      width=500
+      :width=500
       title="源码"
       @on-panel-close="state.componentCodeShow = false"
   >

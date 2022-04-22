@@ -7,8 +7,7 @@ const props = defineProps<{
   state: any
 }>()
 
-
-const rowData = computed(()=>{
+const rowData = computed(() => {
   let rowData = props.component.props.rowData
   if (!rowData) {
     return
@@ -17,7 +16,7 @@ const rowData = computed(()=>{
   return rowData.options[rowData.idx]
 })
 
-const columns = computed(()=>{
+const columns = computed(() => {
   let columns = props.component.props.columns
   if (!columns) {
     return

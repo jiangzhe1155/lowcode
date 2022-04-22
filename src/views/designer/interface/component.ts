@@ -56,14 +56,15 @@ export class CardProp implements ComponentProps {
   enableHeader = {
     idx: 'boolean' as ValueType,
     options: {
-      'boolean': false
+      'boolean': true
     }
   } as Indexable
 
   title = {
     idx: 'string' as ValueType,
     options: {
-      'string': '主标题'
+      'string': '主标题',
+      'variable': '变量'
     }
   } as Indexable
 }

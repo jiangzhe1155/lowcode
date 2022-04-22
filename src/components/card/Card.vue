@@ -1,9 +1,8 @@
 <script setup lang="ts">
 
-import {
-  computed, ref
-} from 'vue'
+import { computed } from 'vue'
 import { Card } from '@/views/designer/interface/component'
+import { getProp } from '@/views/designer/propsWatcher'
 
 const props = defineProps<{
   component: Card,
@@ -11,25 +10,20 @@ const props = defineProps<{
 }>()
 
 const showHeader = computed(() => {
-  let enableHeader = props.component.props.enableHeader
-  if (!enableHeader) {
-    return
-  }
-  let componentValue = enableHeader.options[enableHeader.idx]
-  return componentValue
+  return getProp(props.component.props.enableHeader)
 })
 
 const title = computed(() => {
-  let title = props.component.props.title
-  if (!title) {
-    return
+  let res = getProp(props.component.props.title)
+  let idx = props.component.props.title.idx
+  if (idx === 'string') {
+    return res
+  } else if (idx === 'variable') {
+    try {
+      return eval(`props.state.value.${res}`)
+    } catch (e) {
+    }
   }
-  let componentValue = title.options[title.idx]
-  return componentValue
-})
-
-const subTitle = computed(() => {
-
 })
 
 </script>
@@ -37,7 +31,7 @@ const subTitle = computed(() => {
 <template>
   <el-card>
     <template #header v-if="showHeader">
-      <div class="flex"><span class="font-semibold">{{ title }}</span><span v-if="subTitle">-{{ subTitle }}</span></div>
+      <div class="flex"><span class="font-semibold">{{ title }}</span></div>
     </template>
     <slot></slot>
   </el-card>

@@ -1,21 +1,4 @@
 export type Direction = 'top' | 'bottom' | 'center' | 'left' | 'right';
-
-// export interface Component {
-//   id: string,
-//   pid?: string,
-//   level?: number,
-//   name: string,
-//   type: ComponentType,
-//   children: Component[],
-//   supportDirection: Direction[]
-//   slots: any[],
-//   visible: boolean,
-//   getElement: string,
-//   group: ComponentGroup,
-//   supportGroup: ComponentGroup[],
-//   props: any
-// }
-
 export type ComponentType = 'Card' | 'Root' | 'Page' | 'Dialog' | 'Table';
 
 export type ComponentGroup = 'Input' | 'Container' | 'Model' | 'Root';
