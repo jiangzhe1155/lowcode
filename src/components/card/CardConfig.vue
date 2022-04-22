@@ -19,6 +19,7 @@ const { config } = usePropsWatcher(() => new CardProp(), props.component)
 const onMenuItemSelect = (idx: ValueType) => {
   config.value.title.idx = idx
 }
+
 </script>
 
 <template>
