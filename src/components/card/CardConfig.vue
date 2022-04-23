@@ -9,6 +9,10 @@ import StringConfig from '@/views/designer/config/StringConfig.vue'
 import { Switch } from '@element-plus/icons-vue'
 import VariableConfig from '@/views/designer/config/VariableConfig.vue'
 import { ValueType } from '@/views/lowCode/service'
+import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
+import PropValueSetter from '@/views/designer/config/panel/PropValueSetter.vue'
+import Item from '@/views/designer/config/panel/Item.vue'
+import ItemContainer from '@/views/designer/config/panel/ItemContainer.vue'
 
 const props = defineProps<{
   component: Ref<Card>
@@ -16,48 +20,26 @@ const props = defineProps<{
 
 const { config } = usePropsWatcher(() => new CardProp(), props.component)
 
-const onMenuItemSelect = (idx: ValueType) => {
-  config.value.title.idx = idx
-}
-
 </script>
 
 <template>
-  <div class="!mx-12px flex gap-x-1 items-center">
-    <span class="text-sm text-left w-70px">开启头部</span>
-    <div class="flex-grow">
-      <SwitchConfig :prop="config.enableHeader"></SwitchConfig>
-    </div>
-  </div>
-
-  <div class="!mx-12px flex gap-x-1 items-center" v-if="config.enableHeader.options[config.enableHeader.idx]">
-    <p class="text-sm text-left w-70px">标题</p>
-    <div class="flex-grow">
-      <StringConfig :prop="config.title"></StringConfig>
-      <VariableConfig :prop="config.title"></VariableConfig>
-    </div>
-    <el-popover
-        placement="left-start"
-        popper-class="!p-0"
-        trigger="click"
-        class="!p-0"
-    >
-      <template #reference>
-        <el-button type="text">
-          <el-icon :size="16">
-            <Switch/>
-          </el-icon>
-        </el-button>
-      </template>
-      <div class="flex flex-col">
-        <el-menu :default-active="config.title.idx"
-                 @select="onMenuItemSelect">
-          <el-menu-item class="!h-36px" v-for="(key,idx) in config.title.options" :index="idx">{{ idx }}</el-menu-item>
-        </el-menu>
+  <ItemContainer class="px-12px">
+    <Item>
+      <ItemLabel :width=70>开启头部</ItemLabel>
+      <div class="flex-grow">
+        <SwitchConfig :prop="config.enableHeader"></SwitchConfig>
       </div>
-    </el-popover>
-  </div>
+    </Item>
 
+    <Item v-if="config.enableHeader.options[config.enableHeader.idx]">
+      <ItemLabel :width=70>标题</ItemLabel>
+      <div class="flex-grow">
+        <StringConfig :prop="config.title"></StringConfig>
+        <VariableConfig :prop="config.title"></VariableConfig>
+      </div>
+      <PropValueSetter :prop="config.title"></PropValueSetter>
+    </Item>
+  </ItemContainer>
 </template>
 
 <style scoped>

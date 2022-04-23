@@ -7,9 +7,9 @@ const props = defineProps<{
 </script>
 
 <template>
-  <el-input v-if="prop.idx === 'variable'" class="float-left" v-model="prop.options[prop.idx]">
-    <template #prepend>bind:</template>
-  </el-input>
+    <el-input v-if="prop.idx === 'variable'" v-model="prop.options[prop.idx]">
+      <template #prepend>bind:</template>
+    </el-input>
 </template>
 
 <style scoped>

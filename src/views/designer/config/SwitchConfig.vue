@@ -6,7 +6,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <el-switch  v-if="prop.idx === 'boolean'" class="float-left" v-model="prop.options[prop.idx]"/>
+  <el-switch v-if="prop.idx === 'boolean'" class="float-left" v-model="prop.options[prop.idx]"/>
 </template>
 
 <style scoped>
