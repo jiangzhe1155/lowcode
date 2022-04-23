@@ -215,15 +215,15 @@ export class TableProp implements ComponentProps {
       'array': [{
         label: '编辑',
         confirm: false,
-        onclick: ((row: any) => {
+        onclick: eval("`" + ((row: any) => {
           console.log('点击了', row)
-        }).toString()
+        }).toString() + "`")
       }, {
         label: '删除',
         confirm: true,
-        onclick: ((row: any) => {
+        onclick: eval("`" + ((row: any) => {
           console.log('点击了', row)
-        }).toString()
+        }).toString() + "`")
       }]
     }
   } as Indexable

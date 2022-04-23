@@ -9,7 +9,4 @@ export const designerConfig = reactive({
   dragPanelWidth: 500 as number, //拖拽面板的宽度
 })
 
-
-
-
 export const renderPageStore = useStorage('renderPage', {} as RenderPage)

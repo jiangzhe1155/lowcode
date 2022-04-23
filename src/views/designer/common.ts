@@ -27,9 +27,9 @@ root.children.push(page)
 export class RenderPage {
   component: Component = new Root()
   models: Component[] = []
-  state = (() => {
-    return { title: `一个标题22222` }
-  }).toString()
+  state = eval("`"+(() => {
+    return { title: '一个标题22222' }
+  }).toString()+"`")
 }
 
 let res = new RenderPage()
