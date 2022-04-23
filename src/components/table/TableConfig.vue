@@ -28,6 +28,9 @@ const columns = computed(() => {
   return getProp(config.value.columns)
 })
 
+const operations = computed(() => {
+  return getProp(config.value.operations)
+})
 
 
 </script>
@@ -65,7 +68,7 @@ const columns = computed(() => {
             <Item>
               <ItemLabel fixed>类型</ItemLabel>
               <div class="flex-grow">
-                <el-select v-model="columns[index].type" default-first-option class="w-full">
+                <el-select v-model="columns[index].type" class="w-full" default-first-option>
                   <el-option
                       v-for="item in columnTypes"
                       :key="item.value"
@@ -109,6 +112,47 @@ const columns = computed(() => {
               <ItemLabel fixed>{{ column.title }}({{ column.key }})</ItemLabel>
               <div class="flex-grow">
                 <el-input v-model="rowData[index][column.key]"></el-input>
+              </div>
+            </Item>
+          </ItemContainer>
+        </template>
+      </ArrayConfig>
+    </div>
+
+    <div>
+      <ItemHeader>
+        <ItemLabel>操作列配置</ItemLabel>
+        <PropValueSetter :prop="config.operations"></PropValueSetter>
+      </ItemHeader>
+      <ArrayConfig :columns="operations">
+        <template #header>
+          <ItemLabel>名称</ItemLabel>
+          <ItemLabel>二次确认</ItemLabel>
+        </template>
+        <template #columns="{index}">
+          <el-input v-model="operations[index].label"></el-input>
+          <el-switch v-model="operations[index].confirm" class="w-full"></el-switch>
+        </template>
+        <template #detail="{index}">
+          <ItemContainer>
+            <Item>
+              <ItemLabel fixed>名称</ItemLabel>
+              <div class="flex-grow">
+                <el-input v-model="operations[index].label"></el-input>
+              </div>
+            </Item>
+            <Item>
+              <ItemLabel fixed>二次确认</ItemLabel>
+              <div class="flex-grow">
+                <el-switch v-model="operations[index].confirm"></el-switch>
+              </div>
+            </Item>
+            <Item>
+              <ItemLabel fixed>点击事件</ItemLabel>
+              <div class="flex-grow">
+                <el-input :rows="2"
+                          type="textarea"
+                          v-model="operations[index].onclick"></el-input>
               </div>
             </Item>
           </ItemContainer>

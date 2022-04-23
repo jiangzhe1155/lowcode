@@ -181,14 +181,14 @@ export class TableProp implements ComponentProps {
           title: '姓名',
           key: 'name',
           type: 'input',
-          hidden : false,
-          search : true
+          hidden: false,
+          search: true
         }, {
           title: '性别',
           key: 'sex',
           type: 'input',
-          hidden : false,
-          search : true
+          hidden: false,
+          search: true
         }
       ] as Column[]
     }
@@ -206,6 +206,25 @@ export class TableProp implements ComponentProps {
           sex: '男'
         }
       ]
+    }
+  } as Indexable
+
+  operations = {
+    idx: 'array' as ValueType,
+    options: {
+      'array': [{
+        label: '编辑',
+        confirm: false,
+        onclick: ((row: any) => {
+          console.log('点击了', row)
+        }).toString()
+      }, {
+        label: '删除',
+        confirm: true,
+        onclick: ((row: any) => {
+          console.log('点击了', row)
+        }).toString()
+      }]
     }
   } as Indexable
 
