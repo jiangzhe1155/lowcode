@@ -2,7 +2,7 @@
 import LowCodeAside from '@/views/lowCode/aside/LowCodeAside.vue'
 import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
 
-import { designerConfig } from '@/stores/constant'
+import { designerConfig, renderPageStore } from '@/stores/constant'
 import { onMounted, ref, toRaw, watch } from 'vue'
 import { ElButton } from 'element-plus'
 import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
@@ -27,14 +27,12 @@ import {
   onIframeMouseUp, onIframeResize, onIframeScroll, timeout
 } from '@/views/designer/iframeEvent'
 import { onLongPress, useClipboard, useMagicKeys } from '@vueuse/core'
+import router from '@/router'
 
 const el = ref<HTMLElement>()
 onMounted(() => {
   iframeRef.value = el.value
 })
-
-
-
 
 const onLoad = () => {
   let doc = iframeDoc()
@@ -81,24 +79,23 @@ watch([renderPage, () => iframeWin()], (n, o) => {
 const {
   text,
   copy
-} = useClipboard(), exportJson = () => {
+} = useClipboard()
+
+const exportJson = () => {
   let json = renderPage.value
   console.log('json', json, JSON.stringify(json))
   copy(JSON.stringify(json))
 }
 
-// 撤销事件
 const {
   Ctrl_Z,
   Backspace
 } = useMagicKeys()
-
 watch(Ctrl_Z, (v) => {
   if (v) {
     back()
   }
 })
-
 watch(Backspace, (v) => {
   if (v) {
     if (locationState.currentClickComponent && locationState.currentHoverComponent && locationState.currentClickComponent.id === locationState.currentHoverComponent.id) {
@@ -107,6 +104,19 @@ watch(Backspace, (v) => {
   }
 })
 
+
+const onSave = () => {
+  renderPageStore.value = renderPage.value
+}
+
+const onPreview = () => {
+  onSave()
+  let routeData = router.resolve({
+    name: "Preview",
+  });
+  window.open(routeData.href, '_blank');
+}
+
 </script>
 
 <template>
@@ -114,6 +124,8 @@ watch(Backspace, (v) => {
     <el-header class="!border-b-2" :height="designerConfig.headerHeight+'px'">
       <el-button @click="back">撤销</el-button>
       <el-button @click="exportJson">导出json</el-button>
+      <el-button @click="onSave">保存到本地</el-button>
+      <el-button @click="onPreview">预览</el-button>
     </el-header>
     <el-container>
       <DragItem></DragItem>

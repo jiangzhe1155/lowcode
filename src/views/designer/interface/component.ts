@@ -1,5 +1,6 @@
 import { v4 } from 'uuid'
 import { ComponentType, ValueType } from '../../lowCode/service'
+import { Column } from '@/components/table/ColumnType'
 
 export interface Component {
   id: string,
@@ -179,13 +180,17 @@ export class TableProp implements ComponentProps {
         {
           title: '姓名',
           key: 'name',
-          type: 'input'
+          type: 'input',
+          hidden : false,
+          search : true
         }, {
           title: '性别',
           key: 'sex',
-          type: 'input'
+          type: 'input',
+          hidden : false,
+          search : true
         }
-      ]
+      ] as Column[]
     }
   } as Indexable
 

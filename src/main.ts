@@ -13,11 +13,12 @@ import Dialog from '@/components/dialog/Dialog.vue'
 import Root from '@/components/root/Root.vue'
 import Table from '@/components/table/Table.vue'
 import TableConfig from '@/components/table/TableConfig.vue'
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
 
 
 export const app = createApp(App)
 app.use(router)
-app.use(ElementPlus)
+app.use(ElementPlus,{locale:zhCn})
 app.use(GlobalCmComponent)
 app.mount('#app')
 

@@ -4,16 +4,15 @@ import {
   Table, TableProp
 } from '@/views/designer/interface/component'
 import { getProp, usePropsWatcher } from '@/views/designer/propsWatcher'
-import { Switch } from '@element-plus/icons-vue'
 import ArrayConfig from '@/views/designer/config/ArrayConfig.vue'
 import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
 
-import { ValueType } from '@/views/lowCode/service'
 import Item from '@/views/designer/config/panel/Item.vue'
 import ItemContainer from '@/views/designer/config/panel/ItemContainer.vue'
 import ItemHeader from '@/views/designer/config/panel/ItemHeader.vue'
 import PropValueSetter from '@/views/designer/config/panel/PropValueSetter.vue'
 import PanelContainer from '@/views/designer/config/panel/PanelContainer.vue'
+import { columnTypes } from '@/components/table/ColumnType'
 
 const props = defineProps<{
   component: Ref<Table>
@@ -29,6 +28,8 @@ const columns = computed(() => {
   return getProp(config.value.columns)
 })
 
+
+
 </script>
 
 <template>
@@ -41,37 +42,55 @@ const columns = computed(() => {
       <ArrayConfig :columns="columns">
         <template #header>
           <ItemLabel>标题</ItemLabel>
-          <ItemLabel>类型</ItemLabel>
+          <ItemLabel>key</ItemLabel>
         </template>
         <template #columns="{index}">
           <el-input v-model="columns[index].title"></el-input>
-          <el-input v-model="columns[index].type"></el-input>
+          <el-input v-model="columns[index].key"></el-input>
         </template>
         <template #detail="{index}">
           <ItemContainer>
             <Item>
-              <ItemLabel :width="70">标题</ItemLabel>
+              <ItemLabel fixed>标题</ItemLabel>
               <div class="flex-grow">
                 <el-input v-model="columns[index].title"></el-input>
               </div>
             </Item>
             <Item>
-              <ItemLabel :width="70">类型</ItemLabel>
+              <ItemLabel fixed>字段key</ItemLabel>
               <div class="flex-grow">
-                <el-select v-model="columns[index].type" class="w-full"></el-select>
+                <el-input v-model="columns[index].key"></el-input>
               </div>
             </Item>
             <Item>
-              <ItemLabel :width="70">字段key</ItemLabel>
+              <ItemLabel fixed>类型</ItemLabel>
               <div class="flex-grow">
-                <el-input v-model="columns[index].key"></el-input>
+                <el-select v-model="columns[index].type" default-first-option class="w-full">
+                  <el-option
+                      v-for="item in columnTypes"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                  />
+                </el-select>
+              </div>
+            </Item>
+            <Item>
+              <ItemLabel fixed>隐藏</ItemLabel>
+              <div class="flex-grow">
+                <el-switch v-model="columns[index].hidden"></el-switch>
+              </div>
+            </Item>
+            <Item>
+              <ItemLabel fixed>启用搜索</ItemLabel>
+              <div class="flex-grow">
+                <el-switch v-model="columns[index].search"></el-switch>
               </div>
             </Item>
           </ItemContainer>
         </template>
       </ArrayConfig>
     </div>
-
     <div>
       <ItemHeader>
         <ItemLabel>行数据配置</ItemLabel>
@@ -87,7 +106,7 @@ const columns = computed(() => {
         <template #detail="{index}">
           <ItemContainer>
             <Item v-for="(column,idx) in columns" :key="idx">
-              <ItemLabel :width="70">{{ column.title }}({{ column.key }})</ItemLabel>
+              <ItemLabel fixed>{{ column.title }}({{ column.key }})</ItemLabel>
               <div class="flex-grow">
                 <el-input v-model="rowData[index][column.key]"></el-input>
               </div>

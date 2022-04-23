@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const props = defineProps<{
-  width?:number
+  fixed?:boolean
 }>()
 
 </script>
 
 <template>
-  <span class="text-sm text-left" :class="[props.width? `w-${props.width}px` :'flex-grow' ]"><slot></slot></span>
+  <span class="text-sm text-left break-words" :class="[props.fixed? `w-70px` :'flex-grow' ]"><slot></slot></span>
 </template>
 
 <style scoped>

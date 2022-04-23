@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
-import { Delete, EditPen, FolderAdd, Operation, Plus } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, EditPen, FolderAdd, Operation, Plus } from '@element-plus/icons-vue'
 import Item from '@/views/designer/config/panel/Item.vue'
 
 const props = defineProps<{
@@ -9,6 +9,10 @@ const props = defineProps<{
 
 const onRowDelete = (rows: [], idx: number) => {
   rows.splice(idx, 1)
+}
+
+const onRowCopy = (rows: any[], idx: number) => {
+  rows.push(JSON.parse(JSON.stringify(rows[idx])))
 }
 
 const onAddItem = () => {
@@ -51,7 +55,12 @@ const onAddItem = () => {
               </div>
             </el-popover>
             <slot name="columns" v-bind:element="element" v-bind:index="index"></slot>
-            <el-button type="text" @click="onRowDelete(columns,index)">
+            <el-button type="text" @click="onRowCopy(columns,index)">
+              <el-icon :size="16">
+                <CopyDocument/>
+              </el-icon>
+            </el-button>
+            <el-button type="text" class="!ml-0" @click="onRowDelete(columns,index)">
               <el-icon :size="16">
                 <Delete/>
               </el-icon>
