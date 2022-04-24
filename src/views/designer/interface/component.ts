@@ -193,8 +193,8 @@ export class Button {
 export class OperationButton extends Button {
   constructor (label: string, confirm: boolean, type: string = 'text') {
     super(label, confirm, type)
-    this.onclick = eval('`' + (() => {
-      console.log('点击了')
+    this.onclick = eval('`' + ((row: any, idx: any) => {
+      console.log('点击了', row, idx)
     }).toString() + '`')
   }
 
