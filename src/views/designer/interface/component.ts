@@ -172,6 +172,43 @@ export class Table extends BaseComponent<TableProp> {
   }
 }
 
+export class Button {
+  label = '按鈕'
+  confirm = false
+  type = 'primary'
+  onclick = eval('`' + (() => {
+    console.log('点击了')
+  }).toString() + '`')
+
+  constructor (label: string, confirm: boolean, type?: string) {
+    this.label = label
+    this.confirm = confirm
+    if (type) {
+      this.type = type
+    }
+  }
+
+}
+
+export class OperationButton extends Button {
+  constructor (label: string, confirm: boolean, type: string = 'text') {
+    super(label, confirm, type)
+    this.onclick = eval('`' + (() => {
+      console.log('点击了')
+    }).toString() + '`')
+  }
+
+}
+
+export class ToolbarButton extends Button {
+  constructor (label: string, confirm: boolean, type: string = 'primary') {
+    super(label, confirm, type)
+    this.onclick = eval('`' + (() => {
+      console.log('点击了')
+    }).toString() + '`')
+  }
+}
+
 export class TableProp implements ComponentProps {
   columns = {
     idx: 'array' as ValueType,
@@ -212,38 +249,14 @@ export class TableProp implements ComponentProps {
   operations = {
     idx: 'array' as ValueType,
     options: {
-      'array': [{
-        label: '编辑',
-        confirm: false,
-        onclick: eval('`' + ((row: any) => {
-          console.log('点击了', row)
-        }).toString() + '`')
-      }, {
-        label: '删除',
-        confirm: true,
-        onclick: eval('`' + ((row: any) => {
-          console.log('点击了', row)
-        }).toString() + '`')
-      }]
+      'array': [new OperationButton('编辑', false), new OperationButton('刪除', true)]
     }
   } as Indexable
 
   toolbars = {
     idx: 'array' as ValueType,
     options: {
-      'array': [{
-        label: '新建',
-        confirm: false,
-        onclick: eval('`' + ((row: any) => {
-          console.log('点击了', row)
-        }).toString() + '`')
-      }, {
-        label: '批量删除',
-        confirm: false,
-        onclick: eval('`' + ((row: any) => {
-          console.log('点击了', row)
-        }).toString() + '`')
-      }]
+      'array': [new ToolbarButton('新建', false), new ToolbarButton('批量刪除', true, 'danger')]
     }
   } as Indexable
 

@@ -127,7 +127,7 @@ const operations = computed(() => {
       <ArrayConfig :columns="operations">
         <template #header>
           <ItemLabel>名称</ItemLabel>
-          <ItemLabel>二次确认</ItemLabel>
+          <ItemLabel>二次确认框</ItemLabel>
         </template>
         <template #columns="{index}">
           <el-input v-model="operations[index].label"></el-input>
@@ -142,18 +142,15 @@ const operations = computed(() => {
               </div>
             </Item>
             <Item>
-              <ItemLabel fixed>二次确认</ItemLabel>
+              <ItemLabel fixed>二次确认框</ItemLabel>
               <div class="flex-grow">
                 <el-switch v-model="operations[index].confirm"></el-switch>
               </div>
             </Item>
-            {{ operations[index].onclick }}
             <Item>
               <ItemLabel fixed>点击事件</ItemLabel>
               <div class="flex-grow">
-                <el-input :rows="2"
-                          type="textarea"
-                          v-model="operations[index].onclick"></el-input>
+                <el-input :rows="2" type="textarea" v-model="operations[index].onclick"></el-input>
               </div>
             </Item>
           </ItemContainer>

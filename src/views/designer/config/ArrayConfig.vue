@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import draggable from 'vuedraggable'
-import { CopyDocument, Delete, EditPen, FolderAdd, Operation, Plus } from '@element-plus/icons-vue'
+import { CopyDocument, Delete, EditPen, Operation, Plus } from '@element-plus/icons-vue'
 import Item from '@/views/designer/config/panel/Item.vue'
 
 const props = defineProps<{
@@ -27,6 +27,7 @@ const onAddItem = () => {
       <div class="flex gap-x-1 items-center">
         <div class="w-16px"></div>
         <slot name="header"></slot>
+        <div class="w-16px"></div>
         <div class="w-16px"></div>
         <div class="w-16px"></div>
       </div>

@@ -5,6 +5,7 @@ import { getProp } from '@/views/designer/propsWatcher'
 import { Column } from '@/components/table/ColumnType'
 import Item from '@/views/designer/config/panel/Item.vue'
 import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
+import Button from '@/components/button/Button.vue'
 
 const props = defineProps<{
   component: Table,
@@ -17,6 +18,10 @@ const rowData = computed(() => {
 
 const columns = computed((): Column[] => {
   return getProp(props.component.props.columns)
+})
+
+const toolbars = computed((): any[] => {
+  return getProp(props.component.props.toolbars)
 })
 
 const operations = computed((): any[] => {
@@ -77,39 +82,32 @@ const gridStyle = computed(() => {
       </div>
     </div>
     <div class="flex my-20px">
-      <el-button type="primary">新建</el-button>
-      <el-button type="danger">批量删除</el-button>
+      <Button :component="toolbar" :state="state"
+              v-for="(toolbar,idx) in toolbars"
+              :key="idx">
+      </Button>
     </div>
+
     <el-table :data="rowData" style="width: 100%">
       <el-table-column
           v-for="(column,idx) in columns.filter(c=>!c.hidden)" :key="idx"
           :label="column.title"
           :prop="column.key"/>
-      <el-table-column fixed="right" label="操作" width="120">
-        <template #default="scope">
+
+      <el-table-column label="操作" width="120">
+        <template #default="{row}">
           <div class="flex gap-x-2">
             <div v-for="(operation,idx) in operations" :key="idx">
-              <el-button type="text" @click="onClickRow(scope.row,idx)" v-if="!operation.confirm">
-                {{ operation.label }}
-              </el-button>
-              <el-popconfirm
-                  :title="`确认${operation.label}?`" @confirm="onClickRow(scope.row,idx)">
-                <template #reference>
-                  <el-button type="text" v-if="operation.confirm">
-                    {{ operation.label }}
-                  </el-button>
-                </template>
-              </el-popconfirm>
+              <Button :component="operation" :state="state" :payload="[row,idx]"></Button>
             </div>
           </div>
         </template>
-
       </el-table-column>
     </el-table>
+
     <el-pagination :total="1000" background
                    class="mt-20px"
-                   layout="total,sizes, prev, pager, next"
-    ></el-pagination>
+                   layout="total,sizes, prev, pager, next"/>
   </div>
 
 </template>
