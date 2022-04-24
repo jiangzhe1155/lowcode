@@ -228,4 +228,23 @@ export class TableProp implements ComponentProps {
     }
   } as Indexable
 
+  toolbars = {
+    idx: 'array' as ValueType,
+    options: {
+      'array': [{
+        label: '新建',
+        confirm: false,
+        onclick: eval('`' + ((row: any) => {
+          console.log('点击了', row)
+        }).toString() + '`')
+      }, {
+        label: '批量删除',
+        confirm: false,
+        onclick: eval('`' + ((row: any) => {
+          console.log('点击了', row)
+        }).toString() + '`')
+      }]
+    }
+  } as Indexable
+
 }

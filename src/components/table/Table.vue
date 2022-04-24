@@ -76,7 +76,7 @@ const gridStyle = computed(() => {
         </div>
       </div>
     </div>
-    <div class="flex gap-x-2 my-20px">
+    <div class="flex my-20px">
       <el-button type="primary">新建</el-button>
       <el-button type="danger">批量删除</el-button>
     </div>
@@ -92,7 +92,6 @@ const gridStyle = computed(() => {
               <el-button type="text" @click="onClickRow(scope.row,idx)" v-if="!operation.confirm">
                 {{ operation.label }}
               </el-button>
-
               <el-popconfirm
                   :title="`确认${operation.label}?`" @confirm="onClickRow(scope.row,idx)">
                 <template #reference>

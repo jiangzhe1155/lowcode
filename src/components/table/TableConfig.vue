@@ -147,7 +147,7 @@ const operations = computed(() => {
                 <el-switch v-model="operations[index].confirm"></el-switch>
               </div>
             </Item>
-            {{operations[index].onclick}}
+            {{ operations[index].onclick }}
             <Item>
               <ItemLabel fixed>点击事件</ItemLabel>
               <div class="flex-grow">
