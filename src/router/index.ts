@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import Designer from '../views/designer/Designer.vue'
 import Preview from '../views/designer/Preview.vue'
 
-import Overview from '../views/designer/Overview.vue'
+import Viewport from '../views/designer/layout/canvas/viewport/Viewport.vue'
 
 const routes = [
   {
@@ -14,9 +14,9 @@ const routes = [
     name: 'Designer',
     component: Designer
   },{
-    path: '/lowCode/overview',
-    name: 'Overview',
-    component: Overview
+    path: '/designer/viewport',
+    name: 'Viewport',
+    component: Viewport
   },{
     path: '/preview',
     name: 'Preview',

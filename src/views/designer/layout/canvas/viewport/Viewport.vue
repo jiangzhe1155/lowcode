@@ -53,5 +53,7 @@ addMessageListener('render', (payload: any) => {
   <componentModel/>
 </template>
 
-<style scoped>
+<style >
+
+
 </style>

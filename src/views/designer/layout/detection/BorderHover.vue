@@ -17,12 +17,11 @@ const hoverStyle = computed(() => {
 <template>
   <div
       v-if="locationState.currentHoverComponent && locationState.currentHoverComponent.id !== locationState.currentClickComponent?.id"
-      class="absolute"
-      :style="hoverStyle"
-      :class="[{'border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25':true},'pointer-events-none']">
+      class="absolute border-dashed border-1 border-light-blue-500 bg-light-blue-100 bg-opacity-25"
+      :style="hoverStyle">
     <div>
       <p class="absolute -top-20px text-blue-300 text-sm">
-        {{componentMap.get(locationState.value?.currentHoverComponent.id)}}
+        {{componentMap.get(locationState.currentHoverComponent.id).name}}
       </p>
     </div>
   </div>

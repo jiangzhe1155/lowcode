@@ -10,7 +10,7 @@ import {
 } from '@/views/designer/common'
 import HoverItem from '@/views/lowCode/aside/HoverItem.vue'
 import { CopyDocument, Delete, Lock, Hide } from '@element-plus/icons-vue'
-import { Component } from '../interface/component'
+import { Component } from '../../interface/component'
 
 const clickStyle = computed(() => {
   let location = locationState.currentClickComponent?.location
@@ -68,7 +68,7 @@ const onDelete = () => {
 <template>
   <div
       v-if="locationState.currentClickComponent && !isDragging"
-      class="z-400 pointer-events-none bg-transparent border-solid border-2 border-blue-500 absolute "
+      class="bg-transparent border-solid border-2 border-blue-500 absolute "
       :style="clickStyle"
   >
     <div

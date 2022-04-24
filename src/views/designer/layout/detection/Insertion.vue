@@ -30,7 +30,7 @@ const dragInsertionStyle = computed(() => {
 <template>
   <div
       v-if="isDragging && isShowInsertion"
-      class="absolute cursor-move select-none z-1000"
+      class="absolute"
       :class="{'bg-blue-500':locationState.direction !== 'center',
            'bg-blue-600 bg-opacity-50':locationState.direction === 'center',
         }"

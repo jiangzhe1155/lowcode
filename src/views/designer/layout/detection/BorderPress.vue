@@ -19,7 +19,7 @@ const pressStyleCompute = computed(() => {
 <template>
   <div
       v-if="isDragging"
-      class="absolute bg-gray-400 bg-opacity-50 select-none z-4000 pointer-events-none select-auto cursor-move"
+      class="absolute bg-gray-400 bg-opacity-50 select-none"
       :style="pressStyleCompute"
   >
   </div>

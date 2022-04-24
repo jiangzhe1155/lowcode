@@ -1,77 +1,57 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, ref, watchEffect } from 'vue'
 import { onClickOutside, useWindowSize } from '@vueuse/core'
 import { isAffixPanel, isPanelOpen } from '@/views/designer/common'
 import { designerConfig } from '@/stores/constant'
 
 const { height } = useWindowSize()
-
-const props = defineProps({
-  isAffix: {
-    type: Boolean,
-    required: false,
-    default: false
-  },
-  isVisible: {
-    type: Boolean,
-    required: true,
-    default: true
-  },
-  width: {
-    type: Number,
-    required: false,
-    default: 300
-  },
-  title: {
-    type: String,
-    required: true
+const props = defineProps<{
+  panel: {
+    visible: boolean,
+    affix: boolean,
+    width: number,
+    title: string
   }
-})
+}>()
 
-const isAffix = ref(props.isAffix)
-const emit = defineEmits(['onPanelClose'])
 const getHeight = computed(() => {
   return (height.value - designerConfig.headerHeight) + 'px'
 })
 
 const onPanelClose = () => {
-  emit('onPanelClose')
+  props.panel.visible = false
 }
 
 const onAffix = () => {
-  isAffix.value = !isAffix.value
-  isAffixPanel.value = isAffix.value
+  props.panel.affix = !props.panel.affix
+  isAffixPanel.value = props.panel.affix
 }
 
 const target = ref(null)
 onClickOutside(target, () => {
-  if (props.isVisible && !isAffix.value) {
+  if (props.panel.visible && !props.panel.affix) {
     onPanelClose()
   }
 })
 
-defineExpose({
-  isAffix
-})
-
 watchEffect(() => {
-  isPanelOpen.value = props.isVisible
+  isPanelOpen.value = props.panel.visible
 })
 
 </script>
 
 <template>
   <div
+      v-if="panel.visible"
       ref="target"
-      class="h-full z-900 bg-white border-1"
-      :class="[isAffix ? 'relative' : 'absolute']"
-      v-if="isVisible"
-      :style="{left:(isAffix?0:designerConfig.asideWidth)+'px',height:getHeight,top:designerConfig.headerHeight,width:width+'px'}">
+      :class="[panel.affix ? 'relative' : 'absolute']"
+      :style="{left:(panel.affix?0:designerConfig.asideWidth)+'px',height:getHeight,top:designerConfig.headerHeight,width:panel.width+'px'}"
+      class="h-full z-900 bg-white border-1">
     <div class="flex justify-between p-20px">
-      <p class="text-xl ">{{ title }}</p>
+      <p class="text-xl ">{{ panel.title }}</p>
       <el-button-group>
         <el-button type="text" @click="onAffix">
-          <i v-if="isAffix" class="text-2xl iconfont el-icon-alibuguding"></i>
+          <i v-if="panel.affix" class="text-2xl iconfont el-icon-alibuguding"></i>
           <i v-else class="text-2xl iconfont el-icon-aliguding-copy"></i>
         </el-button>
         <el-button type="text" @click="onPanelClose">

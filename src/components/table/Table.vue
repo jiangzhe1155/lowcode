@@ -35,18 +35,6 @@ const searchColumn = computed(() => {
 
 const filterRowCount = ref(6)
 
-const onEdit = (row) => {
-  console.log(row)
-}
-
-const onDelete = (row) => {
-  console.log(row)
-}
-
-const onClickRow = (row, idx) => {
-  eval(operations.value[idx].onclick)(row)
-}
-
 const gridStyle = computed(() => {
   if (filterRowCount.value == 3) {
     return 'grid-cols-3'

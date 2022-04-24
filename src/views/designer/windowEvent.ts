@@ -1,7 +1,7 @@
 import {
   add,
   asideComponentGroup,
-  asideComponentType,
+  asideComponentType, emitter,
   fetchLocation,
   iframeDoc, isAffixPanel,
   isDragging, isPanelOpen,
@@ -59,6 +59,8 @@ export const onDocumentMouseDragEnd = (e: MouseEvent) => {
   document.removeEventListener('mousemove', onDocumentMouseDrag, true)
   document.removeEventListener('mouseup', onDocumentMouseDragEnd, true)
   iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
+  emitter.emit('onComponentPanelOpen')
+
 }
 
 
