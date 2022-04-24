@@ -556,6 +556,8 @@ export const onComponentDragEnd = () => {
   asideComponentGroup.value = undefined
   asideComponentType.value = undefined
   locationState.currentPressComponent = undefined
+  emitter.emit('onComponentPanelOpen')
+
 }
 
 export const resetLocationState = () => {

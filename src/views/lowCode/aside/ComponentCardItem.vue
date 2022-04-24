@@ -1,10 +1,11 @@
-<script setup lang="ts">
-import { ref, watch } from 'vue'
-import { onLongPress, useMousePressed } from '@vueuse/core'
-import { emitter } from '@/views/designer/common'
+<script lang="ts" setup>
+import { onMounted, ref, watch } from 'vue'
+import { onLongPress, useEventListener, useMousePressed } from '@vueuse/core'
+import { emitter, isDragging, onComponentDragEnd } from '@/views/designer/common'
 import { ComponentGroup, ComponentType } from '@/views/lowCode/service'
 import { asideComponentType, asideComponentGroup, x, y, iframeDoc, startDrag } from '@/views/designer/common'
 import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/windowEvent'
+import { onIframeMouseDown, timeout } from '@/views/designer/iframeEvent'
 
 const props = defineProps<{
   type: ComponentType,
@@ -15,34 +16,42 @@ const props = defineProps<{
 
 const el = ref<HTMLElement | null>()
 
-onLongPress(el, () => {
-  asideComponentType.value = props.type
-  asideComponentGroup.value = props.group
-  startDrag.value = true
-  emitter.emit('onComponentPanelClose')
-  document.addEventListener('mousemove', onDocumentMouseDrag, true)
-  document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
-}, { delay: 200 })
-
 const { pressed } = useMousePressed({ target: el })
-watch(pressed, (n) => {
-  if (n) {
 
-  } else {
-    console.log('按压结束')
-    asideComponentType.value = undefined
-    asideComponentGroup.value = undefined
-    startDrag.value = false
-    emitter.emit('onComponentPanelOpen')
-  }
-})
+const timer = ref()
+useEventListener(el, 'mousedown', (e) => {
+  console.log('鼠标按下了')
+  timer.value = setTimeout(() => {
+    // if (!timeout.value) {
+    //   return
+    // }
+    console.log('开始监听鼠标事件')
+    asideComponentType.value = props.type
+    asideComponentGroup.value = props.group
+    startDrag.value = true
+    document.addEventListener('mousemove', onDocumentMouseDrag, true)
+    document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
+    emitter.emit('onComponentPanelClose')
+  }, 200,) as unknown as number
+
+  // e.preventDefault()
+  // e.stopPropagation()
+}, true)
+
+useEventListener(el, 'mouseup', (e) => {
+  console.log('鼠标抬起了了')
+  clearTimeout(timer.value)
+  timer.value = null
+  onComponentDragEnd()
+  // emitter.emit('onComponentPanelOpen')
+}, true)
+
 
 </script>
 
 <template>
-  <el-card ref="el" shadow="hover" class="h-full">
-    <el-image class="w-56px h-56px"
-              :src="imgUrl">
+  <el-card ref="el" class="h-full select-none cursor-pointer" shadow="hover">
+    <el-image :src="imgUrl" class="w-56px h-56px">
     </el-image>
     <p>{{ name }}</p>
   </el-card>

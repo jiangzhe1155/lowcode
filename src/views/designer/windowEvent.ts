@@ -18,26 +18,30 @@ export const onDocumentMouseDrag = (e: MouseEvent) => {
   if (startDrag.value && !isDragging.value) {
     isDragging.value = true
   }
-  x.value = e.clientX
-  y.value = e.clientY
 
-  let {
-    asideWidth,
-    headerHeight,
-    canvasPadding,
-    dragPanelWidth
-  } = designerConfig
+  if (isDragging){
+    x.value = e.clientX
+    y.value = e.clientY
 
-  const event = new MouseEvent('iframeMouseMove', {
-    clientX: e.clientX - asideWidth - canvasPadding - (isAffixPanel.value && isPanelOpen.value ? dragPanelWidth : 0),
-    clientY: e.clientY - headerHeight - canvasPadding
-  })
-  iframeDoc().dispatchEvent(event)
+    let {
+      asideWidth,
+      headerHeight,
+      canvasPadding,
+      dragPanelWidth
+    } = designerConfig
+
+    const event = new MouseEvent('iframeMouseMove', {
+      clientX: e.clientX - asideWidth - canvasPadding - (isAffixPanel.value && isPanelOpen.value ? dragPanelWidth : 0),
+      clientY: e.clientY - headerHeight - canvasPadding
+    })
+    iframeDoc().dispatchEvent(event)
+  }
+
   e.preventDefault()
   e.stopPropagation()
 }
 
-export const onDocumentMouseDragEnd = (e: MouseEvent) => {
+export const onDocumentMouseDragEnd = () => {
   console.log('主窗口抬起')
   if (isShowInsertion.value && locationState.currentInsertionComponent && locationState.direction) {
     let clickId: string
@@ -50,12 +54,12 @@ export const onDocumentMouseDragEnd = (e: MouseEvent) => {
       locationState.currentClickComponent = fetchLocation(clickId)
     }, 200)
   }
-  onComponentDragEnd()
-  resetLocationState()
+
   clearTimeout(timeout.value)
   timeout.value = null
-  e.preventDefault()
-  e.stopPropagation()
+  onComponentDragEnd()
+  resetLocationState()
+
   document.removeEventListener('mousemove', onDocumentMouseDrag, true)
   document.removeEventListener('mouseup', onDocumentMouseDragEnd, true)
   iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)

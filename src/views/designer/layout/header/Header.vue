@@ -28,10 +28,18 @@ const onPreview = () => {
   window.open(routeData.href, '_blank');
 }
 
+import {
+  isDragging, isPanelOpen,
+} from '@/views/designer/common'
+
 
 </script>
 <template>
-    <el-button @click="back">撤销</el-button>
+
+
+  {{isDragging}}
+
+  <el-button @click="back">撤销</el-button>
     <el-button @click="exportJson">导出json</el-button>
     <el-button @click="onSave">保存到本地</el-button>
     <el-button @click="onPreview">预览</el-button>

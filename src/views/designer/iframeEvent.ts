@@ -55,8 +55,6 @@ export const onIframeMouseDown = (e: MouseEvent) => {
   startDrag.value = true
   locationState.currentPressComponent = currentComponent(<Node>e.target)
   iframeDoc().addEventListener('mousemove', onIframeMouseDrag, true)
-  e.stopPropagation()
-  e.preventDefault()
 }
 
 export const onIframeMouseClick = (e: MouseEvent) => {
