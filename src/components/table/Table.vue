@@ -86,21 +86,24 @@ const gridStyle = computed(() => {
           :label="column.title"
           :prop="column.key"/>
       <el-table-column fixed="right" label="操作" width="120">
-        <div class="flex gap-x-2">
-          <div v-for="(operation,idx) in operations" :key="idx">
-            <el-button type="text" @click="onClickRow(scope.row,idx)" v-if="!operation.confirm">
-              {{ operation.label }}
-            </el-button>
-            <el-popconfirm
-                :title="'确认'+operation.label">
-              <template #reference>
-                <el-button type="text" @click="onClickRow(scope.row,idx)" v-if="operation.confirm">
-                  {{ operation.label }}
-                </el-button>
-              </template>
-            </el-popconfirm>
+        <template #default="scope">
+          <div class="flex gap-x-2">
+            <div v-for="(operation,idx) in operations" :key="idx">
+              <el-button type="text" @click="onClickRow(scope.row,idx)" v-if="!operation.confirm">
+                {{ operation.label }}
+              </el-button>
+
+              <el-popconfirm
+                  :title="`确认${operation.label}?`" @confirm="onClickRow(scope.row,idx)">
+                <template #reference>
+                  <el-button type="text" v-if="operation.confirm">
+                    {{ operation.label }}
+                  </el-button>
+                </template>
+              </el-popconfirm>
+            </div>
           </div>
-        </div>
+        </template>
 
       </el-table-column>
     </el-table>
