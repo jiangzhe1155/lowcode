@@ -19,6 +19,10 @@ const columns = computed((): Column[] => {
   return getProp(props.component.props.columns)
 })
 
+const operations = computed((): any[] => {
+  return getProp(props.component.props.operations)
+})
+
 const searchFilter = ref({})
 const searchColumn = computed(() => {
   return columns.value.filter(c => c.search)
@@ -33,12 +37,32 @@ const onEdit = (row) => {
 const onDelete = (row) => {
   console.log(row)
 }
+
+const onClickRow = (row, idx) => {
+  eval(operations.value[idx].onclick)(row)
+}
+
+const gridStyle = computed(() => {
+  if (filterRowCount.value == 3) {
+    return 'grid-cols-3'
+  }
+  if (filterRowCount.value == 4) {
+    return 'grid-cols-4'
+  }
+  if (filterRowCount.value == 5) {
+    return 'grid-cols-5'
+  }
+  if (filterRowCount.value == 6) {
+    return 'grid-cols-6'
+  }
+})
+
 </script>
 
 <template>
   <div>
-    <div class="">
-      <div :class="'grid-cols-'+filterRowCount" class="grid gap-y-4">
+    <div>
+      <div :class="gridStyle" class="grid gap-y-4">
         <div v-for="(column,idx) in ((parseInt(searchColumn.length / filterRowCount) + 1) * filterRowCount - 1)"
              :key="idx">
           <Item v-if="idx < searchColumn.length">
@@ -62,10 +86,22 @@ const onDelete = (row) => {
           :label="column.title"
           :prop="column.key"/>
       <el-table-column fixed="right" label="操作" width="120">
-        <template #default="scope">
-          <el-button  type="text" @click="onEdit(scope.row)">编辑</el-button>
-          <el-button  type="text" @click="onDelete(scope.row)">删除</el-button>
-        </template>
+        <div class="flex gap-x-2">
+          <div v-for="(operation,idx) in operations" :key="idx">
+            <el-button type="text" @click="onClickRow(scope.row,idx)" v-if="!operation.confirm">
+              {{ operation.label }}
+            </el-button>
+            <el-popconfirm
+                :title="'确认'+operation.label">
+              <template #reference>
+                <el-button type="text" @click="onClickRow(scope.row,idx)" v-if="operation.confirm">
+                  {{ operation.label }}
+                </el-button>
+              </template>
+            </el-popconfirm>
+          </div>
+        </div>
+
       </el-table-column>
     </el-table>
     <el-pagination :total="1000" background
