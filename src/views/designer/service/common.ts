@@ -2,8 +2,8 @@ import { computed, reactive, ref } from 'vue'
 import { v4 } from 'uuid'
 import { useDebouncedRefHistory } from '@vueuse/core'
 import mitt from 'mitt'
-import { Card, Page, Root, Dialog, Direction, Component, Table } from '@/views/designer/interface/component'
-import { ComponentGroup, ComponentType, LocationState, Location } from '@/views/lowCode/service'
+import { Card, Page, Root, Dialog, Direction, Component, Table } from '@/views/designer/service/component'
+import { ComponentGroup, ComponentType, LocationState, Location } from '@/views/designer/service/service'
 
 export const iframeRef = ref<any>()
 export const iframeWin = () => {

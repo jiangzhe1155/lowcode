@@ -1,5 +1,5 @@
 import { v4 } from 'uuid'
-import { ComponentType, ValueType } from '../../lowCode/service'
+import { ComponentType, ValueType } from './service'
 import { Column } from '@/components/table/ColumnType'
 
 export interface Component {

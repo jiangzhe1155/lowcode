@@ -12,8 +12,8 @@ import {
   locationState,
   renderPage,
   updateLocationState
-} from '@/views/designer/common'
-import { sendIframeMessage } from '@/views/lowCode/iframeUtil'
+} from '@/views/designer/service/common'
+import { sendIframeMessage } from '@/views/designer/service/iframeUtil'
 import {
   onIframeMouseClick,
   onIframeMouseDown, onIframeMouseIn,
@@ -21,7 +21,7 @@ import {
   onIframeMouseOver,
   onIframeMouseUp, onIframeResize, onIframeScroll,
   timeout
-} from '@/views/designer/iframeEvent'
+} from '@/views/designer/service/iframeEvent'
 import { useMagicKeys } from '@vueuse/core'
 
 const el = ref<HTMLElement>()

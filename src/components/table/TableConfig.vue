@@ -2,8 +2,8 @@
 import { computed, Ref } from 'vue'
 import {
   Table, TableProp
-} from '@/views/designer/interface/component'
-import { getProp, usePropsWatcher } from '@/views/designer/propsWatcher'
+} from '@/views/designer/service/component'
+import { getProp, usePropsWatcher } from '@/views/designer/service/propsWatcher'
 import ArrayConfig from '@/views/designer/config/ArrayConfig.vue'
 import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
 

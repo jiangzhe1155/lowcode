@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
-import { locationState, isDragging, isShowInsertion } from '@/views/designer/common'
+import { locationState, isDragging, isShowInsertion } from '@/views/designer/service/common'
 
 const dragInsertionStyle = computed(() => {
   let {

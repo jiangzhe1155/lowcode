@@ -1,9 +1,9 @@
 <script setup lang="ts">
 
 import { h, ref, resolveComponent, VNode } from 'vue'
-import { addMessageListener } from '@/views/lowCode/iframeUtil'
-import { RenderPage } from '@/views/designer/common'
-import { Component } from '@/views/designer/interface/component'
+import { addMessageListener } from '@/views/designer/service/iframeUtil'
+import { RenderPage } from '@/views/designer/service/common'
+import { Component } from '@/views/designer/service/component'
 
 const renderPage = ref<RenderPage>()
 const state = ref()

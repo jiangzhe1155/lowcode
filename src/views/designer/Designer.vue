@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Aside from '@/views/designer/layout/aside/Aside.vue'
-import PropsPanel from '@/views/lowCode/aside/PropsPanel.vue'
+import PropsPanel from '@/views/designer/layout/operationArea/PropsPanel.vue'
 
 import { designerConfig } from '@/stores/constant'
 import DragComponentDetecting from '@/views/designer/layout/detection/DragComponentDetecting.vue'

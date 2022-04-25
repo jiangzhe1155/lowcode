@@ -2,7 +2,7 @@
 
 import router from '@/router'
 import { renderPageStore,designerConfig } from '@/stores/constant'
-import { renderPage,back } from '@/views/designer/common'
+import { renderPage,back } from '@/views/designer/service/common'
 import { useClipboard } from '@vueuse/core'
 
 const {
@@ -30,7 +30,7 @@ const onPreview = () => {
 
 import {
   isDragging, isPanelOpen,
-} from '@/views/designer/common'
+} from '@/views/designer/service/common'
 
 
 </script>

@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
-import { onLongPress, useEventListener, useMousePressed } from '@vueuse/core'
-import { emitter, isDragging, onComponentDragEnd } from '@/views/designer/common'
-import { ComponentGroup, ComponentType } from '@/views/lowCode/service'
-import { asideComponentType, asideComponentGroup, x, y, iframeDoc, startDrag } from '@/views/designer/common'
-import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/windowEvent'
-import { onIframeMouseDown, timeout } from '@/views/designer/iframeEvent'
+import { onMounted, ref } from 'vue'
+import { useEventListener } from '@vueuse/core'
+import { emitter, onComponentDragEnd } from '@/views/designer/service/common'
+import { ComponentGroup, ComponentType } from '@/views/designer/service/service'
+import { asideComponentType, asideComponentGroup, x, y, startDrag } from '@/views/designer/service/common'
+import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/service/windowEvent'
 
 const props = defineProps<{
   type: ComponentType,
@@ -15,9 +14,6 @@ const props = defineProps<{
 }>()
 
 const el = ref<HTMLElement | null>()
-
-const { pressed } = useMousePressed({ target: el })
-
 const timer = ref()
 useEventListener(el, 'mousedown', (e) => {
   console.log('鼠标按下了')
@@ -43,11 +39,12 @@ useEventListener(el, 'mouseup', (e) => {
 }, true)
 
 
+
 </script>
 
 <template>
-  <el-card ref="el" class="h-full select-none cursor-pointer" shadow="hover">
-    <el-image :src="imgUrl" class="w-56px h-56px">
+  <el-card ref="el" class="h-full select-none " shadow="hover">
+    <el-image :src="imgUrl" class="w-56px h-56px" @dragstart.prevent>
     </el-image>
     <p>{{ name }}</p>
   </el-card>

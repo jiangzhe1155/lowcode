@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watchEffect } from 'vue'
 import { onClickOutside, useWindowSize } from '@vueuse/core'
-import { isAffixPanel, isPanelOpen } from '@/views/designer/common'
+import { isAffixPanel, isPanelOpen } from '@/views/designer/service/common'
 import { designerConfig } from '@/stores/constant'
 
 const { height } = useWindowSize()

@@ -8,10 +8,10 @@ import {
   locationState,
   renderPage, resetLocationState,
   scrollToTarget, show, updateComponentName
-} from '@/views/designer/common'
+} from '@/views/designer/service/common'
 import { CopyDocument, Delete, Lock, Hide, View } from '@element-plus/icons-vue'
 import DialogComponent from '@/components/dialog/Dialog.vue'
-import { Component } from '@/views/designer/interface/component'
+import { Component } from '@/views/designer/service/component'
 
 const defaultProps = {
   children: 'children',

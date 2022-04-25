@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { h, ref, resolveComponent, VNode } from 'vue'
-import { Component } from '@/views/designer/interface/component'
+import { Component } from '@/views/designer/service/component'
 import { renderPageStore } from '@/stores/constant'
 
 const renderPage = renderPageStore

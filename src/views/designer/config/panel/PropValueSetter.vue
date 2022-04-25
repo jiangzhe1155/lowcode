@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Check, Switch } from '@element-plus/icons-vue'
-import { Indexable } from '@/views/designer/interface/component'
-import { ValueType } from '@/views/lowCode/service'
+import { Indexable } from '@/views/designer/service/component'
+import { ValueType } from '@/views/designer/service/service'
 const props = defineProps<{
   prop: Indexable,
 }>()

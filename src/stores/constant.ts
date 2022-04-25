@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 import { useStorage } from '@vueuse/core'
-import { RenderPage } from '@/views/designer/common'
+import { RenderPage } from '@/views/designer/service/common'
 
 export const designerConfig = reactive({
   headerHeight: 50, // 顶部区域的高度

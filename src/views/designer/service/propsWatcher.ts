@@ -1,4 +1,4 @@
-import { Component, ComponentProps, Indexable} from './interface/component'
+import { Component, ComponentProps, Indexable} from './component'
 import { ref, Ref, watch } from 'vue'
 
 export const usePropsWatcher = <T extends ComponentProps>(configFunc: () => T, componentProps: Ref<Component>) => {

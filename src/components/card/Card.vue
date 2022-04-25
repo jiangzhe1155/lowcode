@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
-import { Card } from '@/views/designer/interface/component'
-import { getProp } from '@/views/designer/propsWatcher'
+import { Card } from '@/views/designer/service/component'
+import { getProp } from '@/views/designer/service/propsWatcher'
 
 const props = defineProps<{
   component: Card,

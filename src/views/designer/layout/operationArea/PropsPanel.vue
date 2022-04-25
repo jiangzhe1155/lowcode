@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import { componentMap, locationState } from '@/views/designer/common'
+import { componentMap, locationState } from '@/views/designer/service/common'
 import { computed, h, resolveComponent } from 'vue'
 
 const targetComponent = computed(() => {

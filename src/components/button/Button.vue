@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Button } from '@/views/designer/interface/component'
+import { Button } from '@/views/designer/service/component'
 
 const props = defineProps<{
   component: Button,

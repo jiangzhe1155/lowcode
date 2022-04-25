@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import Codemirror from 'codemirror-editor-vue3'
 import 'codemirror/mode/javascript/javascript.js'
-import { renderPage } from '@/views/designer/common'
+import { renderPage } from '@/views/designer/service/common'
 
 const queryText = ref(renderPage.value.state)
 

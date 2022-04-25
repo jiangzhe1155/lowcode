@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { vElementHover } from '@vueuse/components'
-import { fetchLocation, locationState, x, y } from '@/views/designer/common'
+import { fetchLocation, locationState} from '@/views/designer/service/common'
 
 const props = defineProps({
   elementId: {

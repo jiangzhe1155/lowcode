@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { Table } from '@/views/designer/interface/component'
+import { Table } from '@/views/designer/service/component'
 import { computed, ref } from 'vue'
-import { getProp } from '@/views/designer/propsWatcher'
+import { getProp } from '@/views/designer/service/propsWatcher'
 import { Column } from '@/components/table/ColumnType'
 import Item from '@/views/designer/config/panel/Item.vue'
 import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'

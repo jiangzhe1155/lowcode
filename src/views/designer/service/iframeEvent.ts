@@ -6,8 +6,8 @@ import {
   startDrag, updateLocationState,
   x,
   y
-} from '@/views/designer/common'
-import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/windowEvent'
+} from '@/views/designer/service/common'
+import { onDocumentMouseDrag, onDocumentMouseDragEnd } from '@/views/designer/service/windowEvent'
 import { designerConfig } from '@/stores/constant'
 import { ref } from 'vue'
 
@@ -37,17 +37,16 @@ export const onIframeMouseUp = (e: Event) => {
   if (componentLocation) {
     locationState.currentClickComponent = componentLocation
   }
-
-  onComponentDragEnd()
   clearTimeout(timeout.value)
   timeout.value = null
+  onComponentDragEnd()
   iframeDoc().removeEventListener('mousemove', onIframeMouseDrag, true)
 }
 
 export let timeout = ref()
 
 export const onIframeMouseDown = (e: MouseEvent) => {
-  if (!timeout.value){
+  if (!timeout.value) {
     return
   }
   console.log('iframe 按下')

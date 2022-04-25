@@ -7,10 +7,10 @@ import {
   copy,
   fetchLocation,
   deleteComponent, isDragging, hide, resetLocationState
-} from '@/views/designer/common'
-import HoverItem from '@/views/lowCode/aside/HoverItem.vue'
+} from '@/views/designer/service/common'
+import ClickHover from '@/views/designer/layout/detection/ClickHover.vue'
 import { CopyDocument, Delete, Lock, Hide } from '@element-plus/icons-vue'
-import { Component } from '../../interface/component'
+import { Component } from '../../service/component'
 
 const clickStyle = computed(() => {
   let location = locationState.currentClickComponent?.location
@@ -82,7 +82,7 @@ const onDelete = () => {
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item v-for="c in parentComponent">
-              <HoverItem :element-id="c.id">{{ c.name }}</HoverItem>
+              <ClickHover :element-id="c.id">{{ c.name }}</ClickHover>
             </el-dropdown-item>
           </el-dropdown-menu>
         </template>

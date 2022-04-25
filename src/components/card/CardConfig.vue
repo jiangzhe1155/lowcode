@@ -2,8 +2,8 @@
 import { Ref } from 'vue'
 import {
   Card, CardProp
-} from '@/views/designer/interface/component'
-import { usePropsWatcher } from '@/views/designer/propsWatcher'
+} from '@/views/designer/service/component'
+import { usePropsWatcher } from '@/views/designer/service/propsWatcher'
 import SwitchConfig from '@/views/designer/config/SwitchConfig.vue'
 import StringConfig from '@/views/designer/config/StringConfig.vue'
 import VariableConfig from '@/views/designer/config/VariableConfig.vue'

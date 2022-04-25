@@ -10,8 +10,8 @@ import {
   startDrag,
   x,
   y
-} from '@/views/designer/common'
-import { onIframeMouseDrag, timeout } from '@/views/designer/iframeEvent'
+} from '@/views/designer/service/common'
+import { onIframeMouseDrag, timeout } from '@/views/designer/service/iframeEvent'
 import { designerConfig } from '@/stores/constant'
 
 export const onDocumentMouseDrag = (e: MouseEvent) => {

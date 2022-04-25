@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Indexable } from '@/views/designer/interface/component'
+import { Indexable } from '@/views/designer/service/component'
 const props = defineProps<{
   prop: Indexable,
 }>()

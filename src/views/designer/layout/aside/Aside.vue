@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { Operation, PieChart } from '@element-plus/icons-vue'
-import { h, markRaw, onMounted, reactive, ref, resolveComponent } from 'vue'
+import { markRaw, onMounted, reactive } from 'vue'
 import AsidePanel from '@/views/designer/layout/aside/panel/AsidePanel.vue'
-import ComponentRepositoryCard from '@/views/lowCode/aside/ComponentRepositoryCard.vue'
-import ComponentRepositoryCode from '@/views/lowCode/aside/ComponentRepositoryCode.vue'
+import ComponentRepository from '@/views/designer/layout/aside/panel/ComponentRepository/ComponentRepository.vue'
+import ComponentCode from '@/views/designer/layout/aside/panel/componentCode/ComponentCode.vue'
+import ComponentTree from '@/views/designer/layout/aside/panel/componentTree/ComponentTree.vue'
 import { designerConfig } from '@/stores/constant'
-import ComponentTree from '@/views/lowCode/aside/ComponentTree.vue'
-
-import { emitter } from '@/views/designer/common'
+import { emitter } from '@/views/designer/service/common'
 
 const panelProps = reactive([
   {
@@ -22,7 +21,7 @@ const panelProps = reactive([
     width: designerConfig.dragPanelWidth,
     visible: false,
     affix: false,
-    render: markRaw(ComponentRepositoryCard),
+    render: markRaw(ComponentRepository),
     icon: markRaw(PieChart)
 
   }, {
@@ -30,7 +29,7 @@ const panelProps = reactive([
     width: 500,
     visible: false,
     affix: false,
-    render: markRaw(ComponentRepositoryCode),
+    render: markRaw(ComponentCode),
     icon: markRaw(PieChart)
   }
 ])
@@ -70,7 +69,7 @@ const onPanelClick = (idx: number) => {
   </el-aside>
 
   <AsidePanel v-for="(panel,idx) in panelProps" :key="idx"
-                :panel="panel">
+              :panel="panel">
     <component :is="panel.render"></component>
   </AsidePanel>
 

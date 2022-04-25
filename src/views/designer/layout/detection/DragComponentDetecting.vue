@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed, onMounted, ref } from 'vue'
-import { isDragging, x, y, locationState, componentMap } from '@/views/designer/common'
+import { isDragging, x, y, locationState, componentMap } from '@/views/designer/service/common'
 
 const dragStyle = computed(() => {
   return {

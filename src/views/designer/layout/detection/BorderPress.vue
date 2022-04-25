@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
-import { locationState,isDragging } from '@/views/designer/common'
+import { locationState,isDragging } from '@/views/designer/service/common'
 
 
 const pressStyleCompute = computed(() => {

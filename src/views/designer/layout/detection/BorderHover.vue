@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue'
-import { locationState,componentMap } from '@/views/designer/common'
+import { locationState,componentMap } from '@/views/designer/service/common'
 
 const hoverStyle = computed(() => {
   let location = locationState.currentHoverComponent?.location
