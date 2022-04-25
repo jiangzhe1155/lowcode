@@ -22,9 +22,9 @@ const timer = ref()
 useEventListener(el, 'mousedown', (e) => {
   console.log('鼠标按下了')
   timer.value = setTimeout(() => {
-    // if (!timeout.value) {
-    //   return
-    // }
+    if (!timer.value) {
+      return
+    }
     console.log('开始监听鼠标事件')
     asideComponentType.value = props.type
     asideComponentGroup.value = props.group
@@ -33,9 +33,6 @@ useEventListener(el, 'mousedown', (e) => {
     document.addEventListener('mouseup', onDocumentMouseDragEnd, true)
     emitter.emit('onComponentPanelClose')
   }, 200,) as unknown as number
-
-  // e.preventDefault()
-  // e.stopPropagation()
 }, true)
 
 useEventListener(el, 'mouseup', (e) => {
@@ -43,7 +40,6 @@ useEventListener(el, 'mouseup', (e) => {
   clearTimeout(timer.value)
   timer.value = null
   onComponentDragEnd()
-  // emitter.emit('onComponentPanelOpen')
 }, true)
 
 
