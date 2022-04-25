@@ -35,7 +35,6 @@ const searchColumn = computed(() => {
 })
 
 const filterRowCount = ref(6)
-
 const gridStyle = computed(() => {
   if (filterRowCount.value == 3) {
     return 'grid-cols-3'
@@ -52,9 +51,10 @@ const gridStyle = computed(() => {
 })
 
 onMounted(async () => {
-  let { data } = await axios.get(`/api/getUsers`, {})
-  console.log('表格初始化', props.state, data)
-  props.state.value.userList = data.data
+  axios.get(`/api/getUsers`, {}).then(res => {
+    console.log('获取到数据', res.data)
+    props.state.value.userList = res.data.data
+  })
 })
 
 
