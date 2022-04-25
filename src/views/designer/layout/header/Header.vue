@@ -40,10 +40,6 @@ const onMock = () => {
 
 </script>
 <template>
-
-
-  {{ isDragging }}
-
   <el-button @click="back">撤销</el-button>
   <el-button @click="onMock">测试mock</el-button>
   <el-button @click="exportJson">导出json</el-button>
