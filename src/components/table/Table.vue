@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { Table } from '@/views/designer/service/component'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { getProp } from '@/views/designer/service/propsWatcher'
 import { Column } from '@/components/table/ColumnType'
 import Item from '@/views/designer/config/panel/Item.vue'
 import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
 import Button from '@/components/button/Button.vue'
+import axios from 'axios'
 
 const props = defineProps<{
   component: Table,
@@ -34,7 +35,6 @@ const searchColumn = computed(() => {
 })
 
 const filterRowCount = ref(6)
-
 const gridStyle = computed(() => {
   if (filterRowCount.value == 3) {
     return 'grid-cols-3'
@@ -49,6 +49,14 @@ const gridStyle = computed(() => {
     return 'grid-cols-6'
   }
 })
+
+onMounted(async () => {
+  axios.get(`/api/getUsers`, {}).then(res => {
+    console.log('获取到数据', res.data)
+    props.state.value.userList = res.data.data
+  })
+})
+
 
 </script>
 
@@ -70,13 +78,13 @@ const gridStyle = computed(() => {
       </div>
     </div>
     <div class="flex my-20px">
-      <Button :component="toolbar" :state="state"
-              v-for="(toolbar,idx) in toolbars"
-              :key="idx">
+      <Button v-for="(toolbar,idx) in toolbars" :key="idx"
+              :component="toolbar"
+              :state="state">
       </Button>
     </div>
 
-    <el-table :data="rowData" style="width: 100%">
+    <el-table :data="state.value.userList" style="width: 100%">
       <el-table-column
           v-for="(column,idx) in columns.filter(c=>!c.hidden)" :key="idx"
           :label="column.title"
@@ -86,7 +94,7 @@ const gridStyle = computed(() => {
         <template #default="{row}">
           <div class="flex gap-x-2">
             <div v-for="(operation,idx) in operations" :key="idx">
-              <Button :component="operation" :state="state" :payload="[row,idx]"></Button>
+              <Button :component="operation" :payload="[row,idx]" :state="state"></Button>
             </div>
           </div>
         </template>
