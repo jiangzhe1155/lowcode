@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { Table } from "@/views/designer/service/component";
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { getProp } from "@/views/designer/service/propsWatcher";
 import { Column } from "@/components/table/ColumnType";
 import Item from "@/views/designer/config/panel/Item.vue";
@@ -8,37 +8,34 @@ import ItemLabel from "@/views/designer/config/panel/ItemLabel.vue";
 import Button from "@/components/button/Button.vue";
 import axios from "axios";
 
-const {
-  state,
-  component
-} = defineProps<{
+const props = defineProps<{
   component: Table,
   state: any
 }>();
 
 const rowData = computed(() => {
-  let res = getProp(component.props.rowData);
-  let idx = component.props.rowData.idx;
-  if (idx === "string") {
+  let res = getProp(props.component.props.rowData);
+  let idx = props.component.props.rowData.idx;
+  if (idx === "array") {
     return res;
   } else if (idx === "variable") {
     try {
-      return eval(`state.value.${res}`);
+      return eval(`props.state.value.${res}`);
     } catch (e) {
     }
   }
 });
 
 const columns = computed((): Column[] => {
-  return getProp(component.props.columns);
+  return getProp(props.component.props.columns);
 });
 
 const toolbars = computed((): any[] => {
-  return getProp(component.props.toolbars);
+  return getProp(props.component.props.toolbars);
 });
 
 const operations = computed((): any[] => {
-  return getProp(component.props.operations);
+  return getProp(props.component.props.operations);
 });
 
 const searchFilter = ref({});
@@ -62,22 +59,20 @@ const gridStyle = computed(() => {
   }
 });
 
-onMounted(async () => {
+onMounted(() => {
   axios.get(`/api/getUsers`, {}).then(res => {
     console.log("获取到数据", res.data);
-    state.value.userList = res.data.data;
+    props.state.value.userList = res.data.data;
   });
 });
-
 
 </script>
 
 <template>
   <div>
-    {{ rowData }}
     <div>
       <div :class="gridStyle" class="grid gap-y-4">
-        <div v-for="(column,idx) in ((parseInt(searchColumn.length / filterRowCount) + 1) * filterRowCount - 1)"
+        <div v-for="(idx) in ((parseInt(searchColumn.length / filterRowCount) + 1) * filterRowCount - 1)"
              :key="idx">
           <Item v-if="idx < searchColumn.length">
             <ItemLabel class="!text-right" fixed>{{ searchColumn[idx].title }}</ItemLabel>

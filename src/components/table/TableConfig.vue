@@ -1,36 +1,37 @@
 <script lang="ts" setup>
-import { computed, Ref } from 'vue'
+import { computed, Ref } from "vue";
 import {
   Table, TableProp
-} from '@/views/designer/service/component'
-import { getProp, usePropsWatcher } from '@/views/designer/service/propsWatcher'
-import ArrayConfig from '@/views/designer/config/ArrayConfig.vue'
-import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
+} from "@/views/designer/service/component";
+import { getProp, usePropsWatcher } from "@/views/designer/service/propsWatcher";
+import ArrayConfig from "@/views/designer/config/ArrayConfig.vue";
+import ItemLabel from "@/views/designer/config/panel/ItemLabel.vue";
 
-import Item from '@/views/designer/config/panel/Item.vue'
-import ItemContainer from '@/views/designer/config/panel/ItemContainer.vue'
-import ItemHeader from '@/views/designer/config/panel/ItemHeader.vue'
-import PropValueSetter from '@/views/designer/config/panel/PropValueSetter.vue'
-import PanelContainer from '@/views/designer/config/panel/PanelContainer.vue'
-import { columnTypes } from '@/components/table/ColumnType'
+import Item from "@/views/designer/config/panel/Item.vue";
+import ItemContainer from "@/views/designer/config/panel/ItemContainer.vue";
+import ItemHeader from "@/views/designer/config/panel/ItemHeader.vue";
+import PropValueSetter from "@/views/designer/config/panel/PropValueSetter.vue";
+import PanelContainer from "@/views/designer/config/panel/PanelContainer.vue";
+import { columnTypes } from "@/components/table/ColumnType";
+import VariableConfig from "@/views/designer/config/VariableConfig.vue";
 
 const props = defineProps<{
   component: Ref<Table>
-}>()
+}>();
 
-const { config } = usePropsWatcher(() => new TableProp(), props.component)
+const { config } = usePropsWatcher(() => new TableProp(), props.component);
 
 const rowData = computed(() => {
-  return getProp(config.value.rowData)
-})
+  return getProp(config.value.rowData);
+});
 
 const columns = computed(() => {
-  return getProp(config.value.columns)
-})
+  return getProp(config.value.columns);
+});
 
 const operations = computed(() => {
-  return getProp(config.value.operations)
-})
+  return getProp(config.value.operations);
+});
 
 
 </script>
@@ -70,10 +71,10 @@ const operations = computed(() => {
               <div class="flex-grow">
                 <el-select v-model="columns[index].type" class="w-full" default-first-option>
                   <el-option
-                      v-for="item in columnTypes"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
+                    v-for="item in columnTypes"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
                   />
                 </el-select>
               </div>
@@ -99,7 +100,7 @@ const operations = computed(() => {
         <ItemLabel>行数据配置</ItemLabel>
         <PropValueSetter :prop="config.rowData"></PropValueSetter>
       </ItemHeader>
-      <ArrayConfig :columns="rowData">
+      <ArrayConfig :columns="rowData" v-if="config.rowData.idx ==='array'">
         <template #header>
           <ItemLabel v-for="(column,idx) in columns.slice(0,2)" :key="idx">{{ column.title }}</ItemLabel>
         </template>
@@ -117,6 +118,7 @@ const operations = computed(() => {
           </ItemContainer>
         </template>
       </ArrayConfig>
+      <VariableConfig :prop="config.rowData"></VariableConfig>
     </div>
 
     <div>

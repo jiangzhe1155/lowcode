@@ -1,30 +1,31 @@
 <script setup lang="ts">
 
-import { computed } from 'vue'
-import { Card } from '@/views/designer/service/component'
-import { getProp } from '@/views/designer/service/propsWatcher'
+import { computed, onMounted } from "vue";
+import { Card } from "@/views/designer/service/component";
+import { getProp } from "@/views/designer/service/propsWatcher";
 
 const props = defineProps<{
   component: Card,
   state: any
-}>()
+}>();
 
 const showHeader = computed(() => {
-  return getProp(props.component.props.enableHeader)
-})
+  return getProp(props.component.props.enableHeader);
+});
 
 const title = computed(() => {
-  let res = getProp(props.component.props.title)
-  let idx = props.component.props.title.idx
-  if (idx === 'string') {
-    return res
-  } else if (idx === 'variable') {
+  let res = getProp(props.component.props.title);
+  let idx = props.component.props.title.idx;
+  if (idx === "string") {
+    return res;
+  } else if (idx === "variable") {
     try {
-      return eval(`props.state.value.${res}`)
+      return eval(`props.state.value.${res}`);
     } catch (e) {
     }
   }
-})
+});
+
 
 </script>
 
