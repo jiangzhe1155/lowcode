@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import BorderClicked from '@/views/designer/layout/detection/BorderClicked.vue'
-import BorderHover from '@/views/designer/layout/detection/BorderHover.vue'
-import BorderPress from '@/views/designer/layout/detection/BorderPress.vue'
-import Insertion from '@/views/designer/layout/detection/Insertion.vue'
-import { onMounted, ref, toRaw, watch } from 'vue'
+import BorderClicked from "@/views/designer/layout/detection/BorderClicked.vue";
+import BorderHover from "@/views/designer/layout/detection/BorderHover.vue";
+import BorderPress from "@/views/designer/layout/detection/BorderPress.vue";
+import Insertion from "@/views/designer/layout/detection/Insertion.vue";
+import { onMounted, ref, toRaw, watch } from "vue";
 import {
   back, deleteComponent,
   iframeDoc,
@@ -12,8 +12,8 @@ import {
   locationState,
   renderPage,
   updateLocationState
-} from '@/views/designer/service/common'
-import { sendIframeMessage } from '@/views/designer/service/iframeUtil'
+} from "@/views/designer/service/common";
+import { sendIframeMessage } from "@/views/designer/service/iframeUtil";
 import {
   onIframeMouseClick,
   onIframeMouseDown, onIframeMouseIn,
@@ -21,71 +21,71 @@ import {
   onIframeMouseOver,
   onIframeMouseUp, onIframeResize, onIframeScroll,
   timeout
-} from '@/views/designer/service/iframeEvent'
-import { useMagicKeys } from '@vueuse/core'
+} from "@/views/designer/service/iframeEvent";
+import { useMagicKeys } from "@vueuse/core";
 
-const el = ref<HTMLElement>()
+const el = ref<HTMLElement>();
 onMounted(() => {
-  iframeRef.value = el.value
-})
+  iframeRef.value = el.value;
+});
 
 const onLoad = () => {
-  let doc = iframeDoc()
-  let win = iframeWin()
+  let doc = iframeDoc();
+  let win = iframeWin();
   if (win) {
-    sendIframeMessage(iframeWin(), 'render', {
+    sendIframeMessage(iframeWin(), "render", {
       renderPage: toRaw(renderPage.value)
-    })
+    });
   }
 
-  doc.addEventListener('mousedown', (e: MouseEvent) => {
+  doc.addEventListener("mousedown", (e: MouseEvent) => {
     timeout.value = setTimeout(
-        () => onIframeMouseDown(e),
-        200,
-    ) as unknown as number
-    e.preventDefault()
-    e.stopPropagation()
-  }, true)
+      () => onIframeMouseDown(e),
+      200
+    ) as unknown as number;
+    e.preventDefault();
+    e.stopPropagation();
+  }, true);
 
-  doc.addEventListener('mouseup', onIframeMouseUp, false)
-  doc.addEventListener('mouseover', onIframeMouseOver, true)
-  doc.addEventListener('mouseleave', onIframeMouseLeave, false)
-  doc.addEventListener('mouseenter', onIframeMouseIn, false)
-  doc.addEventListener('iframeMouseMove', onIframeMouseMove, true)
-  doc.addEventListener('click', onIframeMouseClick, true)
-  doc.addEventListener('scroll', onIframeScroll, true)
-  doc.onselectstart = () => false // 禁止搜索
-  win.addEventListener('resize', onIframeResize, true)
-}
+  doc.addEventListener("mouseup", onIframeMouseUp, false);
+  doc.addEventListener("mouseover", onIframeMouseOver, true);
+  doc.addEventListener("mouseleave", onIframeMouseLeave, false);
+  doc.addEventListener("mouseenter", onIframeMouseIn, false);
+  doc.addEventListener("iframeMouseMove", onIframeMouseMove, true);
+  doc.addEventListener("click", onIframeMouseClick, true);
+  doc.addEventListener("scroll", onIframeScroll, true);
+  doc.onselectstart = () => false; // 禁止搜索
+  win.addEventListener("resize", onIframeResize, true);
+};
 
 watch([renderPage, () => iframeWin()], (n, o) => {
-  console.log('renderPage变化了', renderPage)
+  console.log("renderPage变化了", renderPage);
   if (renderPage && iframeWin()) {
-    onLoad()
+    onLoad();
   }
   setTimeout(() => {
-    updateLocationState()
-  })
-}, { deep: true })
+    updateLocationState();
+  });
+}, { deep: true });
 
 const {
   Ctrl_Z,
   Backspace
-} = useMagicKeys()
+} = useMagicKeys();
 
 watch(Ctrl_Z, (v) => {
   if (v) {
-    back()
+    back();
   }
-})
+});
 
 watch(Backspace, (v) => {
   if (v) {
     if (locationState.currentClickComponent && locationState.currentHoverComponent && locationState.currentClickComponent.id === locationState.currentHoverComponent.id) {
-      deleteComponent(locationState.currentClickComponent.id)
+      deleteComponent(locationState.currentClickComponent.id);
     }
   }
-})
+});
 
 </script>
 <template>
@@ -99,10 +99,10 @@ watch(Backspace, (v) => {
         <Insertion></Insertion>
       </div>
       <iframe
-          ref="el"
-          class="h-full w-full"
-          src="/#/designer/viewport"
-          @load="onLoad"
+        ref="el"
+        class="h-full w-full"
+        src="/#/designer/viewport"
+        @load="onLoad"
       ></iframe>
     </div>
   </div>

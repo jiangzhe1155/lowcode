@@ -41,7 +41,8 @@ abstract class BaseComponent<T extends ComponentProps> implements Component {
   level: number = 0;
   visible: boolean = true;
   lock: boolean = false;
-  abstract props: T}
+  abstract props: T;
+}
 
 interface OptionIndex {
   [index: string]: any;

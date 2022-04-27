@@ -26,7 +26,9 @@ const title = computed(() => {
   }
 });
 
-
+onMounted(() => {
+  console.log("card 重新加载了");
+});
 </script>
 
 <template>

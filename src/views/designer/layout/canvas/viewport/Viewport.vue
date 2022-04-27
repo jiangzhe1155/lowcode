@@ -43,9 +43,12 @@ const componentModel = () => {
   return h("div", {}, renderPage.value?.models.map(m => doRender(m)));
 };
 
+
 addMessageListener("render", (payload: any) => {
   renderPage.value = payload.renderPage;
-  state.value = eval(renderPage.value?.state!)();
+  if (state.value == null) {
+    state.value = eval(renderPage.value?.state!)();
+  }
 });
 
 </script>
