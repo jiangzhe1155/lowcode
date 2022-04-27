@@ -43,7 +43,6 @@ const componentModel = () => {
   return h("div", {}, renderPage.value?.models.map(m => doRender(m)));
 };
 
-
 addMessageListener("render", (payload: any) => {
   renderPage.value = payload.renderPage;
   if (state.value == null) {
