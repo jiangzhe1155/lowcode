@@ -1,67 +1,80 @@
 <script lang="ts" setup>
-import { Table } from '@/views/designer/service/component'
-import { computed, onMounted, ref } from 'vue'
-import { getProp } from '@/views/designer/service/propsWatcher'
-import { Column } from '@/components/table/ColumnType'
-import Item from '@/views/designer/config/panel/Item.vue'
-import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
-import Button from '@/components/button/Button.vue'
-import axios from 'axios'
+import { Table } from "@/views/designer/service/component";
+import { computed, onMounted, ref } from "vue";
+import { getProp } from "@/views/designer/service/propsWatcher";
+import { Column } from "@/components/table/ColumnType";
+import Item from "@/views/designer/config/panel/Item.vue";
+import ItemLabel from "@/views/designer/config/panel/ItemLabel.vue";
+import Button from "@/components/button/Button.vue";
+import axios from "axios";
 
-const props = defineProps<{
+const {
+  state,
+  component
+} = defineProps<{
   component: Table,
   state: any
-}>()
+}>();
 
 const rowData = computed(() => {
-  return getProp(props.component.props.rowData)
-})
+  let res = getProp(component.props.rowData);
+  let idx = component.props.rowData.idx;
+  if (idx === "string") {
+    return res;
+  } else if (idx === "variable") {
+    try {
+      return eval(`state.value.${res}`);
+    } catch (e) {
+    }
+  }
+});
 
 const columns = computed((): Column[] => {
-  return getProp(props.component.props.columns)
-})
+  return getProp(component.props.columns);
+});
 
 const toolbars = computed((): any[] => {
-  return getProp(props.component.props.toolbars)
-})
+  return getProp(component.props.toolbars);
+});
 
 const operations = computed((): any[] => {
-  return getProp(props.component.props.operations)
-})
+  return getProp(component.props.operations);
+});
 
-const searchFilter = ref({})
+const searchFilter = ref({});
 const searchColumn = computed(() => {
-  return columns.value.filter(c => c.search)
-})
+  return columns.value.filter(c => c.search);
+});
 
-const filterRowCount = ref(6)
+const filterRowCount = ref(6);
 const gridStyle = computed(() => {
   if (filterRowCount.value == 3) {
-    return 'grid-cols-3'
+    return "grid-cols-3";
   }
   if (filterRowCount.value == 4) {
-    return 'grid-cols-4'
+    return "grid-cols-4";
   }
   if (filterRowCount.value == 5) {
-    return 'grid-cols-5'
+    return "grid-cols-5";
   }
   if (filterRowCount.value == 6) {
-    return 'grid-cols-6'
+    return "grid-cols-6";
   }
-})
+});
 
 onMounted(async () => {
   axios.get(`/api/getUsers`, {}).then(res => {
-    console.log('获取到数据', res.data)
-    props.state.value.userList = res.data.data
-  })
-})
+    console.log("获取到数据", res.data);
+    state.value.userList = res.data.data;
+  });
+});
 
 
 </script>
 
 <template>
   <div>
+    {{ rowData }}
     <div>
       <div :class="gridStyle" class="grid gap-y-4">
         <div v-for="(column,idx) in ((parseInt(searchColumn.length / filterRowCount) + 1) * filterRowCount - 1)"
@@ -84,11 +97,11 @@ onMounted(async () => {
       </Button>
     </div>
 
-    <el-table :data="state.value.userList" style="width: 100%">
+    <el-table :data="rowData" style="width: 100%">
       <el-table-column
-          v-for="(column,idx) in columns.filter(c=>!c.hidden)" :key="idx"
-          :label="column.title"
-          :prop="column.key"/>
+        v-for="(column,idx) in columns.filter(c=>!c.hidden)" :key="idx"
+        :label="column.title"
+        :prop="column.key" />
 
       <el-table-column label="操作" width="120">
         <template #default="{row}">
@@ -103,7 +116,7 @@ onMounted(async () => {
 
     <el-pagination :total="1000" background
                    class="mt-20px"
-                   layout="total,sizes, prev, pager, next"/>
+                   layout="total,sizes, prev, pager, next" />
   </div>
 
 </template>
