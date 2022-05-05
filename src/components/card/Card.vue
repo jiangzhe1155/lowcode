@@ -20,7 +20,7 @@ const title = computed(() => {
     return res;
   } else if (idx === "variable") {
     try {
-      return eval(`props.state.value.${res}`);
+      return eval(`props.state.${res}`);
     } catch (e) {
     }
   }

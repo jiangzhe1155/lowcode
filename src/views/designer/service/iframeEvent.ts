@@ -21,7 +21,7 @@ export const onIframeMouseDrag = (e: MouseEvent) => {
   } = designerConfig
 
   x.value = e.clientX + asideWidth + canvasPadding + (isAffixPanel.value && isPanelOpen.value ? dragPanelWidth : 0)
-  y.value = e.clientY + +headerHeight + canvasPadding
+  y.value = e.clientY + headerHeight + canvasPadding
   if (startDrag.value && !isDragging.value) {
     isDragging.value = true
     document.addEventListener('mouseup', onDocumentMouseDragEnd, true)

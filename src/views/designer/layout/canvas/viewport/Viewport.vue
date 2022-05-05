@@ -4,8 +4,6 @@ import { h, ref, resolveComponent, VNode } from "vue";
 import { addMessageListener } from "@/views/designer/service/iframeUtil";
 import { RenderPage } from "@/views/designer/service/common";
 import { Component } from "@/views/designer/service/component";
-import { now } from "@vueuse/core";
-import { Timer } from "@element-plus/icons-vue";
 
 const renderPage = ref<RenderPage>();
 const state = ref();
@@ -15,7 +13,7 @@ function doRender (node: Component): VNode | undefined {
   if (node.visible) {
     if (node.children.length > 0) {
       return h(resolve, {
-        state: state,
+        state: state.value,
         component: node,
         id: node.id
       }, () => {
@@ -23,7 +21,7 @@ function doRender (node: Component): VNode | undefined {
       });
     } else {
       return h(resolve as any, {
-        state: state,
+        state: state.value,
         component: node,
         id: node.id
       }, { default: () => h("div", { class: "bg-gray-200 p-10px select-none" }, "拖拽组件或模板到这里") });

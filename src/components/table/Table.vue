@@ -20,7 +20,7 @@ const rowData = computed(() => {
     return res
   } else if (idx === 'variable') {
     try {
-      return eval(`props.state.value.${res}`)
+      return eval(`props.state.${res}`)
     } catch (e) {
     }
   }
@@ -68,12 +68,16 @@ onMounted(() => {
     pageNo: pageNo.value,
     pageSize: pageSize.value
   }).then(res => {
-    console.log('获取到数据', res.data)
-    props.state.value.userList = res.data.data
+    console.log('获取到数据', props.state,props.component)
+    props.state.userList = res.data.data
     pageNo.value = res.data.pageNo
     pageSize.value = res.data.pageSize
     total.value = res.data.total
   })
+
+  setTimeout(()=>{
+    props.state.title = 'aaaaaa'
+  },1000)
 })
 
 const handleSizeChange = () => {
@@ -81,7 +85,7 @@ const handleSizeChange = () => {
     pageNo: pageNo.value,
     pageSize: pageSize.value
   }).then(res => {
-    props.state.value.userList = res.data.data
+    props.state.userList = res.data.data
     total.value = res.data.total
   })
 }
@@ -92,7 +96,7 @@ const handleCurrentChange = () => {
     pageSize: pageSize.value
   }).then(res => {
     console.log('获取到数据', res.data)
-    props.state.value.userList = res.data.data
+    props.state.userList = res.data.data
     total.value = res.data.total
   })
 }

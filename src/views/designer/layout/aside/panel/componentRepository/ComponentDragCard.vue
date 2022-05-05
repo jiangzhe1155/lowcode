@@ -43,7 +43,7 @@ useEventListener(el, 'mouseup', (e) => {
 </script>
 
 <template>
-  <el-card ref="el" class="h-full select-none " shadow="hover">
+  <el-card ref="el" class="h-full select-none cursor-pointer" shadow="hover">
     <el-image :src="imgUrl" class="w-56px h-56px" @dragstart.prevent>
     </el-image>
     <p>{{ name }}</p>
