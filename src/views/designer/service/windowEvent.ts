@@ -52,7 +52,7 @@ export const onDocumentMouseDragEnd = () => {
     }
     setTimeout(() => {
       locationState.currentClickComponent = fetchLocation(clickId)
-    }, 200)
+    },100)
   }
 
   clearTimeout(timeout.value)
