@@ -109,9 +109,9 @@ const handleCurrentChange = () => {
       <div :class="gridStyle" class="grid gap-y-4">
         <div v-for="(idx) in ((parseInt(searchColumn.length / filterRowCount) + 1) * filterRowCount - 1)"
              :key="idx">
-          <Item v-if="idx < searchColumn.length">
-            <ItemLabel class="!text-right" fixed>{{ searchColumn[idx].title }}</ItemLabel>
-            <el-input v-if="searchColumn[idx].type ==='input'" v-model="searchFilter[searchColumn[idx].key]"></el-input>
+          <Item v-if="idx <= searchColumn.length">
+            <ItemLabel class="!text-right" fixed>{{ searchColumn[idx-1].title }}</ItemLabel>
+            <el-input v-if="searchColumn[idx-1].type ==='input'" v-model="searchFilter[searchColumn[idx-1].key]"></el-input>
           </Item>
         </div>
         <div class="order-last text-right">
