@@ -19,6 +19,7 @@
     "uuid": "^8.3.2",
     "vue": "^3.2.31",
     "vue-axios": "^3.4.1",
+    "vue-request": "^1.2.4",
     "vue-router": "^4.0.12",
     "vuedraggable": "^4.1.0"
   },
