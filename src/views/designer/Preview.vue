@@ -3,14 +3,12 @@
 import { h, ref, resolveComponent, VNode } from 'vue'
 import { Component } from '@/views/designer/service/component'
 import { renderPageStore } from '@/stores/constant'
-import { useResizeObserver } from '@vueuse/core'
 
 const renderPage = renderPageStore
 const state =  ref(eval(renderPage.value?.state!)())
 
 function doRender (node: Component): VNode | undefined {
   let resolve = resolveComponent(node.type)
-
   if (node.visible) {
     if (node.children.length > 0) {
       return h(resolve, {
@@ -28,9 +26,6 @@ function doRender (node: Component): VNode | undefined {
       }, { default: () => h('div', { class: 'bg-gray-200 p-10px select-none' }, '拖拽组件或模板到这里') })
     }
   }
-
-
-
 }
 
 const componentRender = () => {

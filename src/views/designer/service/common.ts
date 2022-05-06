@@ -4,6 +4,7 @@ import { useDebouncedRefHistory } from '@vueuse/core'
 import mitt from 'mitt'
 import { Card, Page, Root, Dialog, Direction, Component, Table } from '@/views/designer/service/component'
 import { ComponentGroup, ComponentType, LocationState, Location } from '@/views/designer/service/service'
+import { designerConfig } from '@/stores/constant'
 
 export const iframeRef = ref<any>()
 export const iframeWin = () => {
@@ -15,21 +16,21 @@ export const iframeDoc = () => {
 
 let page = new Page()
 page.children.push(new Table())
-// let card = new Card('卡片1')
-// card.props.enableHeader.options['boolean'] = true
+let card = new Card('卡片1')
+card.props.enableHeader.options['boolean'] = true
 page.children.push(new Card('卡片2'))
-// page.children.push(new Card('卡片3'), card, new Card('卡片4'))
-// let dialog = new Dialog()
-// dialog.children.push(new Card('卡片6'))
+page.children.push(new Card('卡片3'), card, new Card('卡片4'))
+let dialog = new Dialog()
+dialog.children.push(new Card('卡片6'))
 let root = new Root()
 root.children.push(page)
 
 export class RenderPage {
   component: Component = new Root()
   models: Component[] = []
-  state = eval("`"+(() => {
+  state = eval('`' + (() => {
     return { title: '一个标题22222' }
-  }).toString()+"`")
+  }).toString() + '`')
 }
 
 let res = new RenderPage()
@@ -47,7 +48,7 @@ const {
 })
 
 export const componentMap = computed(() => {
-  console.log('componentMap 更新', renderPage)
+  // console.log('componentMap 更新', renderPage)
   let map = new Map()
 
   function doBuild (component: Component, level: number = 0) {
@@ -253,7 +254,7 @@ export const fetchDirection = (x: number, y: number) => {
 
 export const fetchLocation = (componentId: string) => {
   let component = componentMap.value.get(componentId)
-  console.log('component', component)
+  // console.log('component', component)
   let rect = eval(component?.type)?.controlConfig.getElement(component.id, iframeDoc())?.getBoundingClientRect()
   if (rect) {
     let location = {
@@ -472,6 +473,14 @@ export const isShowInsertion = computed(() => {
   let hoverId = locationState.currentInsertionComponent?.id
   let cMap: Map<string | undefined, Component> = componentMap.value
   let pressGroup = pressId ? cMap.get(pressId)?.group : asideComponentGroup.value
+
+  if (pressGroup === 'Model') {
+    // 如果拖动的是对话框，只有上面或者下面可以
+    if (y.value < designerConfig.headerHeight + designerConfig.canvasPadding + 20) {
+      return true
+    }
+  }
+
   if (!isDragging.value || !hoverId) {
     return false
   }
@@ -523,11 +532,12 @@ export const scrollToTopOrBottom = () => {
   let win = iframeWin()
   let hScrollTop = win.scrollY
   let hScrollHeight = win.innerHeight
-  // console.log('hScrollTop', hScrollTop, '', hScrollHeight)
-  if (y.value <= hScrollTop + 20) {
-    win.scrollTo({ top: hScrollTop - 1 / 2 * (hScrollTop + 20 - y.value) })
-  } else if (y.value >= hScrollTop + hScrollHeight - 20) {
-    win.scrollTo({ top: hScrollTop + 1 / 2 * (y.value - (hScrollTop + hScrollHeight - 20)) })
+  let scrollY = y.value - designerConfig.headerHeight - designerConfig.canvasPadding;
+  console.log('hScrollTop', scrollY , hScrollTop, '', hScrollHeight)
+  if (scrollY <= 20) {
+    win.scrollTo({ top: hScrollTop - (20-scrollY) })
+  } else if (scrollY >= hScrollHeight - 20) {
+    win.scrollTo({ top: hScrollTop + (scrollY - hScrollHeight + 20)})
   }
 }
 

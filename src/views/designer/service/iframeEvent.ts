@@ -89,6 +89,6 @@ export const onIframeResize = () => {
 }
 
 export const onIframeScroll = (e: Event) => {
-  console.log('屏幕滚动', e)
+  // console.log('屏幕滚动', e)
   updateLocationState()
 }

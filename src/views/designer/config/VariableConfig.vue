@@ -8,7 +8,7 @@ const props = defineProps<{
 
 <template>
     <el-input v-if="prop.idx === 'variable'" v-model="prop.options[prop.idx]">
-      <template #prepend>bind:</template>
+      <template #prepend>绑定变量</template>
     </el-input>
 </template>
 

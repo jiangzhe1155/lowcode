@@ -22,6 +22,7 @@ const renderTree = computed(() => {
   let page = renderPage.value
   let root = Object.assign({}, page.component)
   root.children = [...page.models, ...root.children]
+  console.log('结构树',root,page.models,)
   return [root]
 })
 

@@ -2,7 +2,7 @@
 
 import router from "@/router";
 import { renderPageStore } from "@/stores/constant";
-import { renderPage, back, isDragging } from "@/views/designer/service/common";
+import { renderPage, back, isDragging,asideComponentType,asideComponentGroup,locationState,y } from "@/views/designer/service/common";
 import { useClipboard } from "@vueuse/core";
 import axios from "axios";
 
@@ -40,6 +40,7 @@ const onMock = () => {
 
 </script>
 <template>
+  {{asideComponentGroup }} {{asideComponentType}} {{locationState.currentInsertionComponent}}{{y}} {{isDragging}}
   <el-button @click="back">撤销</el-button>
   <el-button @click="onMock">测试mock</el-button>
   <el-button @click="exportJson">导出json</el-button>

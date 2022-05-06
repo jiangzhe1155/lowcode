@@ -13,7 +13,7 @@ function doRender (node: Component): VNode | undefined {
   let resolve = resolveComponent(node.type)
   let el = ref()
   useResizeObserver(el, (entries) => {
-      resetLocationState()
+    resetLocationState()
   })
   if (node.visible) {
     if (node.children.length > 0) {
