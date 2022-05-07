@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, resolveComponent } from 'vue'
 import { v4 } from 'uuid'
 import { useDebouncedRefHistory } from '@vueuse/core'
 import mitt from 'mitt'
@@ -589,5 +589,20 @@ export const updateLocationState = () => {
   }
   if (locationState.currentInsertionComponent) {
     locationState.currentInsertionComponent = fetchLocation(locationState.currentInsertionComponent.id)
+  }
+}
+
+export const initData = (ctx:any,renderPage:RenderPage) => {
+  function doInit (component: Component) {
+    ctx[component.id] = eval(component?.type)?.controlConfig.initData()
+    if (component.children.length > 0){
+      component.children?.forEach(child => {
+        doInit(child)
+      })
+    }
+  }
+
+  for (let component of [...renderPage.models, renderPage.component]) {
+    doInit(component)
   }
 }

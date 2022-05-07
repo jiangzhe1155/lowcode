@@ -1,17 +1,16 @@
 <script lang="ts" setup>
 import { Table } from '@/views/designer/service/component'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeMount, onMounted, reactive, ref, watch } from 'vue'
 import { getProp } from '@/views/designer/service/propsWatcher'
 import { Column } from '@/components/table/ColumnType'
 import Item from '@/views/designer/config/panel/Item.vue'
 import ItemLabel from '@/views/designer/config/panel/ItemLabel.vue'
 import Button from '@/components/button/Button.vue'
-import axios from 'axios'
-import { useRequest } from 'vue-request'
 
 const props = defineProps<{
   component: Table,
-  state: any
+  state: any,
+  ctx: any
 }>()
 
 const rowData = computed(() => {
@@ -62,25 +61,12 @@ const gridStyle = computed(() => {
   }
 })
 
-const pageNo = ref(1)
-const pageSize = ref(10)
-const total = ref(0)
+const self = props.ctx[props.component.id]
 
-onMounted(() => {
+onBeforeMount(() => {
   setTimeout(() => {
     props.state.title = 'aaaaaa'
   }, 1000)
-})
-
-props.state.dataMap = useRequest(axios.post(`/api/getUsers`, {
-  pageNo: pageNo.value,
-  pageSize: pageSize.value
-}), {
-  onSuccess: (res) => {
-    console.log('获取到数据', res.data)
-    props.state.userList = res.data.data
-    total.value = res.data.total
-  },
 })
 
 const handleSizeChange = () => {
@@ -119,10 +105,8 @@ const handleCurrentChange = () => {
     </div>
 
     <el-table v-loading="state.dataMap.loading" :data="rowData" style="width: 100%">
-      <el-table-column
-          v-for="(column,idx) in columns.filter(c=>!c.hidden)" :key="idx"
-          :label="column.title"
-          :prop="column.key"/>
+      <el-table-column v-for=" (column,idx) in columns.filter(c=>!c.hidden)" :key="idx" :label="column.title"
+                       :prop="column.key"/>
       <el-table-column label="操作" width="120">
         <template #default="{row}">
           <div class="flex gap-x-2">
@@ -133,10 +117,10 @@ const handleCurrentChange = () => {
         </template>
       </el-table-column>
     </el-table>
-    <el-pagination v-model:currentPage="pageNo"
-                   v-model:page-size="pageSize"
+    <el-pagination v-model:currentPage="self.pageNo"
+                   v-model:page-size="self.pageSize"
                    :page-sizes="[10, 50, 100]"
-                   :total="total"
+                   :total="self.total"
                    background
                    class="mt-20px"
                    layout="total,sizes, prev, pager, next"

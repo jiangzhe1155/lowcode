@@ -1,6 +1,5 @@
 export type Direction = 'top' | 'bottom' | 'center' | 'left' | 'right';
 export type ComponentType = 'Card' | 'Root' | 'Page' | 'Dialog' | 'Table';
-
 export type ComponentGroup = 'Input' | 'Container' | 'Model' | 'Root';
 
 export type ValueType = 'boolean' | 'string' | 'variable' | 'array';
