@@ -7,10 +7,11 @@ import { useRequest } from 'vue-request'
 import axios from 'axios'
 import { initData } from '@/views/designer/service/common'
 
+
+
 const renderPage = renderPageStore
 const state = reactive<any>(eval(renderPage.value?.state!)())
 const ctx = reactive<any>({})
-
 // 创建每个数据源的初始数据
 initData(ctx, renderPage.value)
 let tableId = renderPage.value.component.children[0].children[0].id
