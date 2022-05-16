@@ -174,7 +174,7 @@ export class Table extends BaseComponent<TableProp> {
   group: ComponentGroup = 'Input'
   type: ComponentType = 'Table'
   props: TableProp = new TableProp()
-  public static controlConfig: ControlConfig = new TableControlConfig()
+  public static controlConfig: TableControlConfig = new TableControlConfig()
 
   constructor (name: string = '表格') {
     super()
